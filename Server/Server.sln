@@ -1,0 +1,32 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DBServer", "DBServer\DBServer.vcxproj", "{8EAD9B5E-CCFE-4137-91D8-69EC4871F11F}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GateServer", "GateServer\GateServer.vcxproj", "{190DB7F4-FC62-4B2C-B9E0-D7694213E156}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GameServer", "GameServer\GameServer.vcxproj", "{61A7DB25-7A43-44E9-A75D-FDD674D0E138}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8EAD9B5E-CCFE-4137-91D8-69EC4871F11F}.Debug|Win32.ActiveCfg = Debug|Win32
+		{8EAD9B5E-CCFE-4137-91D8-69EC4871F11F}.Debug|Win32.Build.0 = Debug|Win32
+		{8EAD9B5E-CCFE-4137-91D8-69EC4871F11F}.Release|Win32.ActiveCfg = Release|Win32
+		{8EAD9B5E-CCFE-4137-91D8-69EC4871F11F}.Release|Win32.Build.0 = Release|Win32
+		{190DB7F4-FC62-4B2C-B9E0-D7694213E156}.Debug|Win32.ActiveCfg = Debug|Win32
+		{190DB7F4-FC62-4B2C-B9E0-D7694213E156}.Debug|Win32.Build.0 = Debug|Win32
+		{190DB7F4-FC62-4B2C-B9E0-D7694213E156}.Release|Win32.ActiveCfg = Release|Win32
+		{190DB7F4-FC62-4B2C-B9E0-D7694213E156}.Release|Win32.Build.0 = Release|Win32
+		{61A7DB25-7A43-44E9-A75D-FDD674D0E138}.Debug|Win32.ActiveCfg = Debug|Win32
+		{61A7DB25-7A43-44E9-A75D-FDD674D0E138}.Debug|Win32.Build.0 = Debug|Win32
+		{61A7DB25-7A43-44E9-A75D-FDD674D0E138}.Release|Win32.ActiveCfg = Release|Win32
+		{61A7DB25-7A43-44E9-A75D-FDD674D0E138}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
