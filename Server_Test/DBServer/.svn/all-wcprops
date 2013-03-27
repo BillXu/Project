@@ -1,0 +1,65 @@
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/pro/!svn/ver/474/GodProject/Server/DBServer
+END
+Makefile_ar
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/pro/!svn/ver/178/GodProject/Server/DBServer/Makefile_ar
+END
+rebuild.sh
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/pro/!svn/ver/178/GodProject/Server/DBServer/rebuild.sh
+END
+compile.sh
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/pro/!svn/ver/178/GodProject/Server/DBServer/compile.sh
+END
+RecordStructDefine.h
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/pro/!svn/ver/939/GodProject/Server/DBServer/RecordStructDefine.h
+END
+StartServer.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/pro/!svn/ver/241/GodProject/Server/DBServer/StartServer.cpp
+END
+DBTreator.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/pro/!svn/ver/992/GodProject/Server/DBServer/DBTreator.cpp
+END
+build.sh
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/pro/!svn/ver/178/GodProject/Server/DBServer/build.sh
+END
+StartServer.h
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/pro/!svn/ver/763/GodProject/Server/DBServer/StartServer.h
+END
+DBTreator.h
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/pro/!svn/ver/986/GodProject/Server/DBServer/DBTreator.h
+END
+Makefile
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/pro/!svn/ver/178/GodProject/Server/DBServer/Makefile
+END

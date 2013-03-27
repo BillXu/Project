@@ -1,0 +1,43 @@
+#
+# Makefile for src directory
+#
+
+include ../Make.public
+MAKEFILE = Makefile
+
+TARGET = libBase.a
+
+####################
+#  Subdirs define  #
+####################
+SRC_PATH = ./
+#THREADING_PATH = threading
+SUBDIRS = $(SRC_PATH)
+####################
+#  Objects define  #
+####################
+SRC_OBJS = IStartServer.o Server.o ThreadMod.o ListenThread.o ConnectThread.o Handler.o TreatorBase.o ConnectThread.o Utility.o
+# MessageProtocol.o
+
+COMMON_OBJS = $(SRC_OBJS)
+
+all:subdirs $(TARGET)
+	mv $(TARGET) $(LIBDIR)
+
+subdirs:
+	@for i in $(SUBDIRS);do \
+	echo "===>$$i"; \
+	(cd $$i&&$(MAKE) -f $(MAKEFILE)) || exit 1; \
+	echo "<===$$i"; \
+done
+
+$(TARGET):$(COMMON_OBJS)
+	ar -cr $@ $^
+clean:
+	@for i in $(SUBDIRS); do \
+	echo    "===>$$i"; \
+	(cd $$i &&$(MAKE) clean -f $(MAKEFILE)) || exit 1;\
+	echo    "<===$$i"; \
+done
+	rm -f $(LIBDIR)/$(TARGET)
+

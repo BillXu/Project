@@ -1,0 +1,47 @@
+K 25
+svn:wc:ra_dav:version-url
+V 42
+/svn/pro/!svn/ver/258/GodProject/Server/DB
+END
+Makefile_ar
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/pro/!svn/ver/108/GodProject/Server/DB/Makefile_ar
+END
+rebuild.sh
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/pro/!svn/ver/108/GodProject/Server/DB/rebuild.sh
+END
+compile.sh
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/pro/!svn/ver/108/GodProject/Server/DB/compile.sh
+END
+MysqlClient.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/pro/!svn/ver/108/GodProject/Server/DB/MysqlClient.cpp
+END
+build.sh
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/pro/!svn/ver/108/GodProject/Server/DB/build.sh
+END
+MysqlClient.h
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/pro/!svn/ver/258/GodProject/Server/DB/MysqlClient.h
+END
+Makefile
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/pro/!svn/ver/108/GodProject/Server/DB/Makefile
+END

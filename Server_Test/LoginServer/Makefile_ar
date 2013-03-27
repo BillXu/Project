@@ -1,0 +1,13 @@
+#
+# Makefiel for app
+#
+include ../Make.public
+
+TARGET = LoginServer
+SRC= StartServer.cpp LoginTreator.cpp ServerTreator.cpp User.cpp UserMgr.cpp
+
+all :
+	$(CC) -o $(TARGET) $(SRC) $(CPPFLAGS) -L$(LIBDIR) -lBase -lShare -lRakNet $(LDFLAGS)
+clean :
+	rm -f ./*.o ./$(TARGET)
+

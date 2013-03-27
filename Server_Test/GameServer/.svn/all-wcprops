@@ -1,0 +1,263 @@
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/pro/!svn/ver/914/GodProject/Server/GameServer
+END
+ItemBase.h
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/pro/!svn/ver/834/GodProject/Server/GameServer/ItemBase.h
+END
+TopUser.h
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/pro/!svn/ver/914/GodProject/Server/GameServer/TopUser.h
+END
+ChallTask.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/pro/!svn/ver/992/GodProject/Server/GameServer/ChallTask.cpp
+END
+Task.h
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/pro/!svn/ver/763/GodProject/Server/GameServer/Task.h
+END
+CommItem.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/pro/!svn/ver/546/GodProject/Server/GameServer/CommItem.cpp
+END
+GameTreator.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/pro/!svn/ver/939/GodProject/Server/GameServer/GameTreator.cpp
+END
+Battle.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/pro/!svn/ver/976/GodProject/Server/GameServer/Battle.cpp
+END
+ServerTreator.h
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/pro/!svn/ver/939/GodProject/Server/GameServer/ServerTreator.h
+END
+Relation.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/pro/!svn/ver/707/GodProject/Server/GameServer/Relation.cpp
+END
+General.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/pro/!svn/ver/976/GodProject/Server/GameServer/General.cpp
+END
+User.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/pro/!svn/ver/992/GodProject/Server/GameServer/User.cpp
+END
+compile.sh
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/pro/!svn/ver/299/GodProject/Server/GameServer/compile.sh
+END
+PlrItemMgr.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/pro/!svn/ver/976/GodProject/Server/GameServer/PlrItemMgr.cpp
+END
+RelationMgr.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/pro/!svn/ver/986/GodProject/Server/GameServer/RelationMgr.cpp
+END
+TimeUpdater.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/pro/!svn/ver/939/GodProject/Server/GameServer/TimeUpdater.cpp
+END
+build.sh
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/pro/!svn/ver/299/GodProject/Server/GameServer/build.sh
+END
+Challenge.h
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/pro/!svn/ver/986/GodProject/Server/GameServer/Challenge.h
+END
+Equip.h
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/pro/!svn/ver/638/GodProject/Server/GameServer/Equip.h
+END
+UserMgr.h
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/pro/!svn/ver/986/GodProject/Server/GameServer/UserMgr.h
+END
+StartServer.h
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/pro/!svn/ver/529/GodProject/Server/GameServer/StartServer.h
+END
+ItemBase.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/pro/!svn/ver/560/GodProject/Server/GameServer/ItemBase.cpp
+END
+Makefile
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/pro/!svn/ver/914/GodProject/Server/GameServer/Makefile
+END
+shopHistory.h
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/pro/!svn/ver/788/GodProject/Server/GameServer/shopHistory.h
+END
+TopUser.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/pro/!svn/ver/914/GodProject/Server/GameServer/TopUser.cpp
+END
+Task.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/pro/!svn/ver/763/GodProject/Server/GameServer/Task.cpp
+END
+ServerTreator.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/pro/!svn/ver/986/GodProject/Server/GameServer/ServerTreator.cpp
+END
+ChallTask.h
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/pro/!svn/ver/992/GodProject/Server/GameServer/ChallTask.h
+END
+Makefile_ar
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/pro/!svn/ver/914/GodProject/Server/GameServer/Makefile_ar
+END
+rebuild.sh
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/pro/!svn/ver/299/GodProject/Server/GameServer/rebuild.sh
+END
+CommItem.h
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/pro/!svn/ver/546/GodProject/Server/GameServer/CommItem.h
+END
+GameTreator.h
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/pro/!svn/ver/939/GodProject/Server/GameServer/GameTreator.h
+END
+Battle.h
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/pro/!svn/ver/976/GodProject/Server/GameServer/Battle.h
+END
+Relation.h
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/pro/!svn/ver/986/GodProject/Server/GameServer/Relation.h
+END
+General.h
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/pro/!svn/ver/976/GodProject/Server/GameServer/General.h
+END
+Challenge.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/pro/!svn/ver/986/GodProject/Server/GameServer/Challenge.cpp
+END
+Equip.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/pro/!svn/ver/976/GodProject/Server/GameServer/Equip.cpp
+END
+User.h
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/pro/!svn/ver/986/GodProject/Server/GameServer/User.h
+END
+UserMgr.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/pro/!svn/ver/986/GodProject/Server/GameServer/UserMgr.cpp
+END
+StartServer.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/pro/!svn/ver/834/GodProject/Server/GameServer/StartServer.cpp
+END
+PlrItemMgr.h
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/pro/!svn/ver/976/GodProject/Server/GameServer/PlrItemMgr.h
+END
+TimeUpdater.h
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/pro/!svn/ver/939/GodProject/Server/GameServer/TimeUpdater.h
+END
+RelationMgr.h
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/pro/!svn/ver/986/GodProject/Server/GameServer/RelationMgr.h
+END
+shopHistory.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/pro/!svn/ver/976/GodProject/Server/GameServer/shopHistory.cpp
+END
