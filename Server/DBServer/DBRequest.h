@@ -13,14 +13,16 @@ enum eDBRequestType
 	eRequestType_Select,
 	eRequestType_Max,
 };
-
 struct stDBRequest
 {
 	eDBRequestType eType ;
 	// network form address ;
-	unsigned int nRequestFlag ; // 一般是msg,主要用来表示请求，用于对请求结果的处理.
+	unsigned int nRequestFlag ; // 一般是msg,主要用来表示请求，用于对请求结果的处理. just ;
 	char pSqlBuffer[Max_Sql_String];
 	int nSqlBufferLen ;
+protected:
+	stDBRequest(){}
+	friend class CDBRequestQueue;
 };
 
 struct stDBResult
@@ -43,14 +45,19 @@ public:
 	~CDBRequestQueue();
 	void PushRequest(stDBRequest* request );
 	void PushResult(stDBResult* result );
-	void GetAllResult(VEC_DBRESULT& vAllReslut ) ;
-	void GetAllRequest(VEC_DBREQUEST& vAllRequest );
+	void GetAllResult(VEC_DBRESULT& vAllReslutOut ) ; // delete stDBreslut after used ;
+	void GetAllRequest(VEC_DBREQUEST& vAllRequestOut ); // push reserver after used DBRequest ;
+	void PushReserveRequest(stDBRequest* request );  // stDBRequest 对象使用完　不要delete ，而是push进来。thread safe ;
+	stDBRequest* GetReserveRequest(); //  stDBReuest 不能直接new， 要通过此函数获取； thread safe ;
 protected:
 	void ClearAllRequest();
 	void ClearAllResult();
+	void ClearAllReserveRequest();
 protected:
-	Mutex mRequest ;
-	Mutex mResult ;
-	VEC_DBREQUEST vAllRequest ;
-	VEC_DBRESULT vAllResult ;
+	Mutex mRequestLock ;
+	Mutex mResultLock ;
+	Mutex mReserveQuestLock ;
+	VEC_DBREQUEST m_vReserveRequest ;
+	VEC_DBREQUEST m_vAllRequest ;
+	VEC_DBRESULT m_vAllResult ;
 };
