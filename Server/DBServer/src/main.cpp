@@ -39,7 +39,7 @@ public:
 		printf("error\n") ;
 		return ;
 	  }
-	  mysql_query(conn, "SELECT * FROM sakila.city"); 
+	  mysql_query(conn, "SELECT * FROM city"); 
 	  result = mysql_store_result(conn); 
 	  num_fields = mysql_num_fields(result); 
 	  while ((row = mysql_fetch_row(result))) 

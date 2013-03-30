@@ -37,6 +37,15 @@
     <ClInclude Include="..\..\Common\ThreadMod.h">
       <Filter>Common</Filter>
     </ClInclude>
+    <ClInclude Include="DataBaseThread.h">
+      <Filter>head</Filter>
+    </ClInclude>
+    <ClInclude Include="DBRequest.h">
+      <Filter>head</Filter>
+    </ClInclude>
+    <ClInclude Include="MySqlData.h">
+      <Filter>head</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
@@ -59,6 +68,15 @@
     </ClCompile>
     <ClCompile Include="..\..\Common\ThreadMod.cpp">
       <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="DataBaseThread.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="DBRequest.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="MySqlData.cpp">
+      <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

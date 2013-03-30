@@ -85,6 +85,9 @@
     <ClInclude Include="..\..\Common\Sem.h" />
     <ClInclude Include="..\..\Common\ThreadMod.h" />
     <ClInclude Include="..\..\Common\Utility.h" />
+    <ClInclude Include="DataBaseThread.h" />
+    <ClInclude Include="DBRequest.h" />
+    <ClInclude Include="MySqlData.h" />
     <ClInclude Include="src\main.h" />
   </ItemGroup>
   <ItemGroup>
@@ -94,6 +97,9 @@
     <ClCompile Include="..\..\Common\Sem.cpp" />
     <ClCompile Include="..\..\Common\ThreadMod.cpp" />
     <ClCompile Include="..\..\Common\Utility.cpp" />
+    <ClCompile Include="DataBaseThread.cpp" />
+    <ClCompile Include="DBRequest.cpp" />
+    <ClCompile Include="MySqlData.cpp" />
     <ClCompile Include="src\main.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
