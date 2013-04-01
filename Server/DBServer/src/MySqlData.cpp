@@ -1,7 +1,7 @@
 #include "MySqlData.h"
 stMysqlField::~stMysqlField()
 {
-	if ( eType == eValue_Bin || eValue_String == eType )
+	if ( eType == eValue_Binary || eValue_String == eType )
 	{
 		delete[] Value.pBuffer ;
 	}

@@ -9,7 +9,7 @@ enum eValueType
 	eValue_Double,
 	eValue_longLong,
 	eValue_String,
-	eValue_Bin,
+	eValue_Binary,
 	eValue_Char,
 	eValue_Short,
 	eValue_Max,

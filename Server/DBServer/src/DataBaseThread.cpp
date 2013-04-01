@@ -135,7 +135,7 @@ bool CDataBaseThread::ProcessRequest()
 							break;
 						case MYSQL_TYPE_BLOB: // binary 
 							{
-								pField->eType = eValue_Bin ;
+								pField->eType = eValue_Binary ;
 								pField->Value.pBuffer = new char[pLengths[i]];
 								memcpy(pField->Value.pBuffer,msqlrow[i],pLengths[i]);
 							}
