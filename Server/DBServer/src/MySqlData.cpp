@@ -1,9 +1,9 @@
 #include "MySqlData.h"
 stMysqlField::~stMysqlField()
 {
-	//if ( eType == eValue_Char )
+	if ( eType == eValue_Bin || eValue_String == eType )
 	{
-		//delete [] Value.pBuffer ;
+		delete[] Value.pBuffer ;
 	}
 }
 
@@ -52,11 +52,6 @@ void CMysqlRow::ClearAllFiled()
 	LIST_FIELD::iterator iter = m_vField.begin() ;
 	for ( ; iter != m_vField.end() ; ++iter )
 	{
-		stMysqlField* pField = *iter ;
-		if ( pField->eType == eValue_Char )
-		{
-			delete [] pField->Value.pBuffer ;
-		}
 		delete *iter ;
 		*iter = NULL ;
 	}

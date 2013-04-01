@@ -28,7 +28,8 @@ protected:
 struct stDBResult
 {
 public:
-	typedef std::vector<CMysqlRow> VEC_MYSQLROW ;
+	typedef std::vector<CMysqlRow*> VEC_MYSQLROW ;
+	~stDBResult();
 public:
 	unsigned int nRequestFlag ;
 	// network form address ;

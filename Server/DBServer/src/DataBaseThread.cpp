@@ -6,7 +6,7 @@ bool CDataBaseThread::InitDataBase( const char* pIP,unsigned pPort , const char*
 	// connect to data base ;
 	// init my_sql ;
 	m_pMySql = mysql_init(NULL);
-	if ( !mysql_real_connect(NULL,pIP,pUserName,pPassword,pDBName,pPort,NULL,0) )
+	if ( !mysql_real_connect(m_pMySql,pIP,pUserName,pPassword,pDBName,pPort,NULL,0) )
 	{
 		fprintf(stderr, "Failed to connect to database: Error: %s\\n",  mysql_error(m_pMySql));
 		m_bRunning = false ;
@@ -87,7 +87,7 @@ bool CDataBaseThread::ProcessRequest()
 				int nNumFiled = mysql_num_fields(msqlResult);
 				while ( msqlrow = mysql_fetch_row(msqlResult))
 				{
-					CMysqlRow rowData ;
+					CMysqlRow* rowData = new CMysqlRow ;
 					unsigned long* pLengths = mysql_fetch_lengths(msqlResult);
 					for ( int i = 0 ; i < nNumFiled ; ++i )
 					{
@@ -153,7 +153,7 @@ bool CDataBaseThread::ProcessRequest()
 								pField->eType = eValue_Max ;
 							}
 						}
-						rowData.PushFiled(pField);
+						rowData->PushFiled(pField);
 					}
 					pResult->vResultRows.push_back(rowData);
 				}

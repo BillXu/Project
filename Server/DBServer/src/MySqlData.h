@@ -3,6 +3,7 @@
 #include <list>
 enum eValueType
 {
+	// warning : when add a type that need to New Buffer , we should add it to stFiled::~stFiled ; because the buffer will delect there ;
 	eValue_Float,
 	eValue_Int,
 	eValue_Double,

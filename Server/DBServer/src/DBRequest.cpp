@@ -1,4 +1,15 @@
 #include "DBRequest.h"
+stDBResult::~stDBResult()
+{
+	VEC_MYSQLROW::iterator iter = vResultRows.begin();
+	for ( ; iter != vResultRows.end() ; ++iter )
+	{
+		delete *iter ;
+		*iter = NULL ;
+	}
+	vResultRows.clear() ;
+}
+
 CDBRequestQueue* CDBRequestQueue::SharedDBRequestQueue()
 {
 	static CDBRequestQueue g_sDBRequestQueue ;
