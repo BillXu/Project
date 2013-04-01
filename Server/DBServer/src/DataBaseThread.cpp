@@ -61,28 +61,29 @@ bool CDataBaseThread::ProcessRequest()
 		pResult = new stDBResult;  // will be deleted after processed in the main thread .
 		vProcessedResult.push_back(pResult);
 		pResult->nRequestFlag = pRequest->nRequestFlag ;
-		int iAffectRow = mysql_affected_rows(m_pMySql) ;
-		pResult->nAffectRow = iAffectRow ;
+		//int iAffectRow = mysql_affected_rows(m_pMySql) ;
+		
 		switch ( pRequest->eType )
 		{
 		case eRequestType_Add:
 			{
-
+				pResult->nAffectRow = mysql_affected_rows(m_pMySql);
 			}
 			break; 
 		case eRequestType_Delete:
 			{
-
+				pResult->nAffectRow = mysql_affected_rows(m_pMySql);
 			}
 			break;
 		case eRequestType_Update:
 			{
-
+				pResult->nAffectRow = mysql_affected_rows(m_pMySql);
 			}
 			break;
 		case eRequestType_Select:
 			{
 				msqlResult = mysql_store_result(m_pMySql);
+				pResult->nAffectRow = mysql_num_rows(msqlResult);
 				// process row ;
 				int nNumFiled = mysql_num_fields(msqlResult);
 				while ( msqlrow = mysql_fetch_row(msqlResult))

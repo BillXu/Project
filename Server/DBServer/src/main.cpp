@@ -89,7 +89,7 @@ int main()
 		pRequest->eType = eRequestType_Select ;
 		pRequest->nSqlBufferLen = sprintf(pRequest->pSqlBuffer,"%s","SELECT * FROM TestTable");
 		CDBRequestQueue::SharedDBRequestQueue()->PushRequest(pRequest);
-		Sleep(3);
+		Sleep(300);
 	}
 	getchar();
 	return 0 ; 
