@@ -33,6 +33,7 @@ public:
 	unsigned int nRequestFlag ;
 	// network form address ;
 	VEC_MYSQLROW vResultRows ;  
+	unsigned int nAffectRow ;
 };
 
 class CDBRequestQueue
@@ -41,13 +42,14 @@ public:
 	typedef std::vector<stDBRequest*> VEC_DBREQUEST ;
 	typedef std::vector<stDBResult*> VEC_DBRESULT ;
 public:
+	static CDBRequestQueue* SharedDBRequestQueue();
 	CDBRequestQueue();
 	~CDBRequestQueue();
 	void PushRequest(stDBRequest* request );
-	void PushResult(stDBResult* result );
+	void PushResult(VEC_DBRESULT& result );
 	void GetAllResult(VEC_DBRESULT& vAllReslutOut ) ; // delete stDBreslut after used ;
 	void GetAllRequest(VEC_DBREQUEST& vAllRequestOut ); // push reserver after used DBRequest ;
-	void PushReserveRequest(stDBRequest* request );  // stDBRequest 对象使用完　不要delete ，而是push进来。thread safe ;
+	void PushReserveRequest(VEC_DBREQUEST& request );  // stDBRequest 对象使用完　不要delete ，而是push进来。thread safe ;
 	stDBRequest* GetReserveRequest(); //  stDBReuest 不能直接new， 要通过此函数获取； thread safe ;
 protected:
 	void ClearAllRequest();

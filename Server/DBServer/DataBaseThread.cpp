@@ -1,4 +1,6 @@
 #include "DataBaseThread.h"
+#include "DBRequest.h"
+#include "LogManager.h"
 bool CDataBaseThread::InitDataBase( const char* pIP,unsigned pPort , const char* pUserName,const char* pPassword, const char* pDBName )
 {
 	// connect to data base ;
@@ -38,5 +40,134 @@ void CDataBaseThread::__run()
 bool CDataBaseThread::ProcessRequest()
 {
 	// process request here ;
+	CDBRequestQueue* pRequestQueue = CDBRequestQueue::SharedDBRequestQueue();
+	CDBRequestQueue::VEC_DBREQUEST vRequestOut ;
+	CDBRequestQueue::VEC_DBRESULT vProcessedResult ;
+	pRequestQueue->GetAllRequest(vRequestOut);
+	CDBRequestQueue::VEC_DBREQUEST::iterator iter = vRequestOut.begin() ;
+	stDBRequest* pRequest = NULL ;
+	stDBResult* pResult = NULL ;
+	MYSQL_RES *msqlResult = NULL ;
+	MYSQL_ROW msqlrow;
+	MYSQL_FIELD *msqlfield;
+	for ( ; iter != vRequestOut.end(); ++iter )
+	{
+		pRequest = *iter ;
+		if ( mysql_real_query(m_pMySql,pRequest->pSqlBuffer,pRequest->nSqlBufferLen) )
+		{
+			CLogMgr::SharedLogMgr()->ErrorLog("query DB Error Info , Operate Flag = %d : %s \n", pRequest->nRequestFlag, mysql_error(m_pMySql));
+			continue; 
+		}
+		pResult = new stDBResult;  // will be deleted after processed in the main thread .
+		vProcessedResult.push_back(pResult);
+		pResult->nRequestFlag = pRequest->nRequestFlag ;
+		int iAffectRow = mysql_affected_rows(m_pMySql) ;
+		pResult->nAffectRow = iAffectRow ;
+		switch ( pRequest->eType )
+		{
+		case eRequestType_Add:
+			{
+
+			}
+			break; 
+		case eRequestType_Delete:
+			{
+
+			}
+			break;
+		case eRequestType_Update:
+			{
+
+			}
+			break;
+		case eRequestType_Select:
+			{
+				msqlResult = mysql_store_result(m_pMySql);
+				// process row ;
+				int nNumFiled = mysql_num_fields(msqlResult);
+				while ( msqlrow = mysql_fetch_row(msqlResult))
+				{
+					CMysqlRow rowData ;
+					unsigned long* pLengths = mysql_fetch_lengths(msqlResult);
+					for ( int i = 0 ; i < nNumFiled ; ++i )
+					{
+						msqlfield = mysql_fetch_field(msqlResult);
+						stMysqlField* pField = new stMysqlField(msqlfield->name,msqlfield->name_length) ;
+						pField->nBufferLen = pLengths[i] ;
+						switch (msqlfield->type)
+						{
+						case MYSQL_TYPE_TINY: // char
+							{
+								pField->eType = eValue_Char ;
+								pField->Value.cValue = strtol(msqlrow[i],(char**)NULL,10);
+							}
+							break;
+						case MYSQL_TYPE_SHORT: // short 
+							{
+								pField->eType = eValue_Short ;
+								pField->Value.sValue = strtol(msqlrow[i],(char**)NULL,10);
+							}
+							break;
+						case MYSQL_TYPE_LONG: // int
+							{
+								 pField->eType = eValue_Int ;
+								 pField->Value.iValue = strtol(msqlrow[i],(char**)NULL,10);
+							}
+							break;
+						case MYSQL_TYPE_LONGLONG: // 64 bit int 
+							{
+								pField->eType = eValue_longLong ;
+								pField->Value.llValue = _atoi64(msqlrow[i]);
+							}
+							break;
+						case MYSQL_TYPE_FLOAT: // float 
+							{
+								pField->eType = eValue_Float ;
+								pField->Value.fValue = atof(msqlrow[i]);
+							}
+							break; 
+						case MYSQL_TYPE_DOUBLE: // double 
+							{
+								pField->eType = eValue_Double ;
+								pField->Value.dfValue = atof(msqlrow[i]);
+							}
+							break;
+						case MYSQL_TYPE_BLOB: // binary 
+							{
+								pField->eType = eValue_Bin ;
+								pField->Value.pBuffer = new char[pLengths[i]];
+								memcpy(pField->Value.pBuffer,msqlrow[i],pLengths[i]);
+							}
+							break; 
+						case MYSQL_TYPE_VAR_STRING:  // string 
+							{
+								pField->eType = eValue_String;
+								pField->Value.pBuffer = new char[pLengths[i] + 1 ];
+								memset(pField->Value.pBuffer,0,pLengths[i] + 1 );
+								memcpy(pField->Value.pBuffer,msqlrow[i],pLengths[i]);
+							}
+							break;
+						default:
+							{
+								CLogMgr::SharedLogMgr()->ErrorLog("error DB request unsupport field Type : Type = %d : field Name: %s ",msqlfield->type, pField->strFieldName.c_str()) ;
+								pField->eType = eValue_Max ;
+							}
+						}
+						rowData.PushFiled(pField);
+					}
+					pResult->vResultRows.push_back(rowData);
+				}
+				mysql_free_result(msqlResult);
+			}
+			break; 
+		default:
+			{
+				CLogMgr::SharedLogMgr()->ErrorLog("error DB request type, DB request Flag = %d , Type = %d",pRequest->nRequestFlag,pRequest->eType) ;
+				continue; ;
+			}
+		}
+	}
+	pRequestQueue->PushReserveRequest(vRequestOut);
+	pRequestQueue->PushResult(vProcessedResult);
 	return false ;
 }

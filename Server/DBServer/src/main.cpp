@@ -45,9 +45,9 @@ public:
 	  while ((row = mysql_fetch_row(result))) 
 	  {    
 			for(i = 0; i < num_fields; i++)      
-			 {        
-				 printf("%s ", row[i] ? row[i] : "NULL");      
-			 }   
+			{        
+				printf("%s ", row[i] ? row[i] : "NULL");      
+			}   
 			 printf("\n"); 
 	  } 
 	  mysql_free_result(result);

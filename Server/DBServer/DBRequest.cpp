@@ -1,7 +1,15 @@
 #include "DBRequest.h"
+CDBRequestQueue* CDBRequestQueue::SharedDBRequestQueue()
+{
+	static CDBRequestQueue g_sDBRequestQueue ;
+	return &g_sDBRequestQueue ;
+}
+
 CDBRequestQueue::CDBRequestQueue()
 {
-
+	ClearAllRequest();
+	ClearAllResult();
+	ClearAllReserveRequest();
 }
 
 CDBRequestQueue::~CDBRequestQueue()
@@ -18,16 +26,24 @@ void CDBRequestQueue::PushRequest(stDBRequest* request )
 	mRequestLock.Unlock() ;
 }
 
-void CDBRequestQueue::PushReserveRequest(stDBRequest* request )
+void CDBRequestQueue::PushReserveRequest(VEC_DBREQUEST& vRequest )
 {
 	mReserveQuestLock.Lock() ;
-	m_vReserveRequest.push_back(request);
+	VEC_DBREQUEST::iterator iter = vRequest.begin() ;
+	for ( ; iter != vRequest.end() ; ++iter )
+	{
+		m_vReserveRequest.push_back(*iter);
+	}
 	mReserveQuestLock.Unlock();
 }
-void CDBRequestQueue::PushResult(stDBResult* result )
+void CDBRequestQueue::PushResult(VEC_DBRESULT& vResult )
 {
 	mResultLock.Lock();
-	m_vAllResult.push_back(result);
+	VEC_DBRESULT::iterator iter = vResult.begin() ;
+	for ( ;iter != vResult.end(); ++iter )
+	{
+		m_vAllResult.push_back(*iter);
+	}
 	mResultLock.Unlock();
 }
 
