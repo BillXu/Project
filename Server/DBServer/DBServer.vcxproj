@@ -232,6 +232,7 @@
     <ClInclude Include="..\..\Common\NetLib\XBox360Includes.h" />
     <ClInclude Include="..\..\Common\NetLib\_FindFirst.h" />
     <ClInclude Include="..\..\Common\Sem.h" />
+    <ClInclude Include="..\..\Common\ServerNetwork.h" />
     <ClInclude Include="..\..\Common\ThreadMod.h" />
     <ClInclude Include="..\..\Common\Utility.h" />
     <ClInclude Include="src\DataBaseThread.h" />
@@ -340,6 +341,7 @@
     <ClCompile Include="..\..\Common\NetLib\WSAStartupSingleton.cpp" />
     <ClCompile Include="..\..\Common\NetLib\_FindFirst.cpp" />
     <ClCompile Include="..\..\Common\Sem.cpp" />
+    <ClCompile Include="..\..\Common\ServerNetwork.cpp" />
     <ClCompile Include="..\..\Common\ThreadMod.cpp" />
     <ClCompile Include="..\..\Common\Utility.cpp" />
     <ClCompile Include="src\DataBaseThread.cpp" />

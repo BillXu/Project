@@ -61,6 +61,7 @@ bool CDataBaseThread::ProcessRequest()
 		pResult = new stDBResult;  // will be deleted after processed in the main thread .
 		vProcessedResult.push_back(pResult);
 		pResult->nRequestFlag = pRequest->nRequestFlag ;
+		pResult->nRequestUID = pRequest->nRequestUID ;
 		//int iAffectRow = mysql_affected_rows(m_pMySql) ;
 		
 		switch ( pRequest->eType )

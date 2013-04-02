@@ -7,6 +7,8 @@
 #include "DataBaseThread.h"
 #include "MySqlData.h"
 #include "DBRequest.h"
+#include "RakNetTypes.h"
+#include "RakPeerInterface.h"
 class A
 	:public CThreadT
 {
@@ -23,6 +25,7 @@ public:
 
 	void ShowResult()
 	{
+		RakNetGUID
 		CDBRequestQueue::VEC_DBRESULT vResultOut ;
 		CDBRequestQueue::SharedDBRequestQueue()->GetAllResult(vResultOut) ;
 		CDBRequestQueue::VEC_DBRESULT::iterator iter = vResultOut.begin() ;
