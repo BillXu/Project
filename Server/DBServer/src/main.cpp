@@ -9,6 +9,7 @@
 #include "DBRequest.h"
 #include "RakNetTypes.h"
 #include "RakPeerInterface.h"
+#include "ServerNetwork.h"
 class A
 	:public CThreadT
 {
@@ -25,7 +26,6 @@ public:
 
 	void ShowResult()
 	{
-		RakNetGUID
 		CDBRequestQueue::VEC_DBRESULT vResultOut ;
 		CDBRequestQueue::SharedDBRequestQueue()->GetAllResult(vResultOut) ;
 		CDBRequestQueue::VEC_DBRESULT::iterator iter = vResultOut.begin() ;
@@ -77,22 +77,47 @@ public:
 	int a ; 
 };
 
+class B
+:public CServerNetworkDelegate
+{
+public:
+	virtual bool OnMessage( RakNet::Packet* pData )
+	{
+		unsigned char* pDataNew = pData->data ;
+		printf("Recieve a Number = %d \n",*((int*)&pDataNew[1]));
+		return false ;
+	}
+
+	virtual void OnNewPeerConnected(RakNet::RakNetGUID& nNewPeer, RakNet::Packet* pData )
+	{
+		printf("a peer connected : %s\n",pData->systemAddress.ToString());
+	}
+	
+	virtual void OnPeerDisconnected(RakNet::RakNetGUID& nPeerDisconnected, RakNet::Packet* pData )
+	{
+		printf("a peer Disconnected : %s\n",nPeerDisconnected.ToString());
+	}
+};
 int main()
 {
-	CDataBaseThread a ;
-	a.InitDataBase("localHost",3307,"root","123456","sakila");
-	a.Start() ;
+	//CDataBaseThread a ;
+	//a.InitDataBase("localHost",3307,"root","123456","sakila");
+	//a.Start() ;
 
-	A b ;
-	b.Start();
-
+	//A b ;
+	//b.Start();
+	CServerNetwork::SharedNetwork()->StartupNetwork(3000,100);
+	B b ;
+	CServerNetwork::SharedNetwork()->AddDelegate(&b);
 	while ( true )
 	{
-		stDBRequest* pRequest = CDBRequestQueue::SharedDBRequestQueue()->GetReserveRequest();
-		pRequest->eType = eRequestType_Select ;
-		pRequest->nSqlBufferLen = sprintf(pRequest->pSqlBuffer,"%s","SELECT * FROM TestTable");
-		CDBRequestQueue::SharedDBRequestQueue()->PushRequest(pRequest);
-		Sleep(300);
+		CServerNetwork::SharedNetwork()->RecieveMsg();
+		//stDBRequest* pRequest = CDBRequestQueue::SharedDBRequestQueue()->GetReserveRequest();
+		//pRequest->eType = eRequestType_Select ;
+		//pRequest->nSqlBufferLen = sprintf(pRequest->pSqlBuffer,"%s","SELECT * FROM TestTable");
+		//CDBRequestQueue::SharedDBRequestQueue()->PushRequest(pRequest);
+		//Sleep(300);
+
 	}
 	getchar();
 	return 0 ; 

@@ -16,7 +16,7 @@ enum eDBRequestType
 struct stDBRequest
 {
 	eDBRequestType eType ;
-	uint32 nRequestUID ;
+	unsigned int nRequestUID ;
 	unsigned int nRequestFlag ; // 一般是msg,主要用来表示请求，用于对请求结果的处理. just ;
 	char pSqlBuffer[Max_Sql_String];
 	int nSqlBufferLen ;
@@ -32,7 +32,7 @@ public:
 	~stDBResult();
 public:
 	unsigned int nRequestFlag ;
-	uint32 nRequestUID ;
+	unsigned int nRequestUID ;
 	VEC_MYSQLROW vResultRows ;  
 	unsigned int nAffectRow ;
 };
