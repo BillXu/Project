@@ -78,9 +78,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\Common\BaseData.h" />
     <ClInclude Include="..\..\Common\CommonDefine.h" />
     <ClInclude Include="..\..\Common\ConfigReader.h" />
     <ClInclude Include="..\..\Common\LogManager.h" />
+    <ClInclude Include="..\..\Common\MessageDefine.h" />
+    <ClInclude Include="..\..\Common\MessageIdentifer.h" />
     <ClInclude Include="..\..\Common\mutex.h" />
     <ClInclude Include="..\..\Common\NetLib\AutopatcherPatchContext.h" />
     <ClInclude Include="..\..\Common\NetLib\AutopatcherRepositoryInterface.h" />
@@ -232,15 +235,19 @@
     <ClInclude Include="..\..\Common\NetLib\XBox360Includes.h" />
     <ClInclude Include="..\..\Common\NetLib\_FindFirst.h" />
     <ClInclude Include="..\..\Common\Sem.h" />
+    <ClInclude Include="..\..\Common\ServerMessageDefine.h" />
     <ClInclude Include="..\..\Common\ServerNetwork.h" />
     <ClInclude Include="..\..\Common\ThreadMod.h" />
     <ClInclude Include="..\..\Common\Utility.h" />
     <ClInclude Include="src\DataBaseThread.h" />
+    <ClInclude Include="src\DBPlayer.h" />
+    <ClInclude Include="src\DBPlayerManager.h" />
     <ClInclude Include="src\DBRequest.h" />
     <ClInclude Include="src\main.h" />
     <ClInclude Include="src\MySqlData.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\Common\BaseData.cpp" />
     <ClCompile Include="..\..\Common\ConfigReader.cpp" />
     <ClCompile Include="..\..\Common\LogManager.cpp" />
     <ClCompile Include="..\..\Common\mutex.cpp" />
@@ -345,6 +352,8 @@
     <ClCompile Include="..\..\Common\ThreadMod.cpp" />
     <ClCompile Include="..\..\Common\Utility.cpp" />
     <ClCompile Include="src\DataBaseThread.cpp" />
+    <ClCompile Include="src\DBPlayer.cpp" />
+    <ClCompile Include="src\DBPlayerManager.cpp" />
     <ClCompile Include="src\DBRequest.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\MySqlData.cpp" />

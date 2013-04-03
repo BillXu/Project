@@ -499,6 +499,24 @@
     <ClInclude Include="..\..\Common\ServerNetwork.h">
       <Filter>Common</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Common\BaseData.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="src\DBPlayer.h">
+      <Filter>head</Filter>
+    </ClInclude>
+    <ClInclude Include="src\DBPlayerManager.h">
+      <Filter>head</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\MessageIdentifer.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\ServerMessageDefine.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\MessageDefine.h">
+      <Filter>Common</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
@@ -821,6 +839,15 @@
     </ClCompile>
     <ClCompile Include="..\..\Common\ServerNetwork.cpp">
       <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\BaseData.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="src\DBPlayer.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\DBPlayerManager.cpp">
+      <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

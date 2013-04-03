@@ -1,2 +1,1 @@
-// common file 
-// commit
+#pragma once
