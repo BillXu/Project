@@ -1,6 +1,13 @@
 #include "DataBaseThread.h"
 #include "DBRequest.h"
 #include "LogManager.h"
+
+CDataBaseThread* CDataBaseThread::SharedDBThread()
+{
+	static CDataBaseThread g_sDBThread ;
+	return &g_sDBThread;
+}
+
 bool CDataBaseThread::InitDataBase( const char* pIP,unsigned pPort , const char* pUserName,const char* pPassword, const char* pDBName )
 {
 	// connect to data base ;
@@ -35,6 +42,13 @@ void CDataBaseThread::__run()
 	{
 		mysql_close(m_pMySql) ;
 	}
+}
+
+int CDataBaseThread::EscapeString(char *to, const char *from, unsigned long length )
+{
+	if ( m_pMySql == NULL )
+		return 0 ;
+	return mysql_real_escape_string(m_pMySql, to,from,length );
 }
 
 bool CDataBaseThread::ProcessRequest()

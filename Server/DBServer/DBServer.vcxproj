@@ -243,6 +243,7 @@
     <ClInclude Include="src\DBPlayer.h" />
     <ClInclude Include="src\DBPlayerManager.h" />
     <ClInclude Include="src\DBRequest.h" />
+    <ClInclude Include="src\DBRequestFlags.h" />
     <ClInclude Include="src\main.h" />
     <ClInclude Include="src\MySqlData.h" />
   </ItemGroup>

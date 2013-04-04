@@ -19,7 +19,7 @@ RakNet::RakNetGUID& CDBPlayer::GetFromGameServerGUID()
 	return m_nFromGUID;
 }
 
-void CDBPlayer::OnDBResultAndProcessMsg(stDBResult* pResult )
+void CDBPlayer::OnDBResult(stDBResult* pResult )
 {
 
 }
@@ -30,6 +30,11 @@ void CDBPlayer::OnDisconnected()
 }
 
 void CDBPlayer::OnConnected()
+{
+
+}
+
+void CDBPlayer::OnPassAcountCheck( unsigned int nUserUID)
 {
 
 }

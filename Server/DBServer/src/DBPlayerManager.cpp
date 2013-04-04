@@ -1,18 +1,66 @@
 #include "DBPlayerManager.h"
 #include "DBPlayer.h"
 #include "DBRequest.h"
+#include "ServerMessageDefine.h"
+#include "CommonDefine.h"
+#include "DBRequestFlags.h"
+#include "DataBaseThread.h"
+#include "LogManager.h"
 CDBPlayerManager::CDBPlayerManager()
 {
-	ClearAll();
+	ClearAllPlayers();
+	ClearAccountCheck();
 }
 
 CDBPlayerManager::~CDBPlayerManager()
 {
-	ClearAll();
+	ClearAllPlayers();
+	ClearAccountCheck();
 }
 
 bool CDBPlayerManager::OnMessage( RakNet::Packet* pData )
 {
+     CDBPlayer* pTargetPlayer = NULL ;
+	 stMsg* pMsg = (stMsg*)pData->data ;
+	 if ( pMsg->usMsgType == MSG_LOGIN_CHECK )
+	 {
+		 stMsg2DBLoginCheck* pMsgCheck = (stMsg2DBLoginCheck*)pMsg ;
+		 stAccountCheck* pAccountCheck = new stAccountCheck ;
+		 m_vAccountChecks.push_back(pAccountCheck) ;
+		 pAccountCheck->nTempUsrUID = pMsgCheck->nTempUID;
+		 pAccountCheck->nFromServerID = pData->guid ;
+		
+		 // pase account 
+		 char pAccount[MAX_LEN_ACCOUNT] = { 0 } ;
+		 char* pBuffer = (char*)((char*)pData->data + sizeof(stMsg2DBLoginCheck));
+		 
+		 memcpy(pAccount,pBuffer,pMsgCheck->nAccountLen) ;
+		 pBuffer += pMsgCheck->nAccountLen ;
+		 
+		 // password
+		 char pPassword [MAX_LEN_PASSWORD] = { 0 } ;
+		 memcpy(pPassword,pBuffer,pMsgCheck->nPasswordLen) ;
+
+		 pAccountCheck->strAccount = pAccount;
+		 pAccountCheck->strPassword = pPassword ;
+
+		 // send a DBRequest ;
+		 stDBRequest* pRequest = CDBRequestQueue::SharedDBRequestQueue()->GetReserveRequest();
+		 pRequest->eType = eRequestType_Select ;
+		 pRequest->nRequestUID = pAccountCheck->nTempUsrUID;
+		 pRequest->nRequestFlag = eDBRequest_AccountCheck;
+
+		 // format sql String ;
+		 char pAccountEString[MAX_LEN_ACCOUNT * 2 + 1 ] = {0} ;
+		 CDataBaseThread::SharedDBThread()->EscapeString(pAccountEString,pAccount,pMsgCheck->nAccountLen + 1 ) ;
+		 pRequest->nSqlBufferLen = sprintf(pRequest->pSqlBuffer,"SELECT * FROM accountTable WHERE account = '%s'",pAccountEString ) ;
+		 CDBRequestQueue::SharedDBRequestQueue()->PushRequest(pRequest) ;
+	 }
+	 else if ( MSG_LOGIN_DIRECT == pMsg->usMsgType )
+	 {
+		
+	 }
+		
 	return false ;
 }
 
@@ -40,11 +88,11 @@ void CDBPlayerManager::ProcessDBResults()
 	vResultOut.clear();
 }
 
-CDBPlayer* CDBPlayerManager::GetPlayer( unsigned int nUID , ePlayersType eType )
+CDBPlayer* CDBPlayerManager::GetPlayer( unsigned int nUID )
 {
-	if ( eType < ePlayerType_None || eType >= ePlayerType_Max )
-		return NULL ;
-	LIST_DBPLAYER& vlist = m_vPlayers[eType] ;
+	//if ( eType < ePlayerType_None || eType >= ePlayerType_Max )
+	//	return NULL ;
+	LIST_DBPLAYER& vlist = m_vPlayers;
 	LIST_DBPLAYER::iterator iter = vlist.begin();
 	CDBPlayer* pPlayer = NULL ;
 	for ( ; iter != vlist.end(); ++iter )
@@ -58,54 +106,135 @@ CDBPlayer* CDBPlayerManager::GetPlayer( unsigned int nUID , ePlayersType eType )
 
 void CDBPlayerManager::OnProcessDBResult(stDBResult* pResult )
 {
-
+	if ( pResult->nRequestFlag == eDBRequest_AccountCheck )
+	{
+		OnProcessAccountCheckResult(pResult);
+	}
+	else
+	{
+		CDBPlayer* pPlayer = GetPlayer(pResult->nRequestUID) ;
+		if ( pPlayer )
+		{
+			pPlayer->OnDBResult(pResult);
+		}
+		else
+		{
+			CLogMgr::SharedLogMgr()->ErrorLog( "can not find player id = %d",pResult->nRequestUID );
+		}
+	}
 }
 
-void CDBPlayerManager::RemoveDBPlayer(LIST_DBPLAYER& vPlayers , CDBPlayer* pPlayer )
+void CDBPlayerManager::OnProcessAccountCheckResult(stDBResult* pResult)
 {
-	if ( !pPlayer )
+	LIST_ACCOUNT_CHECK::iterator iter = m_vAccountChecks.begin();
+	stAccountCheck* pAcountCheck = NULL ;
+	for ( ; iter != m_vAccountChecks.end(); ++iter )
+	{
+		pAcountCheck = *iter ;
+		if ( pAcountCheck != NULL && pAcountCheck->nTempUsrUID == pResult->nRequestUID )
+		{
+			m_vAccountChecks.erase(iter) ;
+			break; ;
+		}
+	}
+
+	if ( !pAcountCheck )
+	{
+		CLogMgr::SharedLogMgr()->ErrorLog( "Can not find Acount check tempID = %d",pResult->nRequestUID ) ;
+		delete pAcountCheck ;
 		return ;
-	LIST_DBPLAYER::iterator iter = vPlayers.begin();
-	for ( ; iter != vPlayers.end(); ++iter )
+	}
+	// if the acccound exist ;
+	stMsg2DBLoginCheckRet msgRet ;
+	msgRet.nTempUserUID = pAcountCheck->nTempUsrUID ;
+	if ( pResult->nAffectRow <= 0 )
 	{
-		if ( *iter == pPlayer )
+		msgRet.nRetFlag = 1 ;   // account don't exsit ;
+	}
+	else 
+	{
+		char* pRealPssword = pResult->vResultRows[0]->GetFiledByName("password")->Value.pBuffer;
+		if ( strcmp(pRealPssword,pAcountCheck->strPassword.c_str()))
 		{
-			vPlayers.erase(iter) ;
-			return ;
+			msgRet.nRetFlag = 2 ; // password error ;
+		}
+		else
+		{
+			msgRet.nRetFlag = 0 ;
+			msgRet.nUserUID = pResult->vResultRows[0]->GetFiledByName("UserUID")->Value.llValue;
+			// allocate a new DBPlayer ;
+			CDBPlayer* pPlayer = GetPlayer(msgRet.nUserUID);
+			if ( !pPlayer )
+			{
+				pPlayer = new CDBPlayer(pAcountCheck->nFromServerID);
+				m_vPlayers.push_back(pPlayer);
+			}
+			pPlayer->OnPassAcountCheck(msgRet.nUserUID);
 		}
 	}
+	
+	CServerNetwork::SharedNetwork()->SendMsg( (char*)&msgRet,sizeof(msgRet),pAcountCheck->nFromServerID,false);
+	delete pAcountCheck ;
 }
 
-void CDBPlayerManager::DeleteDBPlayer(LIST_DBPLAYER& vPlayers , CDBPlayer* pPlayer)
+//void CDBPlayerManager::RemoveDBPlayer(LIST_DBPLAYER& vPlayers , CDBPlayer* pPlayer )
+//{
+//	if ( !pPlayer )
+//		return ;
+//	LIST_DBPLAYER::iterator iter = vPlayers.begin();
+//	for ( ; iter != vPlayers.end(); ++iter )
+//	{
+//		if ( *iter == pPlayer )
+//		{
+//			vPlayers.erase(iter) ;
+//			return ;
+//		}
+//	}
+//}
+//
+//void CDBPlayerManager::DeleteDBPlayer(LIST_DBPLAYER& vPlayers , CDBPlayer* pPlayer)
+//{
+//	LIST_DBPLAYER::iterator iter = vPlayers.begin() ;
+//	for ( ; iter != vPlayers.end(); ++iter )
+//	{
+//		if ( pPlayer == NULL )
+//		{
+//			delete *iter ;
+//			*iter = NULL ;
+//			continue; 
+//		}
+//		
+//		if ( *iter == pPlayer )
+//		{
+//			delete *iter ;
+//			*iter = NULL ;
+//			vPlayers.erase(iter) ;
+//			return ;
+//		}
+//	}
+//
+//	if ( pPlayer == NULL )
+//		vPlayers.clear() ;
+//}
+
+void CDBPlayerManager::ClearAllPlayers()
 {
-	LIST_DBPLAYER::iterator iter = vPlayers.begin() ;
-	for ( ; iter != vPlayers.end(); ++iter )
+	LIST_DBPLAYER::iterator iter = m_vPlayers.begin();
+	for ( ; iter != m_vPlayers.end(); ++iter )
 	{
-		if ( pPlayer == NULL )
-		{
-			delete *iter ;
-			*iter = NULL ;
-			continue; 
-		}
-		
-		if ( *iter == pPlayer )
-		{
-			delete *iter ;
-			*iter = NULL ;
-			vPlayers.erase(iter) ;
-			return ;
-		}
+		delete *iter ;
+		*iter = NULL ;
 	}
-
-	if ( pPlayer == NULL )
-		vPlayers.clear() ;
+	m_vPlayers.clear() ; 
 }
 
-void CDBPlayerManager::ClearAll()
+void CDBPlayerManager::ClearAccountCheck()
 {
-	for ( int i = ePlayerType_None ; i < ePlayerType_Max ; ++i )
+	LIST_ACCOUNT_CHECK::iterator iter = m_vAccountChecks.begin();
+	for ( ; iter != m_vAccountChecks.end(); ++iter )
 	{
-		DeleteDBPlayer(m_vPlayers[i],NULL ) ;
+		delete *iter ;
+		*iter = NULL ;
 	}
+	m_vAccountChecks.clear() ;
 }
-

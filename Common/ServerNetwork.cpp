@@ -81,11 +81,14 @@ void CServerNetwork::RecieveMsg()
 				EnumDelegate(&CServerNetwork::OnPeerDisconnected,packet);
 			}
 			break; 
-		case ID_USER_PACKET_ENUM:
+		default:
 			{
-				// a logic message ;
-				// tell delegates ;
-				EnumDelegate(&CServerNetwork::OnLogicMessage,packet);
+				if ( packet->data[0] >= ID_USER_PACKET_ENUM )
+				{
+					// a logic message ;
+					// tell delegates ;
+					EnumDelegate(&CServerNetwork::OnLogicMessage,packet);
+				}
 			}
 			break;
 		}

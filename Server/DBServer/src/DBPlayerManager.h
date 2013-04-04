@@ -7,15 +7,24 @@ class CDBPlayerManager
 :public CServerNetworkDelegate
 {
 public:
-	enum ePlayersType
+	//enum ePlayersType
+	//{
+	//	ePlayerType_None,
+	//	ePlayerType_Active = ePlayerType_None,
+	//	ePlayerType_Reserve,
+	//	ePlayerType_WaitForCheck,
+	//	ePlayerType_Max,
+	//};
+	struct stAccountCheck
 	{
-		ePlayerType_None,
-		ePlayerType_Active = ePlayerType_None,
-		ePlayerType_Reserve,
-		ePlayerType_WaitForCheck,
-		ePlayerType_Max,
+		RakNet::RakNetGUID nFromServerID ;
+		unsigned int nTempUsrUID ;
+		std::string strAccount ;
+		std::string strPassword ;
 	};
+
 	typedef std::list<CDBPlayer*> LIST_DBPLAYER ;
+	typedef std::list<stAccountCheck*> LIST_ACCOUNT_CHECK ;
 public:
 	CDBPlayerManager();
 	~CDBPlayerManager();
@@ -27,12 +36,15 @@ public:
 
 	void ProcessDBResults();
 
-	CDBPlayer* GetPlayer( unsigned int nUID , ePlayersType eType );
+	CDBPlayer* GetPlayer( unsigned int nUID);
 protected:
+	void OnProcessAccountCheckResult(stDBResult* pResult);
 	void OnProcessDBResult(stDBResult* pResult );
-	void RemoveDBPlayer(LIST_DBPLAYER& vPlayers , CDBPlayer* pPlayer );
-	void DeleteDBPlayer(LIST_DBPLAYER& vPlayers , CDBPlayer* pPlayer);
-	void ClearAll();
+	//void RemoveDBPlayer(LIST_DBPLAYER& vPlayers , CDBPlayer* pPlayer );
+	//void DeleteDBPlayer(LIST_DBPLAYER& vPlayers , CDBPlayer* pPlayer);
+	void ClearAllPlayers();
+	void ClearAccountCheck();
 protected:
-	LIST_DBPLAYER m_vPlayers[ePlayerType_Max] ;
+	LIST_DBPLAYER m_vPlayers ;
+	LIST_ACCOUNT_CHECK m_vAccountChecks ;
 };
