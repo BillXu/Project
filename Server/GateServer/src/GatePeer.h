@@ -1,5 +1,6 @@
 #pragma once
 #include "RakNetTypes.h"
+#include "GatePeerManager.h"
 class CGatePeer
 {
 public:
@@ -8,18 +9,22 @@ public:
 	void Reset(unsigned int nPeerUID , RakNet::RakNetGUID& nSelfNetGUID);
 	void OnMessage( RakNet::Packet* pData );
 	void OnDisconnected();
-	void SetGameServerNetGUID(RakNet::RakNetGUID& nNetGUID ){ m_nGameServerNetGUID = nNetGUID ; }
+	void SetGameServerPeer(CGatePeer* pServerPeer ){ m_pGameServerPeer = pServerPeer ; }
 	void OnPeerDisconnect(CGatePeer* peer );
 	RakNet::RakNetGUID& GetSelfNetGUID(){ return m_nSelfNetGUID ; }
 	void OnAddPeerToThisServer(CGatePeer* peer );
-	unsigned short GetOwnPlayers(){ return m_nPlayerOnThisGameServer ;}
+	unsigned short GetOwnPlayers(){ return m_vClientOnThisServer.size() ;}
+	void SetServer(bool bIsServer){m_bServer = bIsServer ;}
+protected:
+	bool IsServer(){ return m_bServer ;}
+	CGatePeer* GetClientPeerOnThisByPeerUID( unsigned int nPeerUID );
 protected:
 	unsigned int m_nPeerUID ;
 	RakNet::RakNetGUID m_nSelfNetGUID ;
-	RakNet::RakNetGUID m_nGameServerNetGUID ; // int bServer = true , m_nSelfNetGUID = m_nGameServerNetGUID ;
+	CGatePeer* m_pGameServerPeer ; // int bServer = true , m_pGameServerPeer = NULL ;
 	bool m_bServer ;
-	unsigned short m_nPlayerOnThisGameServer ; 
+	CGatePeerMgr::LIST_GATEPEER m_vClientOnThisServer ;
 	// static Data ;
+public:
 	static char* s_pBuffer ;
-	static char* s_nUsedBufferLen ;
 };

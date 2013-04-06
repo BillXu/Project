@@ -2,6 +2,7 @@
 #include "GatePeer.h"
 #include "LogManager.h"
 #include "ServerNetwork.h"
+#include "ServerMessageDefine.h"
 #define SERVER_IDEAL_PLAYER_COUNT 2000
 #define RESERVE_PEER_COUN 200
 CGatePeerMgr* CGatePeerMgr::SharedGatePeerMgr()
@@ -29,6 +30,22 @@ bool CGatePeerMgr::OnMessage( RakNet::Packet* pData )
 		CServerNetwork::SharedNetwork()->ClosePeerConnection(pData->guid) ;
 		return true ;
 	}
+
+	stMsg* pMsg = (stMsg*)pData->data ;
+	if ( pMsg->cSysIdentifer == ID_MSG_GM2GA && MSG_VERIFY_GMS == pMsg->usMsgType )
+	{
+		// confirm this peer is game Server ;
+		iter->second->SetServer(true) ;
+		m_vServerPeers[iter->second->GetSelfNetGUID()] = iter->second ;
+		CLogMgr::SharedLogMgr()->PrintLog("A GameServer Entered : %s",iter->second->GetSelfNetGUID().ToString());
+		return true;
+	}
+	else if ( pMsg->cSysIdentifer == ID_MSG_C2S && MSG_VERIFY_CLIENT == pMsg->usMsgType )
+	{
+		AddPeerToServer(iter->second) ;
+		return true;
+	}
+
 	iter->second->OnMessage(pData) ;
 	return false ;
 }
@@ -78,7 +95,7 @@ bool CGatePeerMgr::AddPeerToServer(CGatePeer* pClientPeer )
 		CLogMgr::SharedLogMgr()->PrintLog("Don't have Proper GameServer To Join") ;
 		return false ;
 	}
-	pClientPeer->SetGameServerNetGUID(pServerPeer->GetSelfNetGUID()) ;
+	pClientPeer->SetGameServerPeer(pServerPeer) ;
 	pServerPeer->OnAddPeerToThisServer(pClientPeer);
 	return true ;
 }

@@ -62,3 +62,30 @@ struct stMsg2DBDirectLogin
 	stMsg2DBDirectLogin(){ usMsgType = MSG_LOGIN_DIRECT ; }
 	unsigned int UserUID ;
 };
+
+struct stMsg2GMPeerDisconnect
+	:public stMsg
+{
+	stMsg2GMPeerDisconnect()
+	{
+		cSysIdentifer = ID_MSG_GA2GM ;
+		usMsgType = MSG_DISCONNECT;
+	}
+	unsigned int nPeerUID ;
+	
+};
+
+struct stMsgTransferData
+	:public stMsg
+{
+	stMsgTransferData()
+	{
+		cSysIdentifer = ID_MSG_GA2GM ;
+		usMsgType = MSG_TRANSER_DATA;
+		bBroadCast = false ;
+		pData = NULL ;
+	}
+	unsigned int nTargetPeerUID ;
+	bool bBroadCast ;
+	char* pData ;
+};
