@@ -56,3 +56,9 @@ public:
 	// datas ;
 };
 
+struct stMsg2DBDirectLogin
+:public stMsg2DB
+{
+	stMsg2DBDirectLogin(){ usMsgType = MSG_LOGIN_DIRECT ; }
+	unsigned int UserUID ;
+};

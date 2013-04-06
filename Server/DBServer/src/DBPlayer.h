@@ -3,13 +3,7 @@
 #include "BaseData.h"
 #include "RakNetTypes.h"
 #include "DBRequest.h"
-struct stAccount
-{
-	unsigned int nUserUID ;
-	std::string strAccount ;
-	std::string strPassworld ;
-};
-
+#include "ServerMessageDefine.h"
 struct stDBBaseData
 :public stBaseData
 {
@@ -23,6 +17,7 @@ public:
 	{
 		ePlayerState_None ,
 		ePlayerState_Active,
+		ePlayerState_ReadingData,
 		ePlayerState_Resever,
 		ePlayerState_Max,
 	};
@@ -32,16 +27,20 @@ public:
 	void SetFromServerGUID(RakNet::RakNetGUID& nFromGameServerGUID);
 	RakNet::RakNetGUID& GetFromGameServerGUID();
 	void OnDBResult(stDBResult* pResult );
+	void OnMessage(stMsg* pMsg );
 	void OnDisconnected();
 	void OnConnected();
 	unsigned int GetUserUID();
 	void OnPassAcountCheck( unsigned int nUserUID);
 	ePlayerState GetState(){ return m_eState ; }
 protected:
+	void SaveAllToDB();
+	void ReadAllFromDB();
+	void SendBaseInfo();
 	void SetState( ePlayerState eState ){ m_eState = eState ;}
 protected:
 	stDBBaseData m_stBaseData ;
-	stAccount m_stAccount ;
+	unsigned int m_nUserUID ;
 	RakNet::RakNetGUID m_nFromGUID ;
 	ePlayerState m_eState ;
 };

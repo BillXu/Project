@@ -30,7 +30,7 @@ bool CDBPlayerManager::OnMessage( RakNet::Packet* pData )
 		 pAccountCheck->nTempUsrUID = pMsgCheck->nTempUID;
 		 pAccountCheck->nFromServerID = pData->guid ;
 		
-		 // pase account 
+		 // parse account 
 		 char pAccount[MAX_LEN_ACCOUNT] = { 0 } ;
 		 char* pBuffer = (char*)((char*)pData->data + sizeof(stMsg2DBLoginCheck));
 		 
@@ -53,25 +53,48 @@ bool CDBPlayerManager::OnMessage( RakNet::Packet* pData )
 		 // format sql String ;
 		 char pAccountEString[MAX_LEN_ACCOUNT * 2 + 1 ] = {0} ;
 		 CDataBaseThread::SharedDBThread()->EscapeString(pAccountEString,pAccount,pMsgCheck->nAccountLen + 1 ) ;
-		 pRequest->nSqlBufferLen = sprintf(pRequest->pSqlBuffer,"SELECT * FROM accountTable WHERE account = '%s'",pAccountEString ) ;
+		 pRequest->nSqlBufferLen = sprintf(pRequest->pSqlBuffer,"SELECT * FROM Account WHERE Account = '%s'",pAccountEString ) ;
 		 CDBRequestQueue::SharedDBRequestQueue()->PushRequest(pRequest) ;
 	 }
 	 else if ( MSG_LOGIN_DIRECT == pMsg->usMsgType )
 	 {
-		
+		stMsg2DBDirectLogin* pRealMsg = (stMsg2DBDirectLogin*)pMsg;
+		pTargetPlayer = GetPlayer(pRealMsg->UserUID) ;
+		if ( pTargetPlayer )
+		{
+			pTargetPlayer->SetFromServerGUID(pData->guid) ;
+		}
+		else
+		{
+			pTargetPlayer = new CDBPlayer(pData->guid);
+			m_vPlayers.push_back(pTargetPlayer) ;
+		}
 	 }
-		
-	return false ;
+	
+	 if ( pTargetPlayer )
+		pTargetPlayer->OnMessage(pMsg) ;
+	 return false ;
 }
 
 void CDBPlayerManager::OnNewPeerConnected(RakNet::RakNetGUID& nNewPeer, RakNet::Packet* pData )
 {
-
+	CLogMgr::SharedLogMgr()->PrintLog("A GameServer Connected : %s ",pData->systemAddress.ToString(true));
 }
 
 void CDBPlayerManager::OnPeerDisconnected(RakNet::RakNetGUID& nPeerDisconnected, RakNet::Packet* pData )
 {
 
+	CLogMgr::SharedLogMgr()->PrintLog("A GameServer Lost : %s ",pData->systemAddress.ToString(true));
+
+	LIST_DBPLAYER::iterator iter = m_vPlayers.begin();
+	for ( ; iter != m_vPlayers.end(); ++iter )
+	{
+		CDBPlayer* pPlayer = *iter ;
+		if ( pPlayer && pPlayer->GetState() == CDBPlayer::ePlayerState_Active )
+		{
+			pPlayer->OnDisconnected();
+		}
+	}
 }
 
 void CDBPlayerManager::ProcessDBResults()
@@ -140,7 +163,7 @@ void CDBPlayerManager::OnProcessAccountCheckResult(stDBResult* pResult)
 
 	if ( !pAcountCheck )
 	{
-		CLogMgr::SharedLogMgr()->ErrorLog( "Can not find Acount check tempID = %d",pResult->nRequestUID ) ;
+		CLogMgr::SharedLogMgr()->ErrorLog( "Can not find Account check tempID = %d",pResult->nRequestUID ) ;
 		delete pAcountCheck ;
 		return ;
 	}
@@ -153,7 +176,7 @@ void CDBPlayerManager::OnProcessAccountCheckResult(stDBResult* pResult)
 	}
 	else 
 	{
-		char* pRealPssword = pResult->vResultRows[0]->GetFiledByName("password")->Value.pBuffer;
+		char* pRealPssword = pResult->vResultRows[0]->GetFiledByName("Password")->Value.pBuffer;
 		if ( strcmp(pRealPssword,pAcountCheck->strPassword.c_str()))
 		{
 			msgRet.nRetFlag = 2 ; // password error ;
@@ -168,6 +191,10 @@ void CDBPlayerManager::OnProcessAccountCheckResult(stDBResult* pResult)
 			{
 				pPlayer = new CDBPlayer(pAcountCheck->nFromServerID);
 				m_vPlayers.push_back(pPlayer);
+			}
+			else
+			{
+				pPlayer->SetFromServerGUID(pAcountCheck->nFromServerID) ;
 			}
 			pPlayer->OnPassAcountCheck(msgRet.nUserUID);
 		}
