@@ -15,8 +15,10 @@ enum eMsgType
 	MSG_NONE,
 	MSG_LOGIN_CHECK,  // LOGIN WITH ACCOUNT AND PASSWORD 
 	MSG_LOGIN_DIRECT,  // LOGIN WITH USERUID 
-	MSG_VERIFY_GMS,
-	MSG_VERIFY_CLIENT,
+	MSG_VERIFY_GMS,  // verify that is game server ;
+	MSG_VERIFY_CLIENT, // verify that is client ;
+	MSG_VERIFY_GA, // verify that is gate server 
+	MSG_VERIFY_DB,  // verify that is DBserver ;
 	MSG_TRANSER_DATA, 
 	MSG_DISCONNECT,
 	MSG_REQUEST_BASE_DATA,

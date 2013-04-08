@@ -10,12 +10,13 @@
 #include "LogManager.h"
 #include "MessageIdentifiers.h"
 #include "MessageDefine.h"
-#include "WaitingLayer.h"
 int CNetWorkMgr::s_nCurrentDataSize = 0 ;
 CNetWorkMgr::CNetWorkMgr()
 {
     m_pNetPeer = NULL ;
     m_eConnectType = eConnectType_None;
+	m_nMaxConnectTo = 0;
+	m_nConnectedTo = 0 ;
 }
 
 CNetWorkMgr::~CNetWorkMgr()
@@ -45,17 +46,35 @@ CNetWorkMgr* CNetWorkMgr::SharedNetWorkMgr()
     return &s_gNetWork ;
 }
 
+void CNetWorkMgr::SetupNetwork( int nIntendServerCount )
+{
+	if ( !m_pNetPeer )
+	{
+		m_nMaxConnectTo = nIntendServerCount ;
+		m_pNetPeer = RakNet::RakPeerInterface::GetInstance() ;
+		RakNet::SocketDescriptor sDesc (0,0) ;
+		m_pNetPeer->Startup(nIntendServerCount, &sDesc, 1);
+		m_pNetPeer->SetMaximumIncomingConnections(0);
+	}
+}
+
 bool CNetWorkMgr::ConnectToServer(const char *pSeverIP, unsigned short nPort)
 {
-    DisconnectCurServer();
+	assert(m_pNetPeer && "Pls SetupNetwork() first! " );
     if ( !m_pNetPeer )
-    {
-        m_pNetPeer = RakNet::RakPeerInterface::GetInstance() ;
-        RakNet::SocketDescriptor sDesc (0,0) ;
-        m_pNetPeer->Startup(2, &sDesc, 1);
-        m_pNetPeer->SetMaximumIncomingConnections(0);
-    }
-    RakNet::ConnectionAttemptResult cReslt = m_pNetPeer->Connect(pSeverIP, nPort, NULL ,0) ;
+	{
+		CLogMgr::SharedLogMgr()->ErrorLog("m_pNetPeer is null , please setup network first ");
+		return false ;
+	}
+
+	assert(m_nConnectedTo < m_nMaxConnectTo && "no more slot for new coming server" );
+	if ( m_nMaxConnectTo <= m_nConnectedTo )
+	{
+		CLogMgr::SharedLogMgr()->ErrorLog("no more slot for new coming server, so can not connected to the server: %s , port: %d",pSeverIP, nPort );
+		return false ;
+	}
+
+	RakNet::ConnectionAttemptResult cReslt = m_pNetPeer->Connect(pSeverIP, nPort, NULL ,0) ;
     m_eConnectType = eConnectType_Connecting ;
     switch (cReslt)
     {
@@ -106,15 +125,6 @@ void CNetWorkMgr::ReciveMessage()
         s_nCurrentDataSize = packet->length ;
         switch (nMessageID)
         {
-            case ID_USER_PACKET_ENUM:
-            case MSG_LOGIN_S2C:
-            case MSG_GAME_S2C:
-            {
-                stMsg* pMsg = (stMsg*)(&(packet->data[0]));
-                EnumDeleagte(this, (lpfunc)(&CNetWorkMgr::OnReciveLogicMessage),pMsg) ;
-                CWaitingLayer::SharedWaitingLayer()->EndWaiting() ;
-            }
-            break;
             case ID_DISCONNECTION_NOTIFICATION:
             case ID_CONNECTION_LOST:
             {
@@ -127,6 +137,7 @@ void CNetWorkMgr::ReciveMessage()
                 break ;
             case ID_CONNECTION_REQUEST_ACCEPTED:
             {
+				++m_nConnectedTo;
                 m_nCurrentServer = packet->guid ;
                 CLogMgr::SharedLogMgr()->PrintLog("Connected To Server ");
                 m_eConnectType = eConnectType_Connected;
@@ -155,6 +166,13 @@ void CNetWorkMgr::ReciveMessage()
             }
                 break ;
             default:
+				{
+					if ( nMessageID >= ID_USER_PACKET_ENUM )
+					{
+						stMsg* pMsg = (stMsg*)(&(packet->data[0]));
+						EnumDeleagte(this, (lpfunc)(&CNetWorkMgr::OnReciveLogicMessage),pMsg) ;
+					}
+				}
                 break;
         }
         
@@ -165,10 +183,16 @@ void CNetWorkMgr::ReciveMessage()
 
 bool CNetWorkMgr::SendMsg(const char *pbuffer, int iSize)
 {
-    if ( IsConnected() == false || m_pNetPeer == NULL )
+    if ( m_pNetPeer == NULL )
         return false ;
-    CWaitingLayer::SharedWaitingLayer()->StartWaiting() ;  // waiting layer ;
-    return m_pNetPeer->Send(pbuffer, iSize, IMMEDIATE_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_SYSTEM_ADDRESS, true) ;
+    return m_pNetPeer->Send(pbuffer, iSize, IMMEDIATE_PRIORITY, RELIABLE_ORDERED, 0, m_nCurrentServer, false) ;
+}
+
+bool CNetWorkMgr::SendMsg( const char* pbuffer , int iSize,RakNet::RakNetGUID& nServerNetUID )
+{
+	if ( m_pNetPeer == NULL )
+		return false ;
+	return m_pNetPeer->Send(pbuffer, iSize, IMMEDIATE_PRIORITY, RELIABLE_ORDERED, 0, nServerNetUID, false) ;
 }
 
 void CNetWorkMgr::AddMessageDelegate(CNetMessageDelegate *pDelegate)
@@ -197,12 +221,12 @@ void CNetWorkMgr::RemoveMessageDelegate(CNetMessageDelegate *pDelegate)
 
 bool CNetWorkMgr::OnLostServer( CNetMessageDelegate* pDeleate,void* pData )
 {
-    return pDeleate->OnLostSever() ;
+    return pDeleate->OnLostSever((RakNet::Packet*)pData) ;
 }
 
 bool CNetWorkMgr::OnReciveLogicMessage( CNetMessageDelegate* pDeleate,void* pData )
 {
-    return pDeleate->OnMessage((stMsg*)pData);
+    return pDeleate->OnMessage((RakNet::Packet*)pData);
 }
 
 void CNetWorkMgr::EnumDeleagte( CNetWorkMgr* pTarget, lpfunc pFunc, void* pData )
@@ -215,11 +239,11 @@ void CNetWorkMgr::EnumDeleagte( CNetWorkMgr* pTarget, lpfunc pFunc, void* pData 
     }
 }
 
-void CNetWorkMgr::DisconnectCurServer()
+void CNetWorkMgr::DisconnectServer( RakNet::RakNetGUID& nServerNetUID )
 {
-    if ( IsConnected() )
+    //if ( IsConnected() )
     {
-        m_pNetPeer->CloseConnection(m_nCurrentServer, true) ;
+        m_pNetPeer->CloseConnection(nServerNetUID, true) ;
     }
     m_eConnectType = eConnectType_None ;
 }
