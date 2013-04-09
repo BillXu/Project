@@ -1,8 +1,9 @@
 #pragma once
 #include "ServerNetwork.h"
-#include <list>
+#include <map>
 class stDBResult;
 class CDBPlayer;
+class stMsg ;
 class CDBPlayerManager
 :public CServerNetworkDelegate
 {
@@ -15,16 +16,18 @@ public:
 	//	ePlayerType_WaitForCheck,
 	//	ePlayerType_Max,
 	//};
-	struct stAccountCheck
+	struct stAccountCheckAndRegister 
 	{
 		RakNet::RakNetGUID nFromServerID ;
 		unsigned int nTempUsrUID ;
 		std::string strAccount ;
 		std::string strPassword ;
+		std::string strCharacterName ;
+		bool bCheck ;
 	};
 
-	typedef std::list<CDBPlayer*> LIST_DBPLAYER ;
-	typedef std::list<stAccountCheck*> LIST_ACCOUNT_CHECK ;
+	typedef std::map<unsigned int,CDBPlayer*> MAP_DBPLAYER ;
+	typedef std::map<unsigned int ,stAccountCheckAndRegister*> MAP_ACCOUNT_CHECK_REGISTER ;
 public:
 	CDBPlayerManager();
 	~CDBPlayerManager();
@@ -38,13 +41,17 @@ public:
 
 	CDBPlayer* GetPlayer( unsigned int nUID);
 protected:
+	void ProcessTransferedMsg( stMsg* pMsg ,unsigned int nTargetUserUID , RakNet::RakNetGUID& nFromNetUID );
 	void OnProcessAccountCheckResult(stDBResult* pResult);
+	void OnProcessRegisterResult(stDBResult* pResult);
 	void OnProcessDBResult(stDBResult* pResult );
 	//void RemoveDBPlayer(LIST_DBPLAYER& vPlayers , CDBPlayer* pPlayer );
 	//void DeleteDBPlayer(LIST_DBPLAYER& vPlayers , CDBPlayer* pPlayer);
 	void ClearAllPlayers();
 	void ClearAccountCheck();
+public:
+	static char* s_gBuffer ;
 protected:
-	LIST_DBPLAYER m_vPlayers ;
-	LIST_ACCOUNT_CHECK m_vAccountChecks ;
+	MAP_DBPLAYER m_vPlayers ;
+	MAP_ACCOUNT_CHECK_REGISTER m_vAccountChecks ;
 };

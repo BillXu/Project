@@ -16,8 +16,12 @@ public:
 	virtual bool OnMessage( RakNet::Packet* pMsg );
 	virtual bool OnLostSever(RakNet::Packet* pMsg);
 	void SendMsgToGateServer( unsigned int nUserUID , const char* pBuffer , int nLen, bool bBroadcast = false );
-	void SendMsgToDBServer( unsigned int nUserUID , const char* pBuffer , int nLen );
+	void SendMsgToDBServer( const char* pBuffer , int nLen );
 	CPlayer* GetPlayerByUserUID( unsigned int nUserUID );
+protected:
+	void ProcessMsgFromDBServer(stMsg* pMessage ,RakNet::Packet* pMsg );
+	void processMsgFromGateServer(stMsg* pMessage ,RakNet::Packet* pMsg );
+	void RemoveDisconectedPeer( CPlayer* ) ;
 public:
 	static char* s_pBuffer ;
 protected:

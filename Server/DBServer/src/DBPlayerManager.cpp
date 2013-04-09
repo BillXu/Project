@@ -6,10 +6,16 @@
 #include "DBRequestFlags.h"
 #include "DataBaseThread.h"
 #include "LogManager.h"
+#include "MessageDefine.h"
+char* CDBPlayerManager::s_gBuffer = NULL ;
 CDBPlayerManager::CDBPlayerManager()
 {
 	ClearAllPlayers();
 	ClearAccountCheck();
+	if ( s_gBuffer == NULL )
+	{
+		s_gBuffer = new char[MAX_MSG_BUFFER_LEN] ;
+	}
 }
 
 CDBPlayerManager::~CDBPlayerManager()
@@ -24,15 +30,16 @@ bool CDBPlayerManager::OnMessage( RakNet::Packet* pData )
 	 stMsg* pMsg = (stMsg*)pData->data ;
 	 if ( pMsg->usMsgType == MSG_LOGIN_CHECK )
 	 {
-		 stMsg2DBLoginCheck* pMsgCheck = (stMsg2DBLoginCheck*)pMsg ;
-		 stAccountCheck* pAccountCheck = new stAccountCheck ;
+		 stMsgGM2DBLoginCheck* pMsgCheck = (stMsgGM2DBLoginCheck*)pMsg ;
+		 stAccountCheckAndRegister* pAccountCheck = new stAccountCheckAndRegister ;
 		 m_vAccountChecks.push_back(pAccountCheck) ;
-		 pAccountCheck->nTempUsrUID = pMsgCheck->nTempUID;
+		 pAccountCheck->bCheck = true ;
+		 pAccountCheck->nTempUsrUID = pMsgCheck->nTargetUserUID;
 		 pAccountCheck->nFromServerID = pData->guid ;
 		
 		 // parse account 
 		 char pAccount[MAX_LEN_ACCOUNT] = { 0 } ;
-		 char* pBuffer = (char*)((char*)pData->data + sizeof(stMsg2DBLoginCheck));
+		 char* pBuffer = (char*)((char*)pData->data + sizeof(stMsgGM2DBLoginCheck));
 		 
 		 memcpy(pAccount,pBuffer,pMsgCheck->nAccountLen) ;
 		 pBuffer += pMsgCheck->nAccountLen ;
@@ -69,6 +76,12 @@ bool CDBPlayerManager::OnMessage( RakNet::Packet* pData )
 			pTargetPlayer = new CDBPlayer(pData->guid);
 			m_vPlayers.push_back(pTargetPlayer) ;
 		}
+	 }
+	 else if ( MSG_TRANSER_DATA == pMsg->usMsgType )
+	 {
+		 stMsgTransferData* pMsgTransfer = (stMsgTransferData*)pMsg ;
+		 stMsg* pTargetMessage = (stMsg*)(pData->data + sizeof(stMsgTransferData));
+		 ProcessTransferedMsg(pTargetMessage,pMsgTransfer->nTargetPeerUID,pData->guid) ;
 	 }
 	
 	 if ( pTargetPlayer )
@@ -133,6 +146,10 @@ void CDBPlayerManager::OnProcessDBResult(stDBResult* pResult )
 	{
 		OnProcessAccountCheckResult(pResult);
 	}
+	else if ( eDBRequest_Register == pResult->nRequestFlag )
+	{
+		OnProcessRegisterResult(pResult);
+	}
 	else
 	{
 		CDBPlayer* pPlayer = GetPlayer(pResult->nRequestUID) ;
@@ -147,18 +164,92 @@ void CDBPlayerManager::OnProcessDBResult(stDBResult* pResult )
 	}
 }
 
+void CDBPlayerManager::ProcessTransferedMsg( stMsg* pMsg ,unsigned int nTargetUserUID , RakNet::RakNetGUID& nFromNetUID)
+{
+	switch ( pMsg->usMsgType )
+	{
+	case MSG_REGISTE:
+		{
+			stMsgRegister* pRealMsg = (stMsgRegister*)pMsg ;
+			stAccountCheckAndRegister* pAccountCheck = new stAccountCheckAndRegister ;
+			m_vAccountChecks[nTargetUserUID] = pAccountCheck  ;
+			pAccountCheck->bCheck = false ;
+			pAccountCheck->nTempUsrUID = nTargetUserUID;
+			pAccountCheck->nFromServerID = nFromNetUID ;
+
+			// parse account 
+			char pAccount[MAX_LEN_ACCOUNT] = { 0 } ;
+			char* pBuffer = (char*)((char*)pMsg + sizeof(stMsgRegister));
+
+			memcpy(pAccount,pBuffer,pRealMsg->nAccountLen) ;
+			pBuffer += pRealMsg->nAccountLen ;
+
+			// password
+			char pPassword [MAX_LEN_PASSWORD] = { 0 } ;
+			memcpy(pPassword,pBuffer,pRealMsg->nPaswordLen) ;
+			pBuffer += pRealMsg->nPaswordLen ;
+
+			// parse name
+			char pCharacterName[MAX_LEN_CHARACTER_NAME] = { 0 };
+			memcpy(pCharacterName,pBuffer,pRealMsg->nCharacterNameLen) ;
+
+			pAccountCheck->strAccount = pAccount;
+			pAccountCheck->strPassword = pPassword ;
+			pAccountCheck->strCharacterName = pCharacterName ;
+			
+			// send a DBRequest ;
+			stDBRequest* pRequest = CDBRequestQueue::SharedDBRequestQueue()->GetReserveRequest();
+			pRequest->eType = eRequestType_Add ;
+			pRequest->nRequestUID = pAccountCheck->nTempUsrUID;
+			pRequest->nRequestFlag = eDBRequest_Register;
+
+			// format sql String ;
+			pRequest->nSqlBufferLen = sprintf(pRequest->pSqlBuffer,"INSERT INTO `gamedb`.`account` (`Account`, `Password`, `CharacterName`) VALUES ('%s', '%s', '%s');",pAccount,pPassword,pCharacterName ) ;
+			CDBRequestQueue::SharedDBRequestQueue()->PushRequest(pRequest) ;
+		}
+		break;
+	default:
+		break; 
+	}
+}
+
+void CDBPlayerManager::OnProcessRegisterResult(stDBResult* pResult)
+{
+	stAccountCheckAndRegister* pAcountCheck = NULL ;
+	MAP_ACCOUNT_CHECK_REGISTER::iterator iter = m_vAccountChecks.find(pResult->nRequestUID);
+	if ( iter != m_vAccountChecks.end() )
+	{
+		pAcountCheck = iter->second ;
+	}
+
+	if ( !pAcountCheck )
+	{
+		CLogMgr::SharedLogMgr()->ErrorLog( "Can not find Account register tempID = %d",pResult->nRequestUID ) ;
+		delete pAcountCheck ;
+		return ;
+	}
+	
+	// send msg to gameServer 
+	stMsgTransferData msg ;
+	msg.cSysIdentifer = ID_MSG_DB2GM ;
+	msg.nTargetPeerUID = pAcountCheck->nTempUsrUID ;
+
+	stMsgRegisterRet msgReal ;
+	msgReal.bSuccess = pResult->nAffectRow >= 1 ;
+	if ( msgReal.bSuccess == false )
+		msgReal.nErrCode = 1 ;
+	memcpy(s_gBuffer,(void*)&msg,sizeof(msg)) ;
+	memcpy(s_gBuffer + sizeof(msg),(void*)&msgReal,sizeof(msgReal)) ;
+	CServerNetwork::SharedNetwork()->SendMsg((char*)s_gBuffer,sizeof(msgReal) + sizeof(msg),pAcountCheck->nFromServerID,false);
+}
+
 void CDBPlayerManager::OnProcessAccountCheckResult(stDBResult* pResult)
 {
-	LIST_ACCOUNT_CHECK::iterator iter = m_vAccountChecks.begin();
-	stAccountCheck* pAcountCheck = NULL ;
-	for ( ; iter != m_vAccountChecks.end(); ++iter )
+	stAccountCheckAndRegister* pAcountCheck = NULL ;
+	MAP_ACCOUNT_CHECK_REGISTER::iterator iter = m_vAccountChecks.find(pResult->nRequestUID);
+	if ( iter != m_vAccountChecks.end() )
 	{
-		pAcountCheck = *iter ;
-		if ( pAcountCheck != NULL && pAcountCheck->nTempUsrUID == pResult->nRequestUID )
-		{
-			m_vAccountChecks.erase(iter) ;
-			break; ;
-		}
+		pAcountCheck = iter->second ;
 	}
 
 	if ( !pAcountCheck )

@@ -43,48 +43,93 @@ CPlayerManager::~CPlayerManager()
 bool CPlayerManager::OnMessage( RakNet::Packet* pMsg )
 {
 	stMsg* pMessage = (stMsg*)pMsg->data ;
-	if ( pMessage->cSysIdentifer ==  ID_MSG_GA2GM && pMessage->usMsgType == MSG_VERIFY_GA )
+	if ( pMessage->cSysIdentifer ==  ID_MSG_GA2GM  )
 	{
-		m_bGateServerConnected = true ;
-		m_nGateServerNetUID = pMsg->guid ;
-		CLogMgr::SharedLogMgr()->PrintLog("Success connected to gate Server : %s ", m_nGateServerNetUID.ToString());
-		return true ;
-	}
-	else if ( pMessage->cSysIdentifer == ID_MSG_DB2GM && MSG_VERIFY_DB == pMessage->usMsgType )
-	{
-		m_bDBserverConnected = true ;
-		m_nDBServerNetUID = pMsg->guid ;
-		CLogMgr::SharedLogMgr()->PrintLog("Success connected to DBServer : %s ", m_nDBServerNetUID.ToString());
-		return true ;
-	}
-	else if ( pMessage->cSysIdentifer == ID_MSG_GA2GM && MSG_TRANSER_DATA == pMessage->usMsgType )
-	{
-		stMsgTransferData* pMsgTransfer = (stMsgTransferData*)pMessage ;
-		CPlayer* pTargetPlayer = GetPlayerByUserUID(pMsgTransfer->nTargetPeerUID) ;
-		if ( !pTargetPlayer )
-		{
-			CLogMgr::SharedLogMgr()->ErrorLog( "Can not find target Player, so message From Gate will not be processed" );
-			return true ;
-		}
-		stMsg* pTargetMessage = (stMsg*)(pMsg->data + sizeof(stMsgTransferData));
-		pTargetPlayer->OnMessage(pTargetMessage);
+		processMsgFromGateServer(pMessage,pMsg) ;
 	}
 	else if ( ID_MSG_DB2GM == pMessage->cSysIdentifer )
 	{
-		stMsgDB2GM* pMsgFromDB = (stMsgDB2GM*)pMessage ;
-		CPlayer* pTargetPlayer = GetPlayerByUserUID(pMsgFromDB->nTargetUserUID ) ;
-		if ( !pTargetPlayer )
-		{
-			CLogMgr::SharedLogMgr()->ErrorLog( "Can not find target Player, so message From DBServer will not be processed" );
-			return true ;
-		}
-		pTargetPlayer->OnMessage(pMessage);
+		ProcessMsgFromDBServer(pMessage,pMsg) ;
 	}
 	else
 	{
 		CLogMgr::SharedLogMgr()->ErrorLog( "Receive Unknown message cSysIdentifer = %d ,usMsgType = %d ",pMessage->cSysIdentifer,pMessage->usMsgType ) ;
 	}
 	return false ;
+}
+
+void CPlayerManager::ProcessMsgFromDBServer(stMsg* pMessage ,RakNet::Packet* pMsg  )
+{
+	if ( MSG_VERIFY_DB == pMessage->usMsgType )
+	{
+		m_bDBserverConnected = true ;
+		m_nDBServerNetUID = pMsg->guid ;
+		CLogMgr::SharedLogMgr()->PrintLog("Success connected to DBServer : %s ", m_nDBServerNetUID.ToString());
+		return  ;
+	}
+	else if ( MSG_TRANSER_DATA == pMessage->usMsgType ) // game server don't prcess tranfer msg from DBServer ;
+	{
+		stMsgTransferData* pMsgTransfer = (stMsgTransferData*)pMessage ;
+		stMsg* pTargetMessage = (stMsg*)(pMsg->data + sizeof(stMsgTransferData));
+		pMsgTransfer->cSysIdentifer = ID_MSG_GM2GA ;
+		SendMsgToGateServer(pMsgTransfer->nTargetPeerUID,(char*)pMsg->data,pMsg->length) ;
+	}
+	else
+	{
+		stMsgDB2GM* pMsgFromDB = (stMsgDB2GM*)pMessage ;
+		CPlayer* pTargetPlayer = GetPlayerByUserUID(pMsgFromDB->nTargetUserUID ) ;
+		if ( !pTargetPlayer )
+		{
+			CLogMgr::SharedLogMgr()->ErrorLog( "Can not find target Player, so message From DBServer will not be processed" );
+			return ;
+		}
+		pTargetPlayer->OnMessage(pMessage);
+	}
+}
+
+void CPlayerManager::processMsgFromGateServer(stMsg* pMessage ,RakNet::Packet* pMsg  )
+{
+	if ( pMessage->usMsgType == MSG_VERIFY_GA )
+	{
+		m_bGateServerConnected = true ;
+		m_nGateServerNetUID = pMsg->guid ;
+		CLogMgr::SharedLogMgr()->PrintLog("Success connected to gate Server : %s ", m_nGateServerNetUID.ToString());
+		return  ;
+	}
+	else if ( MSG_TRANSER_DATA == pMessage->usMsgType )
+	{
+		stMsgTransferData* pMsgTransfer = (stMsgTransferData*)pMessage ;
+		stMsg* pTargetMessage = (stMsg*)(pMsg->data + sizeof(stMsgTransferData));
+		// special msg ; game server don't process , just send it to DBServer ;
+		if ( pTargetMessage->usMsgType == MSG_REGISTE )
+		{
+			SendMsgToDBServer((char*)pMsg->data,pMsg->length) ; 
+			return  ;
+		}
+		// special msg 
+		CPlayer* pTargetPlayer = GetPlayerByUserUID(pMsgTransfer->nTargetPeerUID) ;
+		if ( !pTargetPlayer )
+		{
+			CLogMgr::SharedLogMgr()->ErrorLog( "Can not find target Player, so message From Gate will not be processed" );
+			return  ;
+		}
+		pTargetPlayer->OnMessage(pTargetMessage);
+	}
+	else if (MSG_DISCONNECT == pMessage->usMsgType)
+	{
+		stMsg2GMPeerDisconnect* pRealMsg = (stMsg2GMPeerDisconnect*)pMessage ;
+		CPlayer* pTargetPlayer = GetPlayerByUserUID(pRealMsg->nPeerUID) ;
+		if ( !pTargetPlayer )
+		{
+			CLogMgr::SharedLogMgr()->ErrorLog( "Can not find target Player, so Disconnected message From Gate will not be processed" );
+			return  ;
+		}
+		pTargetPlayer->OnDisconnect();
+		RemoveDisconectedPeer( pTargetPlayer );
+		// tell DBserver this peer discannected ;
+		pRealMsg->cSysIdentifer = ID_MSG_GM2DB ;
+		SendMsgToDBServer((char*)pMsg->data,pMsg->length) ;
+	}
 }
 
 bool CPlayerManager::OnLostSever(RakNet::Packet* pMsg)
@@ -134,9 +179,14 @@ void CPlayerManager::SendMsgToGateServer( unsigned int nUserUID , const char* pB
 	CNetWorkMgr::SharedNetWorkMgr()->SendMsg(s_pBuffer,nLen + sizeof(stMsgTransferData),m_nGateServerNetUID) ;
 }
 
-void CPlayerManager::SendMsgToDBServer( unsigned int nUserUID , const char* pBuffer , int nLen )
+void CPlayerManager::SendMsgToDBServer( const char* pBuffer , int nLen )
 {
-
+	if ( m_bDBserverConnected == false )
+	{
+		CLogMgr::SharedLogMgr()->ErrorLog("can not send msg to gate , because DBServer is not connecting !") ;
+		return ;
+	}
+	CNetWorkMgr::SharedNetWorkMgr()->SendMsg(pBuffer,nLen,m_nDBServerNetUID) ;
 }
 
 CPlayer* CPlayerManager::GetPlayerByUserUID( unsigned int nUserUID )
@@ -145,4 +195,9 @@ CPlayer* CPlayerManager::GetPlayerByUserUID( unsigned int nUserUID )
 	if ( iter != m_vAllActivePlayers.end())
 		return iter->second ;
 	return NULL ;
+}
+
+void CPlayerManager::RemoveDisconectedPeer( CPlayer* pPlayer )
+{
+
 }

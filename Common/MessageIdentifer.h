@@ -13,13 +13,18 @@ enum
 enum eMsgType 
 {
 	MSG_NONE,
-	MSG_LOGIN_CHECK,  // LOGIN WITH ACCOUNT AND PASSWORD 
-	MSG_LOGIN_DIRECT,  // LOGIN WITH USERUID 
+	// the msg title used between servers 
+	MSG_SERVERS_USE,
 	MSG_VERIFY_GMS,  // verify that is game server ;
 	MSG_VERIFY_CLIENT, // verify that is client ;
 	MSG_VERIFY_GA, // verify that is gate server 
 	MSG_VERIFY_DB,  // verify that is DBserver ;
-	MSG_TRANSER_DATA, 
+	MSG_TRANSER_DATA, // tranfer data between servers ;
 	MSG_DISCONNECT,
+	MSG_SERVERS_USE_END,
+	// msg title used between server and client ;
+	MSG_LOGIN_CHECK,  // LOGIN WITH ACCOUNT AND PASSWORD 
+	MSG_LOGIN_DIRECT,  // LOGIN WITH USERUID 
+	MSG_REGISTE,
 	MSG_REQUEST_BASE_DATA,
 };
