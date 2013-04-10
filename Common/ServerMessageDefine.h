@@ -20,31 +20,12 @@ struct stMsgDB2GM
 	unsigned int nTargetUserUID;
 };
 
-struct stMsgGM2DBLoginCheck
-:public stMsgGM2DB
-{
-	char* pAccount ;
-	char* pPassword ;
-	unsigned short nAccountLen ;
-	unsigned short nPasswordLen ;
-public:
-	stMsgGM2DBLoginCheck(){ usMsgType = MSG_LOGIN_CHECK ; }
-};
-
-struct stMsgDB2GMLoginCheck
-:public stMsgDB2GM
-{
-	short nRetFlag ;  // 0 success , 1 account don't exsit , 2 password error ;
-public:
-	stMsgDB2GMLoginCheck(){ usMsgType = MSG_LOGIN_CHECK ; }
-};
-
 //-----------------------------------------------
 // message between GateServer and Gamesever ;
-struct stMsg2GMPeerDisconnect
+struct stMsgPeerDisconnect
 	:public stMsg
 {
-	stMsg2GMPeerDisconnect()
+	stMsgPeerDisconnect()
 	{
 		cSysIdentifer = ID_MSG_GA2GM ;
 		usMsgType = MSG_DISCONNECT;

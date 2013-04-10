@@ -30,13 +30,6 @@ void CDBPlayer::OnMessage(stMsg* pMsg )
 {
 	switch ( pMsg->usMsgType )
 	{
-	case MSG_LOGIN_DIRECT:
-		{
-			stMsg2DBDirectLogin* pReallMsg = (stMsg2DBDirectLogin*)pMsg ;
-			m_nUserUID = pReallMsg->UserUID ;
-			ReadAllFromDB();
-		}
-		break;
 	default:
 		break; ;
 	}

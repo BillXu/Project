@@ -21,12 +21,40 @@ struct stMsgRegister
 	unsigned char nAccountLen ;
 	unsigned char nPaswordLen ;
 	unsigned char nCharacterNameLen ;
-};
+	unsigned char nAccountType ;  // 0 visitor login register , 1 ordinary register ,2 SINA WEIBO login register  3 QQ login register .   
+} ;
 
 struct stMsgRegisterRet
 	:public stMsg
 {
 	stMsgRegisterRet(){ cSysIdentifer = ID_MSG_S2C; usMsgType = MSG_REGISTE ; }
+	unsigned char nAccountType ;  // 0 visitor login register , 1 ordinary register ,2 SINA WEIBO login register  3 QQ login register .   
 	bool bSuccess ; // 0 , success 
 	char nErrCode ; // 1 , accound repeated ;
+	char* pAccount;  // used when visitor register
+	//char* pPasswrold; // used when visitor register
+	unsigned char nAccountLen ; // used when visitor register
+	//unsigned char nPaswordLen ; // used when visitor register  // Password = pAccount ;
+};
+
+struct stMsgLogin
+	:public stMsg
+{
+	stMsgLogin(){ cSysIdentifer = ID_MSG_C2S ; usMsgType = MSG_LOGIN; }
+	char* pAccount;
+	char* pPassword;
+	unsigned char nAccountLen ;
+	unsigned char nPaswordLen ;
+};
+
+struct stMsgLoginRet
+	:public stMsg
+{
+public:
+	stMsgLoginRet()
+	{
+		cSysIdentifer = ID_MSG_S2C ; usMsgType = MSG_LOGIN;
+	}
+	bool bOk ; 
+	unsigned char nRetFlag ;  // 1 account don't exsit , 2 password error ;
 };

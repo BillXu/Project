@@ -24,6 +24,7 @@ public:
 		std::string strPassword ;
 		std::string strCharacterName ;
 		bool bCheck ;
+		unsigned char nAccountType ;  // [used when register ] 0 visitor login register , 1 ordinary register ,2 SINA WEIBO login register  3 QQ login register .  
 	};
 
 	typedef std::map<unsigned int,CDBPlayer*> MAP_DBPLAYER ;

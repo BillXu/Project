@@ -101,7 +101,7 @@ void CPlayerManager::processMsgFromGateServer(stMsg* pMessage ,RakNet::Packet* p
 		stMsgTransferData* pMsgTransfer = (stMsgTransferData*)pMessage ;
 		stMsg* pTargetMessage = (stMsg*)(pMsg->data + sizeof(stMsgTransferData));
 		// special msg ; game server don't process , just send it to DBServer ;
-		if ( pTargetMessage->usMsgType == MSG_REGISTE )
+		if ( pTargetMessage->usMsgType == MSG_REGISTE || MSG_LOGIN == pTargetMessage->usMsgType )
 		{
 			SendMsgToDBServer((char*)pMsg->data,pMsg->length) ; 
 			return  ;
@@ -117,7 +117,7 @@ void CPlayerManager::processMsgFromGateServer(stMsg* pMessage ,RakNet::Packet* p
 	}
 	else if (MSG_DISCONNECT == pMessage->usMsgType)
 	{
-		stMsg2GMPeerDisconnect* pRealMsg = (stMsg2GMPeerDisconnect*)pMessage ;
+		stMsgPeerDisconnect* pRealMsg = (stMsgPeerDisconnect*)pMessage ;
 		CPlayer* pTargetPlayer = GetPlayerByUserUID(pRealMsg->nPeerUID) ;
 		if ( !pTargetPlayer )
 		{

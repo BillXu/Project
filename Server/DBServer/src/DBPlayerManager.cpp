@@ -28,62 +28,27 @@ bool CDBPlayerManager::OnMessage( RakNet::Packet* pData )
 {
      CDBPlayer* pTargetPlayer = NULL ;
 	 stMsg* pMsg = (stMsg*)pData->data ;
-	 if ( pMsg->usMsgType == MSG_LOGIN_CHECK )
-	 {
-		 stMsgGM2DBLoginCheck* pMsgCheck = (stMsgGM2DBLoginCheck*)pMsg ;
-		 stAccountCheckAndRegister* pAccountCheck = new stAccountCheckAndRegister ;
-		 m_vAccountChecks.push_back(pAccountCheck) ;
-		 pAccountCheck->bCheck = true ;
-		 pAccountCheck->nTempUsrUID = pMsgCheck->nTargetUserUID;
-		 pAccountCheck->nFromServerID = pData->guid ;
-		
-		 // parse account 
-		 char pAccount[MAX_LEN_ACCOUNT] = { 0 } ;
-		 char* pBuffer = (char*)((char*)pData->data + sizeof(stMsgGM2DBLoginCheck));
-		 
-		 memcpy(pAccount,pBuffer,pMsgCheck->nAccountLen) ;
-		 pBuffer += pMsgCheck->nAccountLen ;
-		 
-		 // password
-		 char pPassword [MAX_LEN_PASSWORD] = { 0 } ;
-		 memcpy(pPassword,pBuffer,pMsgCheck->nPasswordLen) ;
-
-		 pAccountCheck->strAccount = pAccount;
-		 pAccountCheck->strPassword = pPassword ;
-
-		 // send a DBRequest ;
-		 stDBRequest* pRequest = CDBRequestQueue::SharedDBRequestQueue()->GetReserveRequest();
-		 pRequest->eType = eRequestType_Select ;
-		 pRequest->nRequestUID = pAccountCheck->nTempUsrUID;
-		 pRequest->nRequestFlag = eDBRequest_AccountCheck;
-
-		 // format sql String ;
-		 char pAccountEString[MAX_LEN_ACCOUNT * 2 + 1 ] = {0} ;
-		 CDataBaseThread::SharedDBThread()->EscapeString(pAccountEString,pAccount,pMsgCheck->nAccountLen + 1 ) ;
-		 pRequest->nSqlBufferLen = sprintf(pRequest->pSqlBuffer,"SELECT * FROM Account WHERE Account = '%s'",pAccountEString ) ;
-		 CDBRequestQueue::SharedDBRequestQueue()->PushRequest(pRequest) ;
-	 }
-	 else if ( MSG_LOGIN_DIRECT == pMsg->usMsgType )
-	 {
-		stMsg2DBDirectLogin* pRealMsg = (stMsg2DBDirectLogin*)pMsg;
-		pTargetPlayer = GetPlayer(pRealMsg->UserUID) ;
-		if ( pTargetPlayer )
-		{
-			pTargetPlayer->SetFromServerGUID(pData->guid) ;
-		}
-		else
-		{
-			pTargetPlayer = new CDBPlayer(pData->guid);
-			m_vPlayers.push_back(pTargetPlayer) ;
-		}
-	 }
-	 else if ( MSG_TRANSER_DATA == pMsg->usMsgType )
+	 if ( MSG_TRANSER_DATA == pMsg->usMsgType )
 	 {
 		 stMsgTransferData* pMsgTransfer = (stMsgTransferData*)pMsg ;
 		 stMsg* pTargetMessage = (stMsg*)(pData->data + sizeof(stMsgTransferData));
 		 ProcessTransferedMsg(pTargetMessage,pMsgTransfer->nTargetPeerUID,pData->guid) ;
+		 return false;
 	 }
-	
+	 else if ( MSG_DISCONNECT == pMsg->usMsgType )
+	 {
+		stMsgPeerDisconnect* pRealMsg = (stMsgPeerDisconnect*)pMsg ;
+		pTargetPlayer = GetPlayer(pRealMsg->nPeerUID) ;
+		pTargetPlayer->OnDisconnected();
+		// remove this player ;
+		assert(0) ;
+		return false ;
+	 }
+	 else
+	 {
+		 stMsgGM2DB* pRealMsg = (stMsgGM2DB*)pMsg ;
+		 pTargetPlayer = GetPlayer(pRealMsg->nTargetUserUID) ;
+	 }
 	 if ( pTargetPlayer )
 		pTargetPlayer->OnMessage(pMsg) ;
 	 return false ;
@@ -108,6 +73,7 @@ void CDBPlayerManager::OnPeerDisconnected(RakNet::RakNetGUID& nPeerDisconnected,
 			pPlayer->OnDisconnected();
 		}
 	}
+	// remove players ;
 }
 
 void CDBPlayerManager::ProcessDBResults()
@@ -176,18 +142,31 @@ void CDBPlayerManager::ProcessTransferedMsg( stMsg* pMsg ,unsigned int nTargetUs
 			pAccountCheck->bCheck = false ;
 			pAccountCheck->nTempUsrUID = nTargetUserUID;
 			pAccountCheck->nFromServerID = nFromNetUID ;
+			pAccountCheck->nAccountType = pRealMsg->nAccountType ;
 
-			// parse account 
-			char pAccount[MAX_LEN_ACCOUNT] = { 0 } ;
+			
 			char* pBuffer = (char*)((char*)pMsg + sizeof(stMsgRegister));
 
-			memcpy(pAccount,pBuffer,pRealMsg->nAccountLen) ;
-			pBuffer += pRealMsg->nAccountLen ;
-
-			// password
+			char pAccount[MAX_LEN_ACCOUNT] = { 0 } ;
 			char pPassword [MAX_LEN_PASSWORD] = { 0 } ;
-			memcpy(pPassword,pBuffer,pRealMsg->nPaswordLen) ;
-			pBuffer += pRealMsg->nPaswordLen ;
+
+			if ( pAccountCheck->nAccountType != 0 ) 
+			{
+				// parse account 
+				memcpy(pAccount,pBuffer,pRealMsg->nAccountLen) ;
+				pBuffer += pRealMsg->nAccountLen ;
+
+				// password
+				memcpy(pPassword,pBuffer,pRealMsg->nPaswordLen) ;
+				pBuffer += pRealMsg->nPaswordLen ;
+			}
+			else 
+			{
+				uint64_t tta = RakNet::RakPeerInterface::Get64BitUniqueRandomNumber();
+				sprintf(pAccount,"%l64du",tta);
+				sprintf(pPassword,"%l64du",tta);
+			}
+
 
 			// parse name
 			char pCharacterName[MAX_LEN_CHARACTER_NAME] = { 0 };
@@ -204,10 +183,46 @@ void CDBPlayerManager::ProcessTransferedMsg( stMsg* pMsg ,unsigned int nTargetUs
 			pRequest->nRequestFlag = eDBRequest_Register;
 
 			// format sql String ;
-			pRequest->nSqlBufferLen = sprintf(pRequest->pSqlBuffer,"INSERT INTO `gamedb`.`account` (`Account`, `Password`, `CharacterName`) VALUES ('%s', '%s', '%s');",pAccount,pPassword,pCharacterName ) ;
+			pRequest->nSqlBufferLen = sprintf(pRequest->pSqlBuffer,"INSERT INTO `gamedb`.`account` (`Account`, `Password`, `CharacterName`, `AcountType`) VALUES ('%s', '%s', '%s', '%d');",pAccount,pPassword,pCharacterName,pAccountCheck->nAccountType ) ;
 			CDBRequestQueue::SharedDBRequestQueue()->PushRequest(pRequest) ;
 		}
 		break;
+	case MSG_LOGIN:
+		{
+			stMsgLogin* pRealMsg = (stMsgLogin*)pMsg ;
+			stAccountCheckAndRegister* pAccountCheck = new stAccountCheckAndRegister ;
+			m_vAccountChecks[nTargetUserUID] = pAccountCheck  ;
+			pAccountCheck->bCheck = true ;
+			pAccountCheck->nTempUsrUID = nTargetUserUID;
+			pAccountCheck->nFromServerID = nFromNetUID ;
+
+			// parse account 
+			char pAccount[MAX_LEN_ACCOUNT] = { 0 } ;
+			char* pBuffer = (char*)((char*)pMsg + sizeof(stMsgLogin));
+
+			memcpy(pAccount,pBuffer,pRealMsg->nAccountLen) ;
+			pBuffer += pRealMsg->nAccountLen ;
+
+			// password
+			char pPassword [MAX_LEN_PASSWORD] = { 0 } ;
+			memcpy(pPassword,pBuffer,pRealMsg->nPaswordLen) ;
+
+			pAccountCheck->strAccount = pAccount;
+			pAccountCheck->strPassword = pPassword ;
+
+			// send a DBRequest ;
+			stDBRequest* pRequest = CDBRequestQueue::SharedDBRequestQueue()->GetReserveRequest();
+			pRequest->eType = eRequestType_Select ;
+			pRequest->nRequestUID = pAccountCheck->nTempUsrUID;
+			pRequest->nRequestFlag = eDBRequest_AccountCheck;
+
+			// format sql String ;
+			char pAccountEString[MAX_LEN_ACCOUNT * 2 + 1 ] = {0} ;
+			CDataBaseThread::SharedDBThread()->EscapeString(pAccountEString,pAccount,pRealMsg->nAccountLen + 1 ) ;
+			pRequest->nSqlBufferLen = sprintf(pRequest->pSqlBuffer,"SELECT * FROM Account WHERE Account = '%s'",pAccountEString ) ;
+			CDBRequestQueue::SharedDBRequestQueue()->PushRequest(pRequest) ;
+		}
+		break; 
 	default:
 		break; 
 	}
@@ -225,6 +240,7 @@ void CDBPlayerManager::OnProcessRegisterResult(stDBResult* pResult)
 	if ( !pAcountCheck )
 	{
 		CLogMgr::SharedLogMgr()->ErrorLog( "Can not find Account register tempID = %d",pResult->nRequestUID ) ;
+		m_vAccountChecks.erase(iter) ;
 		delete pAcountCheck ;
 		return ;
 	}
@@ -236,11 +252,32 @@ void CDBPlayerManager::OnProcessRegisterResult(stDBResult* pResult)
 
 	stMsgRegisterRet msgReal ;
 	msgReal.bSuccess = pResult->nAffectRow >= 1 ;
+	msgReal.nAccountType = pAcountCheck->nAccountType ;
+	msgReal.nAccountLen = strlen(pAcountCheck->strAccount.c_str());
 	if ( msgReal.bSuccess == false )
+	{
 		msgReal.nErrCode = 1 ;
+#ifdef DEBUG
+		if (msgReal.nAccountType == 0 )
+		{
+			CLogMgr::SharedLogMgr()->ErrorLog("what a pity , visitor login register account repeated ");
+		}
+#endif
+	}
+	unsigned short iLenStart = 0 ;
 	memcpy(s_gBuffer,(void*)&msg,sizeof(msg)) ;
-	memcpy(s_gBuffer + sizeof(msg),(void*)&msgReal,sizeof(msgReal)) ;
-	CServerNetwork::SharedNetwork()->SendMsg((char*)s_gBuffer,sizeof(msgReal) + sizeof(msg),pAcountCheck->nFromServerID,false);
+	iLenStart += sizeof(msg);
+	memcpy(s_gBuffer +iLenStart,(void*)&msgReal,sizeof(msgReal)) ;
+	iLenStart += sizeof(msgReal);
+	if ( msgReal.nAccountType == 0 )  // visitor register , send back accound and password ;
+	{
+		sprintf(s_gBuffer + iLenStart,"%s",pAcountCheck->strAccount.c_str());
+		iLenStart += msgReal.nAccountLen ;
+	}
+	CServerNetwork::SharedNetwork()->SendMsg((char*)s_gBuffer,iLenStart,pAcountCheck->nFromServerID,false);
+
+	delete pAcountCheck ;
+	m_vAccountChecks.erase(iter) ;
 }
 
 void CDBPlayerManager::OnProcessAccountCheckResult(stDBResult* pResult)
@@ -255,15 +292,17 @@ void CDBPlayerManager::OnProcessAccountCheckResult(stDBResult* pResult)
 	if ( !pAcountCheck )
 	{
 		CLogMgr::SharedLogMgr()->ErrorLog( "Can not find Account check tempID = %d",pResult->nRequestUID ) ;
+		m_vAccountChecks.erase(iter) ;
 		delete pAcountCheck ;
 		return ;
 	}
 	// if the acccound exist ;
-	stMsg2DBLoginCheckRet msgRet ;
-	msgRet.nTempUserUID = pAcountCheck->nTempUsrUID ;
+	stMsgLoginRet msgRet ;
+	//msgRet.nTempUserUID = pAcountCheck->nTempUsrUID ;
 	if ( pResult->nAffectRow <= 0 )
 	{
 		msgRet.nRetFlag = 1 ;   // account don't exsit ;
+		msgRet.bOk = false ;
 	}
 	else 
 	{
@@ -271,27 +310,36 @@ void CDBPlayerManager::OnProcessAccountCheckResult(stDBResult* pResult)
 		if ( strcmp(pRealPssword,pAcountCheck->strPassword.c_str()))
 		{
 			msgRet.nRetFlag = 2 ; // password error ;
+			msgRet.bOk = false ;
 		}
 		else
 		{
+			msgRet.bOk = false ;
 			msgRet.nRetFlag = 0 ;
-			msgRet.nUserUID = pResult->vResultRows[0]->GetFiledByName("UserUID")->Value.llValue;
+			unsigned int nUserUID = pResult->vResultRows[0]->GetFiledByName("UserUID")->Value.llValue;
 			// allocate a new DBPlayer ;
-			CDBPlayer* pPlayer = GetPlayer(msgRet.nUserUID);
+			CDBPlayer* pPlayer = GetPlayer(nUserUID);
 			if ( !pPlayer )
 			{
 				pPlayer = new CDBPlayer(pAcountCheck->nFromServerID);
-				m_vPlayers.push_back(pPlayer);
+				m_vPlayers[pAcountCheck->nTempUsrUID] = pPlayer ;
 			}
 			else
 			{
 				pPlayer->SetFromServerGUID(pAcountCheck->nFromServerID) ;
 			}
-			pPlayer->OnPassAcountCheck(msgRet.nUserUID);
+			pPlayer->OnPassAcountCheck(nUserUID);
 		}
 	}
 	
-	CServerNetwork::SharedNetwork()->SendMsg( (char*)&msgRet,sizeof(msgRet),pAcountCheck->nFromServerID,false);
+	// wrap transfer msg 
+	stMsgTransferData msg ;
+	msg.cSysIdentifer = ID_MSG_DB2GM ;
+	msg.nTargetPeerUID = pAcountCheck->nTempUsrUID ;
+	memcpy(s_gBuffer,(void*)&msg,sizeof(msg)) ;
+	memcpy(s_gBuffer + sizeof(msg),(void*)&msgRet,sizeof(msgRet)) ;
+	CServerNetwork::SharedNetwork()->SendMsg( s_gBuffer,sizeof(msgRet) + sizeof(msg),pAcountCheck->nFromServerID,false);
+	m_vAccountChecks.erase(iter) ;
 	delete pAcountCheck ;
 }
 
