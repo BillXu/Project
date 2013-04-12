@@ -40,7 +40,8 @@ public:
 
 	void ProcessDBResults();
 
-	CDBPlayer* GetPlayer( unsigned int nUID);
+	CDBPlayer* GetPlayer( unsigned int nTempUID);
+	CDBPlayer* CDBPlayerManager::GetPlayerByUserUID( unsigned int nUserUID );
 protected:
 	void ProcessTransferedMsg( stMsg* pMsg ,unsigned int nTargetUserUID , RakNet::RakNetGUID& nFromNetUID );
 	void OnProcessAccountCheckResult(stDBResult* pResult);

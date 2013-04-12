@@ -55,7 +55,7 @@ void CPlayer::SendMsgToClient(const char* pBuffer, unsigned short nLen )
 
 void CPlayer::SendMsgToDBServer( const char* pBuffer, unsigned short nLen )
 {
-	CPlayerManager::SharedPlayerMgr()->SendMsgToDBServer(GetUserUID(),pBuffer,nLen) ;
+	CPlayerManager::SharedPlayerMgr()->SendMsgToDBServer(pBuffer,nLen) ;
 }
 
 void CPlayer::ProcessLogicMessage(stMsg* pMsg )

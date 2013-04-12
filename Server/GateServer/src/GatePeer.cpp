@@ -100,7 +100,7 @@ void CGatePeer::OnPeerDisconnect(CGatePeer* peer )
 	if ( peer->IsServer() == false ) // an client of this server lost connect ;
 	{
 		// send msg to tell game server that this peer disconnect ;
-		stMsg2GMPeerDisconnect msg ;
+		stMsgPeerDisconnect msg ;
 		msg.nPeerUID = peer->m_nPeerUID ;
 		CServerNetwork::SharedNetwork()->SendMsg((char*)&msg,sizeof(msg),m_nSelfNetGUID,false) ;
 		// remove client peer 

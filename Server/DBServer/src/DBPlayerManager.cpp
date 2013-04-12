@@ -39,9 +39,13 @@ bool CDBPlayerManager::OnMessage( RakNet::Packet* pData )
 	 {
 		stMsgPeerDisconnect* pRealMsg = (stMsgPeerDisconnect*)pMsg ;
 		pTargetPlayer = GetPlayer(pRealMsg->nPeerUID) ;
-		pTargetPlayer->OnDisconnected();
-		// remove this player ;
-		assert(0) ;
+		if ( !pTargetPlayer )
+		{
+			CLogMgr::SharedLogMgr()->ErrorLog("can not find the palyer to disconnect ") ;
+			return false ;
+		}
+		pTargetPlayer->OnDisconnected();  // don't remove immedetly ; 
+		CLogMgr::SharedLogMgr()->PrintLog("a player disconnected") ;
 		return false ;
 	 }
 	 else
@@ -57,6 +61,11 @@ bool CDBPlayerManager::OnMessage( RakNet::Packet* pData )
 void CDBPlayerManager::OnNewPeerConnected(RakNet::RakNetGUID& nNewPeer, RakNet::Packet* pData )
 {
 	CLogMgr::SharedLogMgr()->PrintLog("A GameServer Connected : %s ",pData->systemAddress.ToString(true));
+	// send verify msg ;
+	stMsg msg ;
+	msg.cSysIdentifer = ID_MSG_VERIFY ;
+	msg.usMsgType = MSG_VERIFY_DB ;
+	CServerNetwork::SharedNetwork()->SendMsg((char*)&msg,sizeof(msg),nNewPeer,false) ;
 }
 
 void CDBPlayerManager::OnPeerDisconnected(RakNet::RakNetGUID& nPeerDisconnected, RakNet::Packet* pData )
@@ -64,16 +73,32 @@ void CDBPlayerManager::OnPeerDisconnected(RakNet::RakNetGUID& nPeerDisconnected,
 
 	CLogMgr::SharedLogMgr()->PrintLog("A GameServer Lost : %s ",pData->systemAddress.ToString(true));
 
-	LIST_DBPLAYER::iterator iter = m_vPlayers.begin();
+	MAP_DBPLAYER::iterator iter = m_vPlayers.begin();
+	//std::list<CDBPlayer*> playersToRemove ;
 	for ( ; iter != m_vPlayers.end(); ++iter )
 	{
-		CDBPlayer* pPlayer = *iter ;
-		if ( pPlayer && pPlayer->GetState() == CDBPlayer::ePlayerState_Active )
+		CDBPlayer* pPlayer = iter->second ;
+		if ( pPlayer && pPlayer->GetState() == CDBPlayer::ePlayerState_Active && pPlayer->GetFromGameServerGUID() == nPeerDisconnected )
 		{
 			pPlayer->OnDisconnected();
+			//playersToRemove.push_back(pPlayer) ;
 		}
 	}
-	// remove players ;
+	//// remove players ;
+	//std::list<CDBPlayer*>::iterator iter_remove = playersToRemove.begin() ;
+	//for ( ; iter_remove != playersToRemove.end(); ++iter_remove )
+	//{
+	//	for ( iter = m_vPlayers.begin(); iter != m_vPlayers.end(); ++iter )
+	//	{
+	//		if ( iter->second == *iter_remove )
+	//		{
+	//			delete *iter_remove;
+	//			m_vPlayers.erase(iter);
+	//			break; 
+	//		}
+	//	}
+	//}
+	//playersToRemove.clear() ;
 }
 
 void CDBPlayerManager::ProcessDBResults()
@@ -94,13 +119,29 @@ CDBPlayer* CDBPlayerManager::GetPlayer( unsigned int nUID )
 {
 	//if ( eType < ePlayerType_None || eType >= ePlayerType_Max )
 	//	return NULL ;
-	LIST_DBPLAYER& vlist = m_vPlayers;
-	LIST_DBPLAYER::iterator iter = vlist.begin();
+	MAP_DBPLAYER& vlist = m_vPlayers;
+	MAP_DBPLAYER::iterator iter = vlist.begin();
 	CDBPlayer* pPlayer = NULL ;
 	for ( ; iter != vlist.end(); ++iter )
 	{
-		pPlayer = *iter ;
-		if ( pPlayer && pPlayer->GetUserUID() == nUID )
+		pPlayer = iter->second ;
+		if ( pPlayer && pPlayer->GetTempUID() == nUID )
+			return pPlayer ;
+	}
+	return NULL ;
+}
+
+CDBPlayer* CDBPlayerManager::GetPlayerByUserUID( unsigned int nUserUID )
+{
+	//if ( eType < ePlayerType_None || eType >= ePlayerType_Max )
+	//	return NULL ;
+	MAP_DBPLAYER& vlist = m_vPlayers;
+	MAP_DBPLAYER::iterator iter = vlist.begin();
+	CDBPlayer* pPlayer = NULL ;
+	for ( ; iter != vlist.end(); ++iter )
+	{
+		pPlayer = iter->second ;
+		if ( pPlayer && pPlayer->GetUserUID() == nUserUID )
 			return pPlayer ;
 	}
 	return NULL ;
@@ -318,7 +359,7 @@ void CDBPlayerManager::OnProcessAccountCheckResult(stDBResult* pResult)
 			msgRet.nRetFlag = 0 ;
 			unsigned int nUserUID = pResult->vResultRows[0]->GetFiledByName("UserUID")->Value.llValue;
 			// allocate a new DBPlayer ;
-			CDBPlayer* pPlayer = GetPlayer(nUserUID);
+			CDBPlayer* pPlayer = GetPlayerByUserUID(nUserUID);
 			if ( !pPlayer )
 			{
 				pPlayer = new CDBPlayer(pAcountCheck->nFromServerID);
@@ -328,7 +369,7 @@ void CDBPlayerManager::OnProcessAccountCheckResult(stDBResult* pResult)
 			{
 				pPlayer->SetFromServerGUID(pAcountCheck->nFromServerID) ;
 			}
-			pPlayer->OnPassAcountCheck(nUserUID);
+			pPlayer->OnPassAcountCheck(nUserUID,pAcountCheck->nTempUsrUID);
 		}
 	}
 	
@@ -385,22 +426,20 @@ void CDBPlayerManager::OnProcessAccountCheckResult(stDBResult* pResult)
 
 void CDBPlayerManager::ClearAllPlayers()
 {
-	LIST_DBPLAYER::iterator iter = m_vPlayers.begin();
+	MAP_DBPLAYER::iterator iter = m_vPlayers.begin();
 	for ( ; iter != m_vPlayers.end(); ++iter )
 	{
-		delete *iter ;
-		*iter = NULL ;
+		delete iter->second;
 	}
 	m_vPlayers.clear() ; 
 }
 
 void CDBPlayerManager::ClearAccountCheck()
 {
-	LIST_ACCOUNT_CHECK::iterator iter = m_vAccountChecks.begin();
+	MAP_ACCOUNT_CHECK_REGISTER::iterator iter = m_vAccountChecks.begin();
 	for ( ; iter != m_vAccountChecks.end(); ++iter )
 	{
-		delete *iter ;
-		*iter = NULL ;
+		delete iter->second;
 	}
 	m_vAccountChecks.clear() ;
 }

@@ -43,11 +43,11 @@ CPlayerManager::~CPlayerManager()
 bool CPlayerManager::OnMessage( RakNet::Packet* pMsg )
 {
 	stMsg* pMessage = (stMsg*)pMsg->data ;
-	if ( pMessage->cSysIdentifer ==  ID_MSG_GA2GM  )
+	if ( pMessage->cSysIdentifer ==  ID_MSG_GA2GM  || ( ID_MSG_VERIFY == pMessage->cSysIdentifer && pMessage->usMsgType == MSG_VERIFY_GA))
 	{
 		processMsgFromGateServer(pMessage,pMsg) ;
 	}
-	else if ( ID_MSG_DB2GM == pMessage->cSysIdentifer )
+	else if ( ID_MSG_DB2GM == pMessage->cSysIdentifer || ID_MSG_VERIFY == pMessage->cSysIdentifer && pMessage->usMsgType == MSG_VERIFY_DB )
 	{
 		ProcessMsgFromDBServer(pMessage,pMsg) ;
 	}
@@ -94,6 +94,12 @@ void CPlayerManager::processMsgFromGateServer(stMsg* pMessage ,RakNet::Packet* p
 		m_bGateServerConnected = true ;
 		m_nGateServerNetUID = pMsg->guid ;
 		CLogMgr::SharedLogMgr()->PrintLog("Success connected to gate Server : %s ", m_nGateServerNetUID.ToString());
+
+		// verify self 
+		stMsg msg ;
+		msg.cSysIdentifer = ID_MSG_VERIFY ;
+		msg.usMsgType = MSG_VERIFY_GMS ;
+		CNetWorkMgr::SharedNetWorkMgr()->SendMsg((char*)&msg,sizeof(msg),pMsg->guid) ;
 		return  ;
 	}
 	else if ( MSG_TRANSER_DATA == pMessage->usMsgType )

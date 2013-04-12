@@ -31,7 +31,8 @@ public:
 	void OnDisconnected();
 	void OnConnected();
 	unsigned int GetUserUID();
-	void OnPassAcountCheck( unsigned int nUserUID);
+	unsigned int GetTempUID(){return m_nTempUID ;}
+	void OnPassAcountCheck( unsigned int nUserUID, unsigned int nTempUID );
 	ePlayerState GetState(){ return m_eState ; }
 protected:
 	void SaveAllToDB();
@@ -40,7 +41,7 @@ protected:
 	void SetState( ePlayerState eState ){ m_eState = eState ;}
 protected:
 	stDBBaseData m_stBaseData ;
-	unsigned int m_nUserUID ;
+	unsigned int m_nUserUID ,m_nTempUID;
 	RakNet::RakNetGUID m_nFromGUID ;
 	ePlayerState m_eState ;
 };

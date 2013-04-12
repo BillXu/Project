@@ -8,6 +8,7 @@ enum
 	ID_MSG_GA2GM,
 	ID_MSG_DB2GM,
 	ID_MSG_GM2DB,
+	ID_MSG_VERIFY,
 };
 
 enum eMsgType 

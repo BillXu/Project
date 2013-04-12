@@ -48,9 +48,10 @@ void CDBPlayer::OnConnected()
 
 }
 
-void CDBPlayer::OnPassAcountCheck( unsigned int nUserUID)
+void CDBPlayer::OnPassAcountCheck(unsigned int nUserUID, unsigned int nTempUID )
 {
 	m_nUserUID = nUserUID ;
+	m_nTempUID = nTempUID ;
 	if ( m_eState = ePlayerState_Resever )
 	{
 		m_eState = ePlayerState_Active ;

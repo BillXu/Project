@@ -32,7 +32,7 @@ bool CGatePeerMgr::OnMessage( RakNet::Packet* pData )
 	}
 
 	stMsg* pMsg = (stMsg*)pData->data ;
-	if ( pMsg->cSysIdentifer == ID_MSG_GM2GA && MSG_VERIFY_GMS == pMsg->usMsgType )
+	if ( pMsg->cSysIdentifer == ID_MSG_VERIFY && MSG_VERIFY_GMS == pMsg->usMsgType )
 	{
 		// confirm this peer is game Server ;
 		iter->second->SetServer(true) ;
@@ -40,7 +40,7 @@ bool CGatePeerMgr::OnMessage( RakNet::Packet* pData )
 		CLogMgr::SharedLogMgr()->PrintLog("A GameServer Entered : %s",iter->second->GetSelfNetGUID().ToString());
 		return true;
 	}
-	else if ( pMsg->cSysIdentifer == ID_MSG_C2S && MSG_VERIFY_CLIENT == pMsg->usMsgType )
+	else if ( pMsg->cSysIdentifer == ID_MSG_VERIFY && MSG_VERIFY_CLIENT == pMsg->usMsgType )
 	{
 		AddPeerToServer(iter->second) ;
 		return true;
@@ -58,6 +58,11 @@ void CGatePeerMgr::OnNewPeerConnected(RakNet::RakNetGUID& nNewPeer, RakNet::Pack
 		Peer->Reset(GeneratePeerUID(),pData->guid) ;
 	}
 	m_vAllGatePeers[pData->guid] = Peer ;
+	// send veryfiy msg ;
+	stMsg msg ;
+	msg.cSysIdentifer = ID_MSG_VERIFY ;
+	msg.usMsgType = MSG_VERIFY_GA ;
+	CServerNetwork::SharedNetwork()->SendMsg((char*)&msg,sizeof(msg),nNewPeer,false) ;
 }
 
 void CGatePeerMgr::OnPeerDisconnected(RakNet::RakNetGUID& nPeerDisconnected, RakNet::Packet* pData )
