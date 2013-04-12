@@ -1,0 +1,359 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{26BB2684-CC5F-4DFA-AE3C-6A8532601859}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>TestClient</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+    <OutDir>../ServerBin</OutDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>../Common;../Common/NetLib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="..\Common\BaseData.cpp" />
+    <ClCompile Include="..\Common\ConfigReader.cpp" />
+    <ClCompile Include="..\Common\LogManager.cpp" />
+    <ClCompile Include="..\Common\NetLib\BitStream.cpp" />
+    <ClCompile Include="..\Common\NetLib\CCRakNetSlidingWindow.cpp" />
+    <ClCompile Include="..\Common\NetLib\CCRakNetUDT.cpp" />
+    <ClCompile Include="..\Common\NetLib\CheckSum.cpp" />
+    <ClCompile Include="..\Common\NetLib\CloudClient.cpp" />
+    <ClCompile Include="..\Common\NetLib\CloudCommon.cpp" />
+    <ClCompile Include="..\Common\NetLib\CloudServer.cpp" />
+    <ClCompile Include="..\Common\NetLib\CommandParserInterface.cpp" />
+    <ClCompile Include="..\Common\NetLib\ConnectionGraph2.cpp" />
+    <ClCompile Include="..\Common\NetLib\ConsoleServer.cpp" />
+    <ClCompile Include="..\Common\NetLib\DataCompressor.cpp" />
+    <ClCompile Include="..\Common\NetLib\DirectoryDeltaTransfer.cpp" />
+    <ClCompile Include="..\Common\NetLib\DS_BytePool.cpp" />
+    <ClCompile Include="..\Common\NetLib\DS_ByteQueue.cpp" />
+    <ClCompile Include="..\Common\NetLib\DS_HuffmanEncodingTree.cpp" />
+    <ClCompile Include="..\Common\NetLib\DS_Table.cpp" />
+    <ClCompile Include="..\Common\NetLib\DynDNS.cpp" />
+    <ClCompile Include="..\Common\NetLib\EmailSender.cpp" />
+    <ClCompile Include="..\Common\NetLib\EncodeClassName.cpp" />
+    <ClCompile Include="..\Common\NetLib\EpochTimeToString.cpp" />
+    <ClCompile Include="..\Common\NetLib\FileList.cpp" />
+    <ClCompile Include="..\Common\NetLib\FileListTransfer.cpp" />
+    <ClCompile Include="..\Common\NetLib\FileOperations.cpp" />
+    <ClCompile Include="..\Common\NetLib\FormatString.cpp" />
+    <ClCompile Include="..\Common\NetLib\FullyConnectedMesh2.cpp" />
+    <ClCompile Include="..\Common\NetLib\Getche.cpp" />
+    <ClCompile Include="..\Common\NetLib\Gets.cpp" />
+    <ClCompile Include="..\Common\NetLib\GetTime.cpp" />
+    <ClCompile Include="..\Common\NetLib\gettimeofday.cpp" />
+    <ClCompile Include="..\Common\NetLib\GridSectorizer.cpp" />
+    <ClCompile Include="..\Common\NetLib\HTTPConnection.cpp" />
+    <ClCompile Include="..\Common\NetLib\IncrementalReadInterface.cpp" />
+    <ClCompile Include="..\Common\NetLib\Itoa.cpp" />
+    <ClCompile Include="..\Common\NetLib\LinuxStrings.cpp" />
+    <ClCompile Include="..\Common\NetLib\LocklessTypes.cpp" />
+    <ClCompile Include="..\Common\NetLib\LogCommandParser.cpp" />
+    <ClCompile Include="..\Common\NetLib\MessageFilter.cpp" />
+    <ClCompile Include="..\Common\NetLib\NatPunchthroughClient.cpp" />
+    <ClCompile Include="..\Common\NetLib\NatPunchthroughServer.cpp" />
+    <ClCompile Include="..\Common\NetLib\NatTypeDetectionClient.cpp" />
+    <ClCompile Include="..\Common\NetLib\NatTypeDetectionCommon.cpp" />
+    <ClCompile Include="..\Common\NetLib\NatTypeDetectionServer.cpp" />
+    <ClCompile Include="..\Common\NetLib\NetworkIDManager.cpp" />
+    <ClCompile Include="..\Common\NetLib\NetworkIDObject.cpp" />
+    <ClCompile Include="..\Common\NetLib\PacketConsoleLogger.cpp" />
+    <ClCompile Include="..\Common\NetLib\PacketFileLogger.cpp" />
+    <ClCompile Include="..\Common\NetLib\PacketizedTCP.cpp" />
+    <ClCompile Include="..\Common\NetLib\PacketLogger.cpp" />
+    <ClCompile Include="..\Common\NetLib\PacketOutputWindowLogger.cpp" />
+    <ClCompile Include="..\Common\NetLib\PluginInterface2.cpp" />
+    <ClCompile Include="..\Common\NetLib\Rackspace.cpp" />
+    <ClCompile Include="..\Common\NetLib\RakMemoryOverride.cpp" />
+    <ClCompile Include="..\Common\NetLib\RakNetCommandParser.cpp" />
+    <ClCompile Include="..\Common\NetLib\RakNetSocket.cpp" />
+    <ClCompile Include="..\Common\NetLib\RakNetStatistics.cpp" />
+    <ClCompile Include="..\Common\NetLib\RakNetTransport2.cpp" />
+    <ClCompile Include="..\Common\NetLib\RakNetTypes.cpp" />
+    <ClCompile Include="..\Common\NetLib\RakPeer.cpp" />
+    <ClCompile Include="..\Common\NetLib\RakSleep.cpp" />
+    <ClCompile Include="..\Common\NetLib\RakString.cpp" />
+    <ClCompile Include="..\Common\NetLib\RakThread.cpp" />
+    <ClCompile Include="..\Common\NetLib\RakWString.cpp" />
+    <ClCompile Include="..\Common\NetLib\Rand.cpp" />
+    <ClCompile Include="..\Common\NetLib\rdlmalloc.cpp" />
+    <ClCompile Include="..\Common\NetLib\ReadyEvent.cpp" />
+    <ClCompile Include="..\Common\NetLib\ReliabilityLayer.cpp" />
+    <ClCompile Include="..\Common\NetLib\ReplicaManager3.cpp" />
+    <ClCompile Include="..\Common\NetLib\Router2.cpp" />
+    <ClCompile Include="..\Common\NetLib\RPC4Plugin.cpp" />
+    <ClCompile Include="..\Common\NetLib\SecureHandshake.cpp" />
+    <ClCompile Include="..\Common\NetLib\SendToThread.cpp" />
+    <ClCompile Include="..\Common\NetLib\SHA1.cpp" />
+    <ClCompile Include="..\Common\NetLib\SignaledEvent.cpp" />
+    <ClCompile Include="..\Common\NetLib\SimpleMutex.cpp" />
+    <ClCompile Include="..\Common\NetLib\SocketLayer.cpp" />
+    <ClCompile Include="..\Common\NetLib\StatisticsHistory.cpp" />
+    <ClCompile Include="..\Common\NetLib\StringCompressor.cpp" />
+    <ClCompile Include="..\Common\NetLib\StringTable.cpp" />
+    <ClCompile Include="..\Common\NetLib\SuperFastHash.cpp" />
+    <ClCompile Include="..\Common\NetLib\TableSerializer.cpp" />
+    <ClCompile Include="..\Common\NetLib\TCPInterface.cpp" />
+    <ClCompile Include="..\Common\NetLib\TeamBalancer.cpp" />
+    <ClCompile Include="..\Common\NetLib\TeamManager.cpp" />
+    <ClCompile Include="..\Common\NetLib\TelnetTransport.cpp" />
+    <ClCompile Include="..\Common\NetLib\ThreadsafePacketLogger.cpp" />
+    <ClCompile Include="..\Common\NetLib\TwoWayAuthentication.cpp" />
+    <ClCompile Include="..\Common\NetLib\UDPForwarder.cpp" />
+    <ClCompile Include="..\Common\NetLib\UDPProxyClient.cpp" />
+    <ClCompile Include="..\Common\NetLib\UDPProxyCoordinator.cpp" />
+    <ClCompile Include="..\Common\NetLib\UDPProxyServer.cpp" />
+    <ClCompile Include="..\Common\NetLib\VariableDeltaSerializer.cpp" />
+    <ClCompile Include="..\Common\NetLib\VariableListDeltaTracker.cpp" />
+    <ClCompile Include="..\Common\NetLib\VariadicSQLParser.cpp" />
+    <ClCompile Include="..\Common\NetLib\VitaIncludes.cpp" />
+    <ClCompile Include="..\Common\NetLib\WSAStartupSingleton.cpp" />
+    <ClCompile Include="..\Common\NetLib\_FindFirst.cpp" />
+    <ClCompile Include="..\Common\NetWorkManager.cpp" />
+    <ClCompile Include="..\Common\Utility.cpp" />
+    <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\MessageDelegate.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\Common\BaseData.h" />
+    <ClInclude Include="..\Common\CommonDefine.h" />
+    <ClInclude Include="..\Common\ConfigReader.h" />
+    <ClInclude Include="..\Common\LogManager.h" />
+    <ClInclude Include="..\Common\MessageDefine.h" />
+    <ClInclude Include="..\Common\MessageIdentifer.h" />
+    <ClInclude Include="..\Common\NetLib\AutopatcherPatchContext.h" />
+    <ClInclude Include="..\Common\NetLib\AutopatcherRepositoryInterface.h" />
+    <ClInclude Include="..\Common\NetLib\BitStream.h" />
+    <ClInclude Include="..\Common\NetLib\CCRakNetSlidingWindow.h" />
+    <ClInclude Include="..\Common\NetLib\CCRakNetUDT.h" />
+    <ClInclude Include="..\Common\NetLib\CheckSum.h" />
+    <ClInclude Include="..\Common\NetLib\CloudClient.h" />
+    <ClInclude Include="..\Common\NetLib\CloudCommon.h" />
+    <ClInclude Include="..\Common\NetLib\CloudServer.h" />
+    <ClInclude Include="..\Common\NetLib\CommandParserInterface.h" />
+    <ClInclude Include="..\Common\NetLib\ConnectionGraph2.h" />
+    <ClInclude Include="..\Common\NetLib\ConsoleServer.h" />
+    <ClInclude Include="..\Common\NetLib\DataCompressor.h" />
+    <ClInclude Include="..\Common\NetLib\DirectoryDeltaTransfer.h" />
+    <ClInclude Include="..\Common\NetLib\DS_BinarySearchTree.h" />
+    <ClInclude Include="..\Common\NetLib\DS_BPlusTree.h" />
+    <ClInclude Include="..\Common\NetLib\DS_BytePool.h" />
+    <ClInclude Include="..\Common\NetLib\DS_ByteQueue.h" />
+    <ClInclude Include="..\Common\NetLib\DS_Hash.h" />
+    <ClInclude Include="..\Common\NetLib\DS_Heap.h" />
+    <ClInclude Include="..\Common\NetLib\DS_HuffmanEncodingTree.h" />
+    <ClInclude Include="..\Common\NetLib\DS_HuffmanEncodingTreeFactory.h" />
+    <ClInclude Include="..\Common\NetLib\DS_HuffmanEncodingTreeNode.h" />
+    <ClInclude Include="..\Common\NetLib\DS_LinkedList.h" />
+    <ClInclude Include="..\Common\NetLib\DS_List.h" />
+    <ClInclude Include="..\Common\NetLib\DS_Map.h" />
+    <ClInclude Include="..\Common\NetLib\DS_MemoryPool.h" />
+    <ClInclude Include="..\Common\NetLib\DS_Multilist.h" />
+    <ClInclude Include="..\Common\NetLib\DS_OrderedChannelHeap.h" />
+    <ClInclude Include="..\Common\NetLib\DS_OrderedList.h" />
+    <ClInclude Include="..\Common\NetLib\DS_Queue.h" />
+    <ClInclude Include="..\Common\NetLib\DS_QueueLinkedList.h" />
+    <ClInclude Include="..\Common\NetLib\DS_RangeList.h" />
+    <ClInclude Include="..\Common\NetLib\DS_Table.h" />
+    <ClInclude Include="..\Common\NetLib\DS_ThreadsafeAllocatingQueue.h" />
+    <ClInclude Include="..\Common\NetLib\DS_Tree.h" />
+    <ClInclude Include="..\Common\NetLib\DS_WeightedGraph.h" />
+    <ClInclude Include="..\Common\NetLib\DynDNS.h" />
+    <ClInclude Include="..\Common\NetLib\EmailSender.h" />
+    <ClInclude Include="..\Common\NetLib\EpochTimeToString.h" />
+    <ClInclude Include="..\Common\NetLib\Export.h" />
+    <ClInclude Include="..\Common\NetLib\FileList.h" />
+    <ClInclude Include="..\Common\NetLib\FileListNodeContext.h" />
+    <ClInclude Include="..\Common\NetLib\FileListTransfer.h" />
+    <ClInclude Include="..\Common\NetLib\FileListTransferCBInterface.h" />
+    <ClInclude Include="..\Common\NetLib\FileOperations.h" />
+    <ClInclude Include="..\Common\NetLib\FormatString.h" />
+    <ClInclude Include="..\Common\NetLib\FullyConnectedMesh2.h" />
+    <ClInclude Include="..\Common\NetLib\Getche.h" />
+    <ClInclude Include="..\Common\NetLib\Gets.h" />
+    <ClInclude Include="..\Common\NetLib\GetTime.h" />
+    <ClInclude Include="..\Common\NetLib\gettimeofday.h" />
+    <ClInclude Include="..\Common\NetLib\GridSectorizer.h" />
+    <ClInclude Include="..\Common\NetLib\HTTPConnection.h" />
+    <ClInclude Include="..\Common\NetLib\IncrementalReadInterface.h" />
+    <ClInclude Include="..\Common\NetLib\InternalPacket.h" />
+    <ClInclude Include="..\Common\NetLib\Itoa.h" />
+    <ClInclude Include="..\Common\NetLib\Kbhit.h" />
+    <ClInclude Include="..\Common\NetLib\LinuxStrings.h" />
+    <ClInclude Include="..\Common\NetLib\LocklessTypes.h" />
+    <ClInclude Include="..\Common\NetLib\LogCommandParser.h" />
+    <ClInclude Include="..\Common\NetLib\MessageFilter.h" />
+    <ClInclude Include="..\Common\NetLib\MessageIdentifiers.h" />
+    <ClInclude Include="..\Common\NetLib\MTUSize.h" />
+    <ClInclude Include="..\Common\NetLib\NativeFeatureIncludes.h" />
+    <ClInclude Include="..\Common\NetLib\NativeFeatureIncludesOverrides.h" />
+    <ClInclude Include="..\Common\NetLib\NativeTypes.h" />
+    <ClInclude Include="..\Common\NetLib\NatPunchthroughClient.h" />
+    <ClInclude Include="..\Common\NetLib\NatPunchthroughServer.h" />
+    <ClInclude Include="..\Common\NetLib\NatTypeDetectionClient.h" />
+    <ClInclude Include="..\Common\NetLib\NatTypeDetectionCommon.h" />
+    <ClInclude Include="..\Common\NetLib\NatTypeDetectionServer.h" />
+    <ClInclude Include="..\Common\NetLib\NetworkIDManager.h" />
+    <ClInclude Include="..\Common\NetLib\NetworkIDObject.h" />
+    <ClInclude Include="..\Common\NetLib\PacketConsoleLogger.h" />
+    <ClInclude Include="..\Common\NetLib\PacketFileLogger.h" />
+    <ClInclude Include="..\Common\NetLib\PacketizedTCP.h" />
+    <ClInclude Include="..\Common\NetLib\PacketLogger.h" />
+    <ClInclude Include="..\Common\NetLib\PacketOutputWindowLogger.h" />
+    <ClInclude Include="..\Common\NetLib\PacketPool.h" />
+    <ClInclude Include="..\Common\NetLib\PacketPriority.h" />
+    <ClInclude Include="..\Common\NetLib\PluginInterface2.h" />
+    <ClInclude Include="..\Common\NetLib\PS3Includes.h" />
+    <ClInclude Include="..\Common\NetLib\Rackspace.h" />
+    <ClInclude Include="..\Common\NetLib\RakAlloca.h" />
+    <ClInclude Include="..\Common\NetLib\RakAssert.h" />
+    <ClInclude Include="..\Common\NetLib\RakMemoryOverride.h" />
+    <ClInclude Include="..\Common\NetLib\RakNetCommandParser.h" />
+    <ClInclude Include="..\Common\NetLib\RakNetDefines.h" />
+    <ClInclude Include="..\Common\NetLib\RakNetDefinesOverrides.h" />
+    <ClInclude Include="..\Common\NetLib\RakNetSmartPtr.h" />
+    <ClInclude Include="..\Common\NetLib\RakNetSocket.h" />
+    <ClInclude Include="..\Common\NetLib\RakNetStatistics.h" />
+    <ClInclude Include="..\Common\NetLib\RakNetTime.h" />
+    <ClInclude Include="..\Common\NetLib\RakNetTransport2.h" />
+    <ClInclude Include="..\Common\NetLib\RakNetTypes.h" />
+    <ClInclude Include="..\Common\NetLib\RakNetVersion.h" />
+    <ClInclude Include="..\Common\NetLib\RakPeer.h" />
+    <ClInclude Include="..\Common\NetLib\RakPeerInterface.h" />
+    <ClInclude Include="..\Common\NetLib\RakSleep.h" />
+    <ClInclude Include="..\Common\NetLib\RakString.h" />
+    <ClInclude Include="..\Common\NetLib\RakThread.h" />
+    <ClInclude Include="..\Common\NetLib\RakWString.h" />
+    <ClInclude Include="..\Common\NetLib\Rand.h" />
+    <ClInclude Include="..\Common\NetLib\rdlmalloc-options.h" />
+    <ClInclude Include="..\Common\NetLib\rdlmalloc.h" />
+    <ClInclude Include="..\Common\NetLib\ReadyEvent.h" />
+    <ClInclude Include="..\Common\NetLib\RefCountedObj.h" />
+    <ClInclude Include="..\Common\NetLib\ReliabilityLayer.h" />
+    <ClInclude Include="..\Common\NetLib\ReplicaEnums.h" />
+    <ClInclude Include="..\Common\NetLib\ReplicaManager3.h" />
+    <ClInclude Include="..\Common\NetLib\Router2.h" />
+    <ClInclude Include="..\Common\NetLib\RPC4Plugin.h" />
+    <ClInclude Include="..\Common\NetLib\SecureHandshake.h" />
+    <ClInclude Include="..\Common\NetLib\SendToThread.h" />
+    <ClInclude Include="..\Common\NetLib\SHA1.h" />
+    <ClInclude Include="..\Common\NetLib\SignaledEvent.h" />
+    <ClInclude Include="..\Common\NetLib\SimpleMutex.h" />
+    <ClInclude Include="..\Common\NetLib\SimpleTCPServer.h" />
+    <ClInclude Include="..\Common\NetLib\SingleProducerConsumer.h" />
+    <ClInclude Include="..\Common\NetLib\SocketDefines.h" />
+    <ClInclude Include="..\Common\NetLib\SocketIncludes.h" />
+    <ClInclude Include="..\Common\NetLib\SocketLayer.h" />
+    <ClInclude Include="..\Common\NetLib\StatisticsHistory.h" />
+    <ClInclude Include="..\Common\NetLib\StringCompressor.h" />
+    <ClInclude Include="..\Common\NetLib\StringTable.h" />
+    <ClInclude Include="..\Common\NetLib\SuperFastHash.h" />
+    <ClInclude Include="..\Common\NetLib\TableSerializer.h" />
+    <ClInclude Include="..\Common\NetLib\TCPInterface.h" />
+    <ClInclude Include="..\Common\NetLib\TeamBalancer.h" />
+    <ClInclude Include="..\Common\NetLib\TeamManager.h" />
+    <ClInclude Include="..\Common\NetLib\TelnetTransport.h" />
+    <ClInclude Include="..\Common\NetLib\ThreadPool.h" />
+    <ClInclude Include="..\Common\NetLib\ThreadsafePacketLogger.h" />
+    <ClInclude Include="..\Common\NetLib\TransportInterface.h" />
+    <ClInclude Include="..\Common\NetLib\TwoWayAuthentication.h" />
+    <ClInclude Include="..\Common\NetLib\UDPForwarder.h" />
+    <ClInclude Include="..\Common\NetLib\UDPProxyClient.h" />
+    <ClInclude Include="..\Common\NetLib\UDPProxyCommon.h" />
+    <ClInclude Include="..\Common\NetLib\UDPProxyCoordinator.h" />
+    <ClInclude Include="..\Common\NetLib\UDPProxyServer.h" />
+    <ClInclude Include="..\Common\NetLib\VariableDeltaSerializer.h" />
+    <ClInclude Include="..\Common\NetLib\VariableListDeltaTracker.h" />
+    <ClInclude Include="..\Common\NetLib\VariadicSQLParser.h" />
+    <ClInclude Include="..\Common\NetLib\VitaIncludes.h" />
+    <ClInclude Include="..\Common\NetLib\WindowsIncludes.h" />
+    <ClInclude Include="..\Common\NetLib\WSAStartupSingleton.h" />
+    <ClInclude Include="..\Common\NetLib\XBox360Includes.h" />
+    <ClInclude Include="..\Common\NetLib\_FindFirst.h" />
+    <ClInclude Include="..\Common\NetWorkManager.h" />
+    <ClInclude Include="..\Common\Utility.h" />
+    <ClInclude Include="src\main.h" />
+    <ClInclude Include="src\MessageDelegate.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\Common\NetLib\build.sh" />
+    <None Include="..\Common\NetLib\CMakeLists.txt" />
+    <None Include="..\Common\NetLib\compile.sh" />
+    <None Include="..\Common\NetLib\Makefile" />
+    <None Include="..\Common\NetLib\Makefile_ar" />
+    <None Include="..\Common\NetLib\RakNet.vcproj" />
+    <None Include="..\Common\NetLib\RakNet_vc8.vcproj" />
+    <None Include="..\Common\NetLib\RakNet_vc9.vcproj" />
+    <None Include="..\Common\NetLib\rebuild.sh" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

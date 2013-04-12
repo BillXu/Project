@@ -204,8 +204,8 @@ void CDBPlayerManager::ProcessTransferedMsg( stMsg* pMsg ,unsigned int nTargetUs
 			else 
 			{
 				uint64_t tta = RakNet::RakPeerInterface::Get64BitUniqueRandomNumber();
-				sprintf(pAccount,"%l64du",tta);
-				sprintf(pPassword,"%l64du",tta);
+				sprintf(pAccount,"%I64d",tta);
+				sprintf(pPassword,"%I64d",tta);
 			}
 
 

@@ -5,7 +5,7 @@
 int main()
 {
 	CLogMgr::SharedLogMgr()->PrintLog("Starting Gate Server");
-	CServerNetwork::SharedNetwork()->StartupNetwork(1000,25535);
+	CServerNetwork::SharedNetwork()->StartupNetwork(3000,25535);
 	CServerNetwork::SharedNetwork()->AddDelegate(CGatePeerMgr::SharedGatePeerMgr());
 	while( true )
 	{

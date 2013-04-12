@@ -132,7 +132,7 @@ void CNetWorkMgr::ReciveMessage()
                 {
                     m_eConnectType = eConnectType_Disconnectd ;
                 }
-                EnumDeleagte(this, (lpfunc)(&CNetWorkMgr::OnLostServer),0) ;
+                EnumDeleagte(this, (lpfunc)(&CNetWorkMgr::OnLostServer),packet) ;
             }
                 break ;
             case ID_CONNECTION_REQUEST_ACCEPTED:
@@ -167,10 +167,10 @@ void CNetWorkMgr::ReciveMessage()
                 break ;
             default:
 				{
-					if ( nMessageID >= ID_USER_PACKET_ENUM )
+					if ( nMessageID >= ID_USER_PACKET_ENUM && nMessageID <= 138 )
 					{
-						stMsg* pMsg = (stMsg*)(&(packet->data[0]));
-						EnumDeleagte(this, (lpfunc)(&CNetWorkMgr::OnReciveLogicMessage),pMsg) ;
+						printf("this is: %s \n",packet->guid.ToString()) ;
+						EnumDeleagte(this, (lpfunc)(&CNetWorkMgr::OnReciveLogicMessage),packet) ;
 					}
 				}
                 break;

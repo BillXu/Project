@@ -1,4 +1,6 @@
 #pragma once
+#pragma pack(push)
+#pragma pack(1)
 // Define message , used between Servers ;mainly DBServer and GameServer 
 #include "MessageDefine.h"
 // WARNNING:变长字符串，我们不包括终结符 \0 ;
@@ -48,3 +50,5 @@ struct stMsgTransferData
 	bool bBroadCast ;
 	char* pData ;
 };
+
+#pragma pack(pop)//

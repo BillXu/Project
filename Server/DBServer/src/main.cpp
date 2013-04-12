@@ -10,6 +10,7 @@
 #include "RakNetTypes.h"
 #include "RakPeerInterface.h"
 #include "ServerNetwork.h"
+#include "DBPlayerManager.h"
 class A
 	:public CThreadT
 {
@@ -100,24 +101,19 @@ public:
 };
 int main()
 {
-	//CDataBaseThread a ;
-	//a.InitDataBase("localHost",3307,"root","123456","sakila");
-	//a.Start() ;
+	CDataBaseThread::SharedDBThread()->InitDataBase("localHost",3307,"root","123456","gamedb");
+	CDataBaseThread::SharedDBThread()->Start() ;
 
 	//A b ;
 	//b.Start();
-	CServerNetwork::SharedNetwork()->StartupNetwork(3000,100);
-	B b ;
-	CServerNetwork::SharedNetwork()->AddDelegate(&b);
+	CServerNetwork::SharedNetwork()->StartupNetwork(8000,5);
+	CDBPlayerManager DBMgr ;
+	CServerNetwork::SharedNetwork()->AddDelegate(&DBMgr);
 	while ( true )
 	{
 		CServerNetwork::SharedNetwork()->RecieveMsg();
-		//stDBRequest* pRequest = CDBRequestQueue::SharedDBRequestQueue()->GetReserveRequest();
-		//pRequest->eType = eRequestType_Select ;
-		//pRequest->nSqlBufferLen = sprintf(pRequest->pSqlBuffer,"%s","SELECT * FROM TestTable");
-		//CDBRequestQueue::SharedDBRequestQueue()->PushRequest(pRequest);
-		//Sleep(300);
-
+		DBMgr.ProcessDBResults();
+		Sleep(5);
 	}
 	getchar();
 	return 0 ; 
