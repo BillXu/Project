@@ -25,6 +25,7 @@ enum eMsgType
 	MSG_SERVERS_USE_END,
 	// msg title used between server and client ;
 	MSG_REGISTE,
+	MSG_CONNECT_RET,
 	MSG_LOGIN,
 	MSG_REQUEST_BASE_DATA,
 };

@@ -55,6 +55,12 @@ void CGatePeer::OnMessage( RakNet::Packet* pData )
 	else
 	{
 		// warapper the message , then send the message to the game server ;
+		if ( m_pGameServerPeer == NULL && CGatePeerMgr::SharedGatePeerMgr()->AddPeerToServer(this) == false)
+		{ 
+			CLogMgr::SharedLogMgr()->PrintLog( "No Game Server Connect Login " ) ;
+			return ;
+		}
+
 		stMsgTransferData msgToSend ;
 		msgToSend.cSysIdentifer = ID_MSG_GA2GM ;
 		msgToSend.nTargetPeerUID = m_nPeerUID ;
@@ -68,16 +74,18 @@ void CGatePeer::OnDisconnected()
 {
 	if ( m_bServer ) // server crash down , tell all clients on this sever 
 	{
-		CGatePeerMgr::LIST_GATEPEER::iterator iter = m_vClientOnThisServer.begin();
+		MAP_GATE_PEER::iterator iter = m_vClientOnThisServer.begin();
 		CGatePeer* pClient = NULL ;
 		for ( ; iter != m_vClientOnThisServer.end(); ++iter )
 		{
-			pClient = *iter ;
+			pClient = iter->second ;
 			if ( pClient )
 			{
 				pClient->OnPeerDisconnect(this) ;
+				CGatePeerMgr::SharedGatePeerMgr()->RemovePeer(pClient) ;
 			}
 		}
+		m_vClientOnThisServer.clear() ;
 	}
 	else  // tell the server that this client disconnect ; 
 	{
@@ -104,14 +112,10 @@ void CGatePeer::OnPeerDisconnect(CGatePeer* peer )
 		msg.nPeerUID = peer->m_nPeerUID ;
 		CServerNetwork::SharedNetwork()->SendMsg((char*)&msg,sizeof(msg),m_nSelfNetGUID,false) ;
 		// remove client peer 
-		CGatePeerMgr::LIST_GATEPEER::iterator iter = m_vClientOnThisServer.begin();
-		for ( ; iter != m_vClientOnThisServer.end(); ++iter)
+		MAP_GATE_PEER::iterator iter = m_vClientOnThisServer.find(peer->m_nPeerUID);
+		if ( iter != m_vClientOnThisServer.end())
 		{
-			if ( *iter && (*iter)->m_nPeerUID == peer->m_nPeerUID )
-			{
-				m_vClientOnThisServer.erase(iter) ;
-				break; 
-			}
+			m_vClientOnThisServer.erase(iter) ;
 		}
 	}
 	else  // server crash , close connect of this client ;
@@ -128,18 +132,13 @@ void CGatePeer::OnAddPeerToThisServer(CGatePeer* peer )
 		CLogMgr::SharedLogMgr()->PrintLog("Client Peer Can not invoke this func = OnAddPeerToThisServer , this peer address = %s ",m_nSelfNetGUID.ToString()) ;
 		return ;
 	}
-	m_vClientOnThisServer.push_back(peer) ;
+	m_vClientOnThisServer[peer->m_nPeerUID] = peer ;
 }
 
 CGatePeer* CGatePeer::GetClientPeerOnThisByPeerUID( unsigned int nPeerUID )
 {
-	CGatePeerMgr::LIST_GATEPEER::iterator iter = m_vClientOnThisServer.begin();
-	for ( ; iter != m_vClientOnThisServer.end(); ++iter)
-	{
-		if ( *iter && (*iter)->m_nPeerUID == nPeerUID )
-		{
-			return (*iter) ;
-		}
-	}
+	MAP_GATE_PEER::iterator iter = m_vClientOnThisServer.find(nPeerUID);
+	if ( iter != m_vClientOnThisServer.end() )
+		return iter->second ;
 	return NULL ;
 }

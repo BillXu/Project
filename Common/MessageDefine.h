@@ -38,6 +38,14 @@ struct stMsgRegisterRet
 	//unsigned char nPaswordLen ; // used when visitor register  // Password = pAccount ;
 };
 
+struct stMsgConnectRet
+	:public stMsg
+{
+public:
+	stMsgConnectRet(){ cSysIdentifer = ID_MSG_S2C ; usMsgType = MSG_CONNECT_RET ; }
+	bool bOk ;
+	unsigned char nErr ; // 1 ; no proper server ;
+};
 struct stMsgLogin
 	:public stMsg
 {

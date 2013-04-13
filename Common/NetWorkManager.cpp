@@ -169,7 +169,6 @@ void CNetWorkMgr::ReciveMessage()
 				{
 					if ( nMessageID >= ID_USER_PACKET_ENUM && nMessageID <= 138 )
 					{
-						printf("this is: %s \n",packet->guid.ToString()) ;
 						EnumDeleagte(this, (lpfunc)(&CNetWorkMgr::OnReciveLogicMessage),packet) ;
 					}
 				}

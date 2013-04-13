@@ -64,7 +64,7 @@ void CPlayerManager::ProcessMsgFromDBServer(stMsg* pMessage ,RakNet::Packet* pMs
 	{
 		m_bDBserverConnected = true ;
 		m_nDBServerNetUID = pMsg->guid ;
-		CLogMgr::SharedLogMgr()->PrintLog("Success connected to DBServer : %s ", m_nDBServerNetUID.ToString());
+		CLogMgr::SharedLogMgr()->PrintLog("Success connected to DBServer : %s ", pMsg->systemAddress.ToString());
 		return  ;
 	}
 	else if ( MSG_TRANSER_DATA == pMessage->usMsgType ) // game server don't prcess tranfer msg from DBServer ;
@@ -72,7 +72,7 @@ void CPlayerManager::ProcessMsgFromDBServer(stMsg* pMessage ,RakNet::Packet* pMs
 		stMsgTransferData* pMsgTransfer = (stMsgTransferData*)pMessage ;
 		stMsg* pTargetMessage = (stMsg*)(pMsg->data + sizeof(stMsgTransferData));
 		pMsgTransfer->cSysIdentifer = ID_MSG_GM2GA ;
-		SendMsgToGateServer(pMsgTransfer->nTargetPeerUID,(char*)pMsg->data,pMsg->length) ;
+		SendMsgToGateServer(pMsgTransfer->nTargetPeerUID,(char*)pTargetMessage,pMsg->length - sizeof(stMsgTransferData) ) ;
 	}
 	else
 	{
@@ -93,7 +93,7 @@ void CPlayerManager::processMsgFromGateServer(stMsg* pMessage ,RakNet::Packet* p
 	{
 		m_bGateServerConnected = true ;
 		m_nGateServerNetUID = pMsg->guid ;
-		CLogMgr::SharedLogMgr()->PrintLog("Success connected to gate Server : %s ", m_nGateServerNetUID.ToString());
+		CLogMgr::SharedLogMgr()->PrintLog("Success connected to gate Server : %s ", pMsg->systemAddress.ToString());
 
 		// verify self 
 		stMsg msg ;
@@ -124,14 +124,22 @@ void CPlayerManager::processMsgFromGateServer(stMsg* pMessage ,RakNet::Packet* p
 	else if (MSG_DISCONNECT == pMessage->usMsgType)
 	{
 		stMsgPeerDisconnect* pRealMsg = (stMsgPeerDisconnect*)pMessage ;
-		CPlayer* pTargetPlayer = GetPlayerByUserUID(pRealMsg->nPeerUID) ;
-		if ( !pTargetPlayer )
+		MAP_PLAYERS::iterator iter = m_vAllActivePlayers.find(pRealMsg->nPeerUID) ;
+		//CPlayer* pTargetPlayer = GetPlayerByUserUID(pRealMsg->nPeerUID) ;
+		if ( iter == m_vAllActivePlayers.end())
 		{
-			CLogMgr::SharedLogMgr()->ErrorLog( "Can not find target Player, so Disconnected message From Gate will not be processed" );
-			return  ;
+			//CLogMgr::SharedLogMgr()->ErrorLog( "Can not find target Player, so Disconnected message From Gate will not be processed" );
 		}
-		pTargetPlayer->OnDisconnect();
-		RemoveDisconectedPeer( pTargetPlayer );
+		else
+		{
+			CPlayer* pTargetPlayer = iter->second ;
+			if ( pTargetPlayer)
+			{
+				pTargetPlayer->OnDisconnect();
+				PushReserverPlayers( pTargetPlayer );
+			}
+			m_vAllActivePlayers.erase(iter) ;
+		}
 		// tell DBserver this peer discannected ;
 		pRealMsg->cSysIdentifer = ID_MSG_GM2DB ;
 		SendMsgToDBServer((char*)pMsg->data,pMsg->length) ;
@@ -159,12 +167,24 @@ bool CPlayerManager::OnLostSever(RakNet::Packet* pMsg)
 			if ( bGateDown )
 			{
 				iter->second->OnGateServerLost();
+				stMsgPeerDisconnect pRealMsg;
+				// tell DBserver this peer discannected ;
+				pRealMsg.cSysIdentifer = ID_MSG_GM2DB ;
+				pRealMsg.nPeerUID = iter->first ;
+				SendMsgToDBServer((char*)pMsg->data,pMsg->length) ;
+				// remove the peer ;
+				PushReserverPlayers(iter->second) ;
 			}
 			else 
 			{
 				iter->second->OnDBServerLost();
 			}
 		}
+	}
+
+	if ( bGateDown )
+	{
+		m_vAllActivePlayers.clear();
 	}
 	return false ;
 }
@@ -203,7 +223,12 @@ CPlayer* CPlayerManager::GetPlayerByUserUID( unsigned int nUserUID )
 	return NULL ;
 }
 
-void CPlayerManager::RemoveDisconectedPeer( CPlayer* pPlayer )
+void CPlayerManager::PushReserverPlayers( CPlayer* pPlayer )
 {
-
+	 if ( m_vAllReservePlayers.size() >= RESEVER_GAME_SERVER_PLAYERS )
+	 {
+		 delete pPlayer ;
+		 return ;
+	 }
+	 m_vAllReservePlayers.push_back(pPlayer);
 }

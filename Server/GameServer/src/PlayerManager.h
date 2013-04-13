@@ -21,7 +21,7 @@ public:
 protected:
 	void ProcessMsgFromDBServer(stMsg* pMessage ,RakNet::Packet* pMsg );
 	void processMsgFromGateServer(stMsg* pMessage ,RakNet::Packet* pMsg );
-	void RemoveDisconectedPeer( CPlayer* ) ;
+	void PushReserverPlayers( CPlayer* ) ;
 public:
 	static char* s_pBuffer ;
 protected:

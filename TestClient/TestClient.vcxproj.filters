@@ -330,6 +330,18 @@
     <ClCompile Include="src\MessageDelegate.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="..\Common\mutex.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Common\Sem.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Common\ThreadMod.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Client.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Common\BaseData.h">
@@ -807,6 +819,18 @@
       <Filter>head</Filter>
     </ClInclude>
     <ClInclude Include="src\MessageDelegate.h">
+      <Filter>head</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Common\mutex.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Common\Sem.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Common\ThreadMod.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Client.h">
       <Filter>head</Filter>
     </ClInclude>
   </ItemGroup>

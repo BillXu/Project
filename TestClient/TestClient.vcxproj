@@ -51,12 +51,13 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>../Common;../Common/NetLib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../Common;../Common/NetLib;../Common/pthreadLib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>ws2_32.lib;pthreadVC2.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>../Lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -80,6 +81,7 @@
     <ClCompile Include="..\Common\BaseData.cpp" />
     <ClCompile Include="..\Common\ConfigReader.cpp" />
     <ClCompile Include="..\Common\LogManager.cpp" />
+    <ClCompile Include="..\Common\mutex.cpp" />
     <ClCompile Include="..\Common\NetLib\BitStream.cpp" />
     <ClCompile Include="..\Common\NetLib\CCRakNetSlidingWindow.cpp" />
     <ClCompile Include="..\Common\NetLib\CCRakNetUDT.cpp" />
@@ -177,7 +179,10 @@
     <ClCompile Include="..\Common\NetLib\WSAStartupSingleton.cpp" />
     <ClCompile Include="..\Common\NetLib\_FindFirst.cpp" />
     <ClCompile Include="..\Common\NetWorkManager.cpp" />
+    <ClCompile Include="..\Common\Sem.cpp" />
+    <ClCompile Include="..\Common\ThreadMod.cpp" />
     <ClCompile Include="..\Common\Utility.cpp" />
+    <ClCompile Include="src\Client.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\MessageDelegate.cpp" />
   </ItemGroup>
@@ -188,6 +193,7 @@
     <ClInclude Include="..\Common\LogManager.h" />
     <ClInclude Include="..\Common\MessageDefine.h" />
     <ClInclude Include="..\Common\MessageIdentifer.h" />
+    <ClInclude Include="..\Common\mutex.h" />
     <ClInclude Include="..\Common\NetLib\AutopatcherPatchContext.h" />
     <ClInclude Include="..\Common\NetLib\AutopatcherRepositoryInterface.h" />
     <ClInclude Include="..\Common\NetLib\BitStream.h" />
@@ -338,7 +344,10 @@
     <ClInclude Include="..\Common\NetLib\XBox360Includes.h" />
     <ClInclude Include="..\Common\NetLib\_FindFirst.h" />
     <ClInclude Include="..\Common\NetWorkManager.h" />
+    <ClInclude Include="..\Common\Sem.h" />
+    <ClInclude Include="..\Common\ThreadMod.h" />
     <ClInclude Include="..\Common\Utility.h" />
+    <ClInclude Include="src\Client.h" />
     <ClInclude Include="src\main.h" />
     <ClInclude Include="src\MessageDelegate.h" />
   </ItemGroup>

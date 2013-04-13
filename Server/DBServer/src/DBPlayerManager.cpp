@@ -41,7 +41,7 @@ bool CDBPlayerManager::OnMessage( RakNet::Packet* pData )
 		pTargetPlayer = GetPlayer(pRealMsg->nPeerUID) ;
 		if ( !pTargetPlayer )
 		{
-			CLogMgr::SharedLogMgr()->ErrorLog("can not find the palyer to disconnect ") ;
+			CLogMgr::SharedLogMgr()->ErrorLog("can not find the player to disconnect ") ;
 			return false ;
 		}
 		pTargetPlayer->OnDisconnected();  // don't remove immedetly ; 

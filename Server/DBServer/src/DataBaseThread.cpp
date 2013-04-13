@@ -36,6 +36,7 @@ void CDataBaseThread::__run()
 	{
 		if ( ProcessRequest() )
 			break ;
+		Sleep(2);
 	}
 
 	if ( m_pMySql )

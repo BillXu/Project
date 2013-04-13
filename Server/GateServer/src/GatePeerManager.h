@@ -19,6 +19,7 @@ public:
 	unsigned int GeneratePeerUID();
 	bool AddPeerToServer(CGatePeer* pClientPeer );
 	int GetAllOnLinePeerCount();
+	void RemovePeer(CGatePeer* pPeer );
 protected:
 	CGatePeer* GetProperGameServerToAddClient();  // ¸ºÔØ¾ùºâ²ßÂÔ£»
 	CGatePeer* GetReserveGatePeer();
