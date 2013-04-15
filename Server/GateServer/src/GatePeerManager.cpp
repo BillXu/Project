@@ -48,6 +48,11 @@ bool CGatePeerMgr::OnMessage( RakNet::Packet* pData )
 #ifdef DEBUG
 		CLogMgr::SharedLogMgr()->PrintLog("A Client Entered : %s",pData->systemAddress.ToString(true) );
 #endif
+		if ( m_vAllGatePeers.find(pData->guid) != m_vAllGatePeers.end())
+		{
+			CLogMgr::SharedLogMgr()->PrintLog("Don't verify Client More than once , IP:%s",pData->systemAddress.ToString(false));
+			return true ;
+		}
 		CGatePeer* Peer = GetReserveGatePeer();
 		if ( Peer )
 		{

@@ -1,42 +1,42 @@
 #include "Client.h"
 #include "MessageDefine.h"
 #include "CommonDefine.h"
+CClient::CClient()
+{
+	m_pPlayerData = NULL ;
+	m_pCurentScene = NULL ;
+}
+
+CClient::~CClient()
+{
+	delete m_pPlayerData ;
+	if ( m_pCurentScene )
+	{
+		m_pCurentScene->OnEixtScene();
+		delete m_pCurentScene ;
+	}
+}
+
 void CClient::Init()
 {
 	m_pNetWork.SetupNetwork();
 	m_pNetWork.ConnectToServer("127.0.0.1",3000) ;
-	m_pNetWork.AddMessageDelegate(&m_pDelegate);
 }
 
 void CClient::Run()
 {
-	while ( m_pDelegate.bRegisterOK == false  )
+	clock_t nTick = clock();
+	while ( 1  )
 	{
-		m_pNetWork.ReciveMessage() ;
-		if (m_pDelegate.bCannected )
+		m_pNetWork.ReciveMessage();
+
+		if ( m_pCurentScene)
 		{
-			stMsg msgVerify ;
-			msgVerify.cSysIdentifer = ID_MSG_VERIFY ;
-			msgVerify.usMsgType = MSG_VERIFY_CLIENT ;
-			m_pNetWork.SendMsg((char*)&msgVerify,sizeof(msgVerify)) ;
-			Sleep(10) ;
-			m_pDelegate.bCannected = false ;
-			m_pDelegate.bVerify = true ;
-			continue; 
+			float fElasp = (float)(clock() - nTick ) / (float)CLOCKS_PER_SEC ;
+			nTick = clock();
+			m_pCurentScene->OnUpdate(fElasp);
 		}
-		if ( m_pDelegate.bVerify )
-		{
-			// send register ;
-			m_pDelegate.bVerify = false ;
-			stMsgRegister msg ;
-			msg.nAccountType = 0 ;
-			msg.nCharacterNameLen = strlen("thisVisiter");
-			char pBuffer [MAX_LEN_ACCOUNT] = {0} ;
-			memcpy(pBuffer,&msg,sizeof(msg));
-			sprintf(pBuffer + sizeof(msg),"%s","thisVisiter") ;
-			m_pNetWork.SendMsg(pBuffer,sizeof(msg)+msg.nCharacterNameLen) ;
-		}
-		Sleep(10);
+		Sleep(5);
 	}
 	m_pNetWork.ShutDown();
 }

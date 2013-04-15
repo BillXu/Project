@@ -327,9 +327,6 @@
     <ClCompile Include="src\main.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\MessageDelegate.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
     <ClCompile Include="..\Common\mutex.cpp">
       <Filter>Common</Filter>
     </ClCompile>
@@ -340,6 +337,15 @@
       <Filter>Common</Filter>
     </ClCompile>
     <ClCompile Include="src\Client.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\IScene.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\LoginScene.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\PlayerData.cpp">
       <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>
@@ -818,9 +824,6 @@
     <ClInclude Include="src\main.h">
       <Filter>head</Filter>
     </ClInclude>
-    <ClInclude Include="src\MessageDelegate.h">
-      <Filter>head</Filter>
-    </ClInclude>
     <ClInclude Include="..\Common\mutex.h">
       <Filter>Common</Filter>
     </ClInclude>
@@ -831,6 +834,15 @@
       <Filter>Common</Filter>
     </ClInclude>
     <ClInclude Include="src\Client.h">
+      <Filter>head</Filter>
+    </ClInclude>
+    <ClInclude Include="src\IScene.h">
+      <Filter>head</Filter>
+    </ClInclude>
+    <ClInclude Include="src\LoginScene.h">
+      <Filter>head</Filter>
+    </ClInclude>
+    <ClInclude Include="src\PlayerData.h">
       <Filter>head</Filter>
     </ClInclude>
   </ItemGroup>

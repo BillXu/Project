@@ -183,8 +183,10 @@
     <ClCompile Include="..\Common\ThreadMod.cpp" />
     <ClCompile Include="..\Common\Utility.cpp" />
     <ClCompile Include="src\Client.cpp" />
+    <ClCompile Include="src\IScene.cpp" />
+    <ClCompile Include="src\LoginScene.cpp" />
     <ClCompile Include="src\main.cpp" />
-    <ClCompile Include="src\MessageDelegate.cpp" />
+    <ClCompile Include="src\PlayerData.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Common\BaseData.h" />
@@ -348,8 +350,10 @@
     <ClInclude Include="..\Common\ThreadMod.h" />
     <ClInclude Include="..\Common\Utility.h" />
     <ClInclude Include="src\Client.h" />
+    <ClInclude Include="src\IScene.h" />
+    <ClInclude Include="src\LoginScene.h" />
     <ClInclude Include="src\main.h" />
-    <ClInclude Include="src\MessageDelegate.h" />
+    <ClInclude Include="src\PlayerData.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Common\NetLib\build.sh" />

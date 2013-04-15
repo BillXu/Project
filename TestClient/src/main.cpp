@@ -1,5 +1,4 @@
 #include "main.h"
-#include "MessageDelegate.h"
 #include "MessageDefine.h"
 #include "RakNetTypes.h"
 #include "RakPeerInterface.h"
