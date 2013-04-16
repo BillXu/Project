@@ -1,6 +1,7 @@
 #include "Client.h"
 #include "MessageDefine.h"
 #include "CommonDefine.h"
+#include "LoginScene.h"
 CClient::CClient()
 {
 	m_pPlayerData = NULL ;
@@ -20,6 +21,8 @@ CClient::~CClient()
 void CClient::Init()
 {
 	m_pNetWork.SetupNetwork();
+	m_pCurentScene = new CLoginScene(&m_pNetWork);
+	m_pCurentScene->OnEnterScene();
 	m_pNetWork.ConnectToServer("127.0.0.1",3000) ;
 }
 

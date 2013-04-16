@@ -68,15 +68,16 @@ bool CDataBaseThread::ProcessRequest()
 	for ( ; iter != vRequestOut.end(); ++iter )
 	{
 		pRequest = *iter ;
-		if ( mysql_real_query(m_pMySql,pRequest->pSqlBuffer,pRequest->nSqlBufferLen) )
-		{
-			CLogMgr::SharedLogMgr()->ErrorLog("query DB Error Info , Operate Flag = %d : %s \n", pRequest->nRequestFlag, mysql_error(m_pMySql));
-			continue; 
-		}
 		pResult = new stDBResult;  // will be deleted after processed in the main thread .
 		vProcessedResult.push_back(pResult);
 		pResult->nRequestFlag = pRequest->nRequestFlag ;
 		pResult->nRequestUID = pRequest->nRequestUID ;
+		if ( mysql_real_query(m_pMySql,pRequest->pSqlBuffer,pRequest->nSqlBufferLen) )
+		{
+			CLogMgr::SharedLogMgr()->ErrorLog("query DB Error Info , Operate Flag = %d : %s \n", pRequest->nRequestFlag, mysql_error(m_pMySql));
+			pResult->nAffectRow = 0 ;
+			continue; 
+		}
 		//int iAffectRow = mysql_affected_rows(m_pMySql) ;
 		
 		switch ( pRequest->eType )

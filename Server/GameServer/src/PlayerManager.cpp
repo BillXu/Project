@@ -153,10 +153,12 @@ bool CPlayerManager::OnLostSever(RakNet::Packet* pMsg)
 	{
 		bGateDown = true ;
 		m_bGateServerConnected = false ;
+		CLogMgr::SharedLogMgr()->PrintLog("Gate Server Lost");
 	}
 	else
 	{
 		m_bDBserverConnected = false ;
+		CLogMgr::SharedLogMgr()->PrintLog("DB Server Lost");
 	}
 
 	MAP_PLAYERS::iterator iter = m_vAllActivePlayers.begin();

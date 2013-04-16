@@ -46,6 +46,7 @@ public:
 	bool bOk ;
 	unsigned char nErr ; // 1 ; no proper server ;
 };
+
 struct stMsgLogin
 	:public stMsg
 {

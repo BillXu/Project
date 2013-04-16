@@ -81,8 +81,8 @@ void CGatePeer::OnDisconnected()
 			pClient = iter->second ;
 			if ( pClient )
 			{
+				pClient->SetGameServerPeer(NULL);  // just lost game server , should delete from gate server , client should reconnecte fo disconnected ;
 				pClient->OnPeerDisconnect(this) ;
-				CGatePeerMgr::SharedGatePeerMgr()->RemovePeer(pClient) ;
 			}
 		}
 		m_vClientOnThisServer.clear() ;
@@ -118,9 +118,12 @@ void CGatePeer::OnPeerDisconnect(CGatePeer* peer )
 			m_vClientOnThisServer.erase(iter) ;
 		}
 	}
-	else  // server crash , close connect of this client ;
+	else  // server crash ,tell this client ;
 	{
-		CServerNetwork::SharedNetwork()->ClosePeerConnection(m_nSelfNetGUID);
+		stMsg msg ;
+		msg.cSysIdentifer = ID_MSG_S2C ;
+		msg.usMsgType = MSG_GAME_SERVER_LOST ;
+		CServerNetwork::SharedNetwork()->SendMsg((char*)&msg,sizeof(msg),GetSelfNetGUID(),false) ;
 	}
 }
 

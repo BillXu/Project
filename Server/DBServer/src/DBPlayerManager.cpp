@@ -259,7 +259,7 @@ void CDBPlayerManager::ProcessTransferedMsg( stMsg* pMsg ,unsigned int nTargetUs
 
 			// format sql String ;
 			char pAccountEString[MAX_LEN_ACCOUNT * 2 + 1 ] = {0} ;
-			CDataBaseThread::SharedDBThread()->EscapeString(pAccountEString,pAccount,pRealMsg->nAccountLen + 1 ) ;
+			CDataBaseThread::SharedDBThread()->EscapeString(pAccountEString,pAccount,pRealMsg->nAccountLen ) ;
 			pRequest->nSqlBufferLen = sprintf(pRequest->pSqlBuffer,"SELECT * FROM Account WHERE Account = '%s'",pAccountEString ) ;
 			CDBRequestQueue::SharedDBRequestQueue()->PushRequest(pRequest) ;
 		}
@@ -355,7 +355,7 @@ void CDBPlayerManager::OnProcessAccountCheckResult(stDBResult* pResult)
 		}
 		else
 		{
-			msgRet.bOk = false ;
+			msgRet.bOk = true ;
 			msgRet.nRetFlag = 0 ;
 			unsigned int nUserUID = pResult->vResultRows[0]->GetFiledByName("UserUID")->Value.llValue;
 			// allocate a new DBPlayer ;

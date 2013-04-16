@@ -16,10 +16,17 @@ void TestGameServer()
 		CNetWorkMgr::SharedNetWorkMgr()->ReciveMessage() ;
 		Sleep(10) ;
 	}
-	CNetWorkMgr::SharedNetWorkMgr()->ShutDown();
+	
 }
+
+BOOL WINAPI ConsoleHandler(DWORD msgType)
+{    
+	CNetWorkMgr::SharedNetWorkMgr()->ShutDown(); 
+	return TRUE;
+} 
 int main()
 {
+	SetConsoleCtrlHandler(ConsoleHandler, TRUE); 
 	//RakNet::RakPeerInterface *client = RakNet::RakPeerInterface::GetInstance();
 	//RakNet::SocketDescriptor socketDescriptor;
 	//socketDescriptor.port = 0;

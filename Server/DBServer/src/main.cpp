@@ -99,8 +99,16 @@ public:
 		printf("a peer Disconnected : %s\n",nPeerDisconnected.ToString());
 	}
 };
+
+BOOL WINAPI ConsoleHandler(DWORD msgType)
+{    
+	CServerNetwork::SharedNetwork()->ShutDown(); 
+	return TRUE;
+} 
+
 int main()
 {
+	SetConsoleCtrlHandler(ConsoleHandler, TRUE); 
 	CDataBaseThread::SharedDBThread()->InitDataBase("localHost",3307,"root","123456","gamedb");
 	CDataBaseThread::SharedDBThread()->Start() ;
 
@@ -115,6 +123,5 @@ int main()
 		DBMgr.ProcessDBResults();
 		Sleep(5);
 	}
-	getchar();
 	return 0 ; 
 }

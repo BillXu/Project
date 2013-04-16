@@ -7,6 +7,11 @@ bool CLoginScene::OnMessage( RakNet::Packet* pPacket )
 	IScene::OnMessage(pPacket) ;
 	switch (pMsg->usMsgType)
 	{
+	case MSG_GAME_SERVER_LOST:
+		{
+			CLogMgr::SharedLogMgr()->PrintLog("Game Server Lost !");
+		}
+		break;
 	case MSG_REGISTE:
 		{
 			stMsgRegisterRet* pRealMsg = (stMsgRegisterRet*)pMsg ;
@@ -60,7 +65,8 @@ bool CLoginScene::OnMessage( RakNet::Packet* pPacket )
 
 void CLoginScene::OnVerifyed()
 {
-
+	//Register("myGameName","firstAccount","123456",1);
+	Login("firstAccount","123456");
 }
 
 void CLoginScene::Login( const char* pAccound , const char* pPassword )
@@ -72,10 +78,10 @@ void CLoginScene::Login( const char* pAccound , const char* pPassword )
 	msg.nPaswordLen = strlen(pPassword);
 	char* pbuffer = new char[msg.nPaswordLen + msg.nAccountLen + sizeof(msg)];
 	memcpy(pbuffer,(void*)&msg,sizeof(msg));
-	sprintf(pbuffer + sizeof(msg),"%s",pAccound) ;
-	sprintf(pbuffer + msg.nAccountLen + sizeof(msg),"%s", pPassword) ;
+	memcpy(pbuffer + sizeof(msg),pAccound,msg.nAccountLen) ;
+	memcpy(pbuffer + msg.nAccountLen + sizeof(msg),pPassword, msg.nPaswordLen) ;
 	m_pNetWork->SendMsg(pbuffer,msg.nAccountLen + sizeof(msg) + msg.nPaswordLen) ;
-	delete []pbuffer ;
+	delete [] pbuffer ;
 }
 
 void CLoginScene::Register( const char* pName ,const char* pAccound , const char* pPassword , int nType )
