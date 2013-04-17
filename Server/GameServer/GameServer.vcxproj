@@ -234,6 +234,7 @@
     <ClInclude Include="..\..\Common\NetLib\_FindFirst.h" />
     <ClInclude Include="..\..\Common\NetWorkManager.h" />
     <ClInclude Include="..\..\Common\ServerMessageDefine.h" />
+    <ClInclude Include="..\..\Common\Timer.h" />
     <ClInclude Include="..\..\Common\Utility.h" />
     <ClInclude Include="src\main.h" />
     <ClInclude Include="src\Player.h" />
@@ -340,6 +341,7 @@
     <ClCompile Include="..\..\Common\NetLib\WSAStartupSingleton.cpp" />
     <ClCompile Include="..\..\Common\NetLib\_FindFirst.cpp" />
     <ClCompile Include="..\..\Common\NetWorkManager.cpp" />
+    <ClCompile Include="..\..\Common\Timer.cpp" />
     <ClCompile Include="..\..\Common\Utility.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\Player.cpp" />
