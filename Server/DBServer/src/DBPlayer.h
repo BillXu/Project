@@ -7,7 +7,14 @@
 struct stDBBaseData
 :public stBaseData
 {
-
+public:
+	bool m_bInitData ;
+	stDBBaseData()  // give init data here ; new reigster player ;
+	{
+		m_bInitData = true ;
+		nCoin = 1000 ;
+		nDiamoned = 1 ;
+	}
 };
 
 class CDBPlayer
@@ -32,7 +39,7 @@ public:
 	void OnConnected();
 	unsigned int GetUserUID();
 	unsigned int GetTempUID(){return m_nTempUID ;}
-	void OnPassAcountCheck( unsigned int nUserUID, unsigned int nTempUID );
+	void OnPassAcountCheck( unsigned int nUserUID, unsigned int nTempUID, const char* pname );
 	ePlayerState GetState(){ return m_eState ; }
 protected:
 	void SaveAllToDB();
@@ -41,7 +48,7 @@ protected:
 	void SetState( ePlayerState eState ){ m_eState = eState ;}
 protected:
 	stDBBaseData m_stBaseData ;
-	unsigned int m_nUserUID ,m_nTempUID;
+	unsigned int m_nTempUID,m_nUserUID;
 	RakNet::RakNetGUID m_nFromGUID ;
 	ePlayerState m_eState ;
 };

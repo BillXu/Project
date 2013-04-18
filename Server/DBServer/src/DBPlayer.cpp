@@ -1,5 +1,8 @@
 #include "DBPlayer.h"
 #include <assert.h>
+#include "DBRequest.h"
+#include "DBRequestFlags.h"
+#include "LogManager.h"
 CDBPlayer::CDBPlayer(RakNet::RakNetGUID& nFromGameServerGUID )
 	:m_eState(ePlayerState_None),m_nFromGUID(nFromGameServerGUID),m_nUserUID(0)
 {
@@ -23,7 +26,27 @@ RakNet::RakNetGUID& CDBPlayer::GetFromGameServerGUID()
 
 void CDBPlayer::OnDBResult(stDBResult* pResult )
 {
-
+	switch ( pResult->nRequestFlag )
+	{
+	case eDBRequest_BaseData:
+		{
+			if ( pResult->nAffectRow > 0 )
+			{
+				m_stBaseData.m_bInitData = false ;
+				CMysqlRow* pRow = pResult->vResultRows[0];
+				m_stBaseData.nCoin = pRow->GetFiledByName("Coin")->Value.llValue ;
+				m_stBaseData.nDiamoned = pRow->GetFiledByName("Diamond")->Value.iValue;
+				m_nUserUID = pRow->GetFiledByName("UserUID")->Value.llValue ;
+				m_eState = ePlayerState_Active;
+			}
+		}
+		break;
+	default:
+		{
+			CLogMgr::SharedLogMgr()->PrintLog("Unprocessed DBResult flag = %d", pResult->nRequestFlag) ;
+		}
+		break;
+	}
 }
 
 void CDBPlayer::OnMessage(stMsg* pMsg )
@@ -48,11 +71,12 @@ void CDBPlayer::OnConnected()
 
 }
 
-void CDBPlayer::OnPassAcountCheck(unsigned int nUserUID, unsigned int nTempUID )
+void CDBPlayer::OnPassAcountCheck(unsigned int nUserUID, unsigned int nTempUID, const char* pname )
 {
 	m_nUserUID = nUserUID ;
 	m_nTempUID = nTempUID ;
-	if ( m_eState = ePlayerState_Resever )
+	m_stBaseData.strName = pname ;
+	if ( m_eState == ePlayerState_Resever )
 	{
 		m_eState = ePlayerState_Active ;
 		SendBaseInfo();
@@ -71,11 +95,32 @@ unsigned int CDBPlayer::GetUserUID()
 void CDBPlayer::ReadAllFromDB()
 {
 	m_eState = ePlayerState_ReadingData;
+	// read base data ;
+	stDBRequest* pRequest = CDBRequestQueue::SharedDBRequestQueue()->GetReserveRequest();
+	pRequest->eType = eRequestType_Select ;
+	pRequest->nRequestFlag = eDBRequest_BaseData ;
+	pRequest->nRequestUID = GetTempUID() ;
+	pRequest->nSqlBufferLen = sprintf(pRequest->pSqlBuffer,"SELECT * FROM basedata WHERE UserUID = '%d'",GetUserUID());
+	CDBRequestQueue::SharedDBRequestQueue()->PushRequest(pRequest) ;
 }
 
 void CDBPlayer::SaveAllToDB()
 {
-
+	stDBRequest* pRequest = CDBRequestQueue::SharedDBRequestQueue()->GetReserveRequest();
+	pRequest->nRequestUID = m_nTempUID ;
+	if ( m_stBaseData.m_bInitData )
+	{
+		pRequest->eType = eRequestType_Add ;
+		pRequest->nRequestFlag = eDBRequest_Add_BaseData ;
+		pRequest->nSqlBufferLen = sprintf(pRequest->pSqlBuffer,"INSERT INTO gamedb.basedata (`UserUID`, `Coin`, `Diamond`) VALUES ('%d', '%I64d', '%d');",m_nUserUID,m_stBaseData.nCoin,m_stBaseData.nDiamoned);
+	}
+	else
+	{
+		pRequest->eType = eRequestType_Update ;
+		pRequest->nRequestFlag = eDBRequest_Update_BaseData ;
+		pRequest->nSqlBufferLen = sprintf(pRequest->pSqlBuffer,"UPDATE gamedb.basedata SET Coin = '%I64d', Diamond = '%d' WHERE UserUID = '%d'",m_stBaseData.nCoin,m_stBaseData.nDiamoned,m_nUserUID);
+	}
+	CDBRequestQueue::SharedDBRequestQueue()->PushRequest(pRequest) ;
 }
 
 void CDBPlayer::SendBaseInfo()

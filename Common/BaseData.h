@@ -1,6 +1,8 @@
 #pragma once
+#include <string>
 struct stBaseData
 {
-	unsigned int nMoney ;
+	long long nCoin ;
 	unsigned int nDiamoned ;
+	std::string strName ;
 };

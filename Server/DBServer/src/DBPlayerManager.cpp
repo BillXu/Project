@@ -369,7 +369,7 @@ void CDBPlayerManager::OnProcessAccountCheckResult(stDBResult* pResult)
 			{
 				pPlayer->SetFromServerGUID(pAcountCheck->nFromServerID) ;
 			}
-			pPlayer->OnPassAcountCheck(nUserUID,pAcountCheck->nTempUsrUID);
+			pPlayer->OnPassAcountCheck(nUserUID,pAcountCheck->nTempUsrUID,pAcountCheck->strCharacterName.c_str());
 		}
 	}
 	
