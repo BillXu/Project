@@ -3,6 +3,7 @@
 #pragma pack(1)
 // Define message , used between Servers ;mainly DBServer and GameServer 
 #include "MessageDefine.h"
+#include "BaseData.h"
 // WARNNING:变长字符串，我们不包括终结符 \0 ;
 
 //--------------------------------------------
@@ -20,6 +21,14 @@ struct stMsgDB2GM
 {
 	stMsgDB2GM(){ cSysIdentifer = ID_MSG_DB2GM, usMsgType = MSG_NONE ; }
 	unsigned int nTargetUserUID;
+};
+
+struct stMsgPushBaseDataToGameServer
+	:stMsgDB2GM
+{
+public:
+	stMsgPushBaseDataToGameServer(){usMsgType = MSG_PUSH_BASE_DATA ;}
+	stBaseData stData ;
 };
 
 //-----------------------------------------------

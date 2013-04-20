@@ -23,6 +23,7 @@ enum eMsgType
 	MSG_TRANSER_DATA, // tranfer data between servers ;
 	MSG_DISCONNECT,
 	MSG_SERVERS_USE_END,
+	MSG_PUSH_BASE_DATA, // PUSH DATA FROM DB SERVER TO GAMER SERVER ;
 	// msg title used between server and client ;
 	MSG_REGISTE,
 	MSG_CONNECT_RET,

@@ -22,6 +22,7 @@ protected:
 	void ProcessMsgFromDBServer(stMsg* pMessage ,RakNet::Packet* pMsg );
 	void processMsgFromGateServer(stMsg* pMessage ,RakNet::Packet* pMsg );
 	void PushReserverPlayers( CPlayer* ) ;
+	CPlayer* GetReserverPlayer();
 public:
 	static char* s_pBuffer ;
 protected:

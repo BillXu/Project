@@ -1,4 +1,5 @@
 #pragma once 
+#include "BaseData.h"
 struct stMsg ;
 class CPlayer
 {
@@ -18,4 +19,5 @@ protected:
 	void ProcessDBMessage(stMsg* pMsg );
 protected:
 	unsigned int m_nUserUID ;
+	stBaseData m_stBaseData ;
 };

@@ -72,6 +72,16 @@ void CPlayerManager::ProcessMsgFromDBServer(stMsg* pMessage ,RakNet::Packet* pMs
 		stMsgTransferData* pMsgTransfer = (stMsgTransferData*)pMessage ;
 		stMsg* pTargetMessage = (stMsg*)(pMsg->data + sizeof(stMsgTransferData));
 		pMsgTransfer->cSysIdentifer = ID_MSG_GM2GA ;
+		if ( pTargetMessage->usMsgType == MSG_LOGIN )  // if login ok , we alloct player ;
+		{
+			stMsgLoginRet* pTarget = (stMsgLoginRet*)pTargetMessage ;
+			if ( pTarget->bOk )
+			{
+				CPlayer* pPlayer = GetReserverPlayer();
+				pPlayer->Reset(pMsgTransfer->nTargetPeerUID) ;
+				m_vAllActivePlayers[pPlayer->GetUserUID()] = pPlayer ;
+			}
+		}
 		SendMsgToGateServer(pMsgTransfer->nTargetPeerUID,(char*)pTargetMessage,pMsg->length - sizeof(stMsgTransferData) ) ;
 	}
 	else
@@ -233,4 +243,18 @@ void CPlayerManager::PushReserverPlayers( CPlayer* pPlayer )
 		 return ;
 	 }
 	 m_vAllReservePlayers.push_back(pPlayer);
+}
+
+CPlayer* CPlayerManager::GetReserverPlayer()
+{
+	CPlayer* pPlayer = NULL ;
+	LIST_PLAYERS::iterator iter = m_vAllReservePlayers.begin();
+	if ( iter != m_vAllReservePlayers.end() )
+	{
+		CPlayer* pPlayer = *iter ;
+		m_vAllReservePlayers.erase(iter) ;
+		return pPlayer ;
+	}
+	pPlayer = new CPlayer(0) ;
+	return pPlayer ;
 }

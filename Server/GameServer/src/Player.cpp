@@ -65,5 +65,18 @@ void CPlayer::ProcessLogicMessage(stMsg* pMsg )
 
 void CPlayer::ProcessDBMessage(stMsg* pMsg )
 {
-
+	switch( pMsg->usMsgType )
+	{
+	case MSG_PUSH_BASE_DATA:
+		{
+			stMsgPushBaseDataToGameServer* pRealMsg = (stMsgPushBaseDataToGameServer*)pMsg ;
+			memcpy(&m_stBaseData,&(pRealMsg->stData),sizeof(stBaseData));
+			CLogMgr::SharedLogMgr()->PrintLog("name = %s",m_stBaseData.strName) ;
+		}
+		break;
+	default:
+		{
+			CLogMgr::SharedLogMgr()->ErrorLog( "Unprocessed Msg From DBServer id = %d " ,pMsg->usMsgType ) ;
+		}
+	}
 }

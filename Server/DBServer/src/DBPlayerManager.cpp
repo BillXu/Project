@@ -358,6 +358,7 @@ void CDBPlayerManager::OnProcessAccountCheckResult(stDBResult* pResult)
 			msgRet.bOk = true ;
 			msgRet.nRetFlag = 0 ;
 			unsigned int nUserUID = pResult->vResultRows[0]->GetFiledByName("UserUID")->Value.llValue;
+			pAcountCheck->strCharacterName = pResult->vResultRows[0]->GetFiledByName("CharacterName")->Value.pBuffer ;
 			// allocate a new DBPlayer ;
 			CDBPlayer* pPlayer = GetPlayerByUserUID(nUserUID);
 			if ( !pPlayer )

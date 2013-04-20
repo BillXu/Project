@@ -3,6 +3,7 @@
 #include "DBRequest.h"
 #include "DBRequestFlags.h"
 #include "LogManager.h"
+#include "ServerNetwork.h"
 CDBPlayer::CDBPlayer(RakNet::RakNetGUID& nFromGameServerGUID )
 	:m_eState(ePlayerState_None),m_nFromGUID(nFromGameServerGUID),m_nUserUID(0)
 {
@@ -39,6 +40,7 @@ void CDBPlayer::OnDBResult(stDBResult* pResult )
 				m_nUserUID = pRow->GetFiledByName("UserUID")->Value.llValue ;
 				m_eState = ePlayerState_Active;
 			}
+			SendBaseInfo();
 		}
 		break;
 	default:
@@ -75,7 +77,7 @@ void CDBPlayer::OnPassAcountCheck(unsigned int nUserUID, unsigned int nTempUID, 
 {
 	m_nUserUID = nUserUID ;
 	m_nTempUID = nTempUID ;
-	m_stBaseData.strName = pname ;
+	sprintf(m_stBaseData.strName,"%s",pname) ;
 	if ( m_eState == ePlayerState_Resever )
 	{
 		m_eState = ePlayerState_Active ;
@@ -127,4 +129,8 @@ void CDBPlayer::SendBaseInfo()
 {
 	assert(m_eState == ePlayerState_Active) ;
 	// send message to gameserver ;
+	stMsgPushBaseDataToGameServer msg ;
+	msg.nTargetUserUID = GetTempUID();
+	memcpy(&msg.stData,&m_stBaseData,sizeof(stBaseData));
+	CServerNetwork::SharedNetwork()->SendMsg((char*)&msg,sizeof(msg),m_nFromGUID,false) ;	
 }
