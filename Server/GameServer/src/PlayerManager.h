@@ -14,7 +14,7 @@ public:
 	CPlayerManager();
 	~CPlayerManager();
 	virtual bool OnMessage( RakNet::Packet* pMsg );
-	virtual bool OnLostSever(RakNet::Packet* pMsg);
+	bool OnLostSever(bool bGateDown);
 	void SendMsgToGateServer( unsigned int nUserUID , const char* pBuffer , int nLen, bool bBroadcast = false );
 	void SendMsgToDBServer( const char* pBuffer , int nLen );
 	CPlayer* GetPlayerByUserUID( unsigned int nUserUID );
@@ -23,14 +23,7 @@ protected:
 	void processMsgFromGateServer(stMsg* pMessage ,RakNet::Packet* pMsg );
 	void PushReserverPlayers( CPlayer* ) ;
 	CPlayer* GetReserverPlayer();
-public:
-	static char* s_pBuffer ;
 protected:
-	// server associate 
-	RakNet::RakNetGUID m_nGateServerNetUID ;
-	RakNet::RakNetGUID m_nDBServerNetUID ;
-	bool m_bGateServerConnected ;
-	bool m_bDBserverConnected ;
 	// logic data ;
 	MAP_PLAYERS m_vAllActivePlayers ;
 	LIST_PLAYERS m_vAllReservePlayers ;

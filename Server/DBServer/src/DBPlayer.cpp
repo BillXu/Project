@@ -38,8 +38,8 @@ void CDBPlayer::OnDBResult(stDBResult* pResult )
 				m_stBaseData.nCoin = pRow->GetFiledByName("Coin")->Value.llValue ;
 				m_stBaseData.nDiamoned = pRow->GetFiledByName("Diamond")->Value.iValue;
 				m_nUserUID = pRow->GetFiledByName("UserUID")->Value.llValue ;
-				m_eState = ePlayerState_Active;
 			}
+			m_eState = ePlayerState_Active;
 			SendBaseInfo();
 		}
 		break;

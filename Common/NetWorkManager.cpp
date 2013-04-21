@@ -11,6 +11,15 @@
 #include "MessageIdentifiers.h"
 #include "MessageDefine.h"
 int CNetWorkMgr::s_nCurrentDataSize = 0 ;
+void CNetMessageDelegate::SetPriority( unsigned int nPriority )
+{
+	if ( nPriority == GetPriority() )
+		return ;
+	m_nPriority = nPriority ;
+	CNetWorkMgr::SharedNetWorkMgr()->RemoveMessageDelegate(this);
+	CNetWorkMgr::SharedNetWorkMgr()->AddMessageDelegate(this);
+}
+
 CNetWorkMgr::CNetWorkMgr()
 {
     m_pNetPeer = NULL ;
@@ -194,10 +203,28 @@ bool CNetWorkMgr::SendMsg( const char* pbuffer , int iSize,RakNet::RakNetGUID& n
 	return m_pNetPeer->Send(pbuffer, iSize, IMMEDIATE_PRIORITY, RELIABLE_ORDERED, 0, nServerNetUID, false) ;
 }
 
-void CNetWorkMgr::AddMessageDelegate(CNetMessageDelegate *pDelegate)
+void CNetWorkMgr::AddMessageDelegate(CNetMessageDelegate *pDelegate, unsigned short nPrio )
 {
-    RemoveMessageDelegate(pDelegate) ;
-    m_vAllDelegate.push_back(pDelegate) ;
+	if ( !pDelegate)
+		return ;
+	pDelegate->SetPriority(nPrio) ;
+}
+
+void CNetWorkMgr::AddMessageDelegate(CNetMessageDelegate *pDelegate )
+{
+	RemoveMessageDelegate(pDelegate) ;
+	LIST_DELEGATE::iterator iter = m_vAllDelegate.begin();
+	CNetMessageDelegate* pDelegateIter = NULL ;
+	for ( ; iter != m_vAllDelegate.end(); ++iter)
+	{
+		pDelegateIter = *iter ;
+		if ( pDelegateIter->GetPriority() <= pDelegate->GetPriority() )
+		{
+			m_vAllDelegate.insert(iter,pDelegate);
+			return ;
+		}
+	}
+	m_vAllDelegate.push_back(pDelegate) ;
 }
 
 void CNetWorkMgr::RemoveAllDelegate()
@@ -220,6 +247,7 @@ void CNetWorkMgr::RemoveMessageDelegate(CNetMessageDelegate *pDelegate)
 
 bool CNetWorkMgr::OnLostServer( CNetMessageDelegate* pDeleate,void* pData )
 {
+	--m_nConnectedTo;
     return pDeleate->OnLostSever((RakNet::Packet*)pData) ;
 }
 

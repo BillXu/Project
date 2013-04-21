@@ -502,6 +502,9 @@
     <ClInclude Include="..\..\Common\Timer.h">
       <Filter>Common</Filter>
     </ClInclude>
+    <ClInclude Include="src\GameServerApp.h">
+      <Filter>head</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
@@ -818,6 +821,9 @@
     </ClCompile>
     <ClCompile Include="..\..\Common\Timer.cpp">
       <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GameServerApp.cpp">
+      <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

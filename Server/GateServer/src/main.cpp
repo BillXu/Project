@@ -29,16 +29,16 @@ BOOL WINAPI ConsoleHandler(DWORD msgType)
 	CTRL_SHUTDOWN_EVENT
 	System shutdown  
 	*/    
-	return FALSE;
+	return TRUE;
 } 
 
 
 int main()
 {
+	SetConsoleCtrlHandler(ConsoleHandler, TRUE); 
 	CLogMgr::SharedLogMgr()->PrintLog("Starting Gate Server");
 	CServerNetwork::SharedNetwork()->StartupNetwork(3000,25535);
 	CServerNetwork::SharedNetwork()->AddDelegate(CGatePeerMgr::SharedGatePeerMgr());
-	SetConsoleCtrlHandler(ConsoleHandler, TRUE); 
 	while( true )
 	{
 		CServerNetwork::SharedNetwork()->RecieveMsg();

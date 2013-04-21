@@ -5,6 +5,7 @@ void CServerNetworkDelegate::SetPriority(unsigned int nPriority )
 {
 	if ( nPriority == m_nPriority )
 		return ;
+	m_nPriority = nPriority ;
 	CServerNetwork::SharedNetwork()->RemoveDelegate(this);
 	CServerNetwork::SharedNetwork()->AddDelegate(this,nPriority);
 }

@@ -3,7 +3,7 @@
 #include "LogManager.h"
 #include "Player.h"
 #include "CommonDefine.h"
-char* CPlayerManager::s_pBuffer = NULL ;
+#include "GameServerApp.h"
 CPlayerManager* CPlayerManager::SharedPlayerMgr()
 {
 	static CPlayerManager g_sPlayerMgr ;
@@ -12,11 +12,6 @@ CPlayerManager* CPlayerManager::SharedPlayerMgr()
 
 CPlayerManager::CPlayerManager()
 {
-	if ( s_pBuffer == NULL )
-	{
-		s_pBuffer = new char[MAX_MSG_BUFFER_LEN] ;
-	}
-	m_bGateServerConnected = m_bDBserverConnected = false ;
 	m_vAllReservePlayers.clear() ;
 	m_vAllActivePlayers.clear();
 }
@@ -43,11 +38,11 @@ CPlayerManager::~CPlayerManager()
 bool CPlayerManager::OnMessage( RakNet::Packet* pMsg )
 {
 	stMsg* pMessage = (stMsg*)pMsg->data ;
-	if ( pMessage->cSysIdentifer ==  ID_MSG_GA2GM  || ( ID_MSG_VERIFY == pMessage->cSysIdentifer && pMessage->usMsgType == MSG_VERIFY_GA))
+	if ( pMessage->cSysIdentifer ==  ID_MSG_GA2GM )
 	{
 		processMsgFromGateServer(pMessage,pMsg) ;
 	}
-	else if ( ID_MSG_DB2GM == pMessage->cSysIdentifer || ID_MSG_VERIFY == pMessage->cSysIdentifer && pMessage->usMsgType == MSG_VERIFY_DB )
+	else if ( ID_MSG_DB2GM == pMessage->cSysIdentifer )
 	{
 		ProcessMsgFromDBServer(pMessage,pMsg) ;
 	}
@@ -60,14 +55,7 @@ bool CPlayerManager::OnMessage( RakNet::Packet* pMsg )
 
 void CPlayerManager::ProcessMsgFromDBServer(stMsg* pMessage ,RakNet::Packet* pMsg  )
 {
-	if ( MSG_VERIFY_DB == pMessage->usMsgType )
-	{
-		m_bDBserverConnected = true ;
-		m_nDBServerNetUID = pMsg->guid ;
-		CLogMgr::SharedLogMgr()->PrintLog("Success connected to DBServer : %s ", pMsg->systemAddress.ToString());
-		return  ;
-	}
-	else if ( MSG_TRANSER_DATA == pMessage->usMsgType ) // game server don't prcess tranfer msg from DBServer ;
+	if ( MSG_TRANSER_DATA == pMessage->usMsgType ) // game server don't prcess tranfer msg from DBServer ;
 	{
 		stMsgTransferData* pMsgTransfer = (stMsgTransferData*)pMessage ;
 		stMsg* pTargetMessage = (stMsg*)(pMsg->data + sizeof(stMsgTransferData));
@@ -99,20 +87,7 @@ void CPlayerManager::ProcessMsgFromDBServer(stMsg* pMessage ,RakNet::Packet* pMs
 
 void CPlayerManager::processMsgFromGateServer(stMsg* pMessage ,RakNet::Packet* pMsg  )
 {
-	if ( pMessage->usMsgType == MSG_VERIFY_GA )
-	{
-		m_bGateServerConnected = true ;
-		m_nGateServerNetUID = pMsg->guid ;
-		CLogMgr::SharedLogMgr()->PrintLog("Success connected to gate Server : %s ", pMsg->systemAddress.ToString());
-
-		// verify self 
-		stMsg msg ;
-		msg.cSysIdentifer = ID_MSG_VERIFY ;
-		msg.usMsgType = MSG_VERIFY_GMS ;
-		CNetWorkMgr::SharedNetWorkMgr()->SendMsg((char*)&msg,sizeof(msg),pMsg->guid) ;
-		return  ;
-	}
-	else if ( MSG_TRANSER_DATA == pMessage->usMsgType )
+	if ( MSG_TRANSER_DATA == pMessage->usMsgType )
 	{
 		stMsgTransferData* pMsgTransfer = (stMsgTransferData*)pMessage ;
 		stMsg* pTargetMessage = (stMsg*)(pMsg->data + sizeof(stMsgTransferData));
@@ -156,21 +131,8 @@ void CPlayerManager::processMsgFromGateServer(stMsg* pMessage ,RakNet::Packet* p
 	}
 }
 
-bool CPlayerManager::OnLostSever(RakNet::Packet* pMsg)
+bool CPlayerManager::OnLostSever(bool bGateDown)
 {
-	bool bGateDown = false ;
-	if ( pMsg->guid == m_nGateServerNetUID )
-	{
-		bGateDown = true ;
-		m_bGateServerConnected = false ;
-		CLogMgr::SharedLogMgr()->PrintLog("Gate Server Lost");
-	}
-	else
-	{
-		m_bDBserverConnected = false ;
-		CLogMgr::SharedLogMgr()->PrintLog("DB Server Lost");
-	}
-
 	MAP_PLAYERS::iterator iter = m_vAllActivePlayers.begin();
 	for ( ; iter != m_vAllActivePlayers.end(); ++iter )
 	{
@@ -183,7 +145,7 @@ bool CPlayerManager::OnLostSever(RakNet::Packet* pMsg)
 				// tell DBserver this peer discannected ;
 				pRealMsg.cSysIdentifer = ID_MSG_GM2DB ;
 				pRealMsg.nPeerUID = iter->first ;
-				SendMsgToDBServer((char*)pMsg->data,pMsg->length) ;
+				SendMsgToDBServer((char*)&pRealMsg,sizeof(stMsgPeerDisconnect)) ;
 				// remove the peer ;
 				PushReserverPlayers(iter->second) ;
 			}
@@ -203,28 +165,12 @@ bool CPlayerManager::OnLostSever(RakNet::Packet* pMsg)
 
 void CPlayerManager::SendMsgToGateServer( unsigned int nUserUID , const char* pBuffer , int nLen, bool bBroadcast )
 {
-	if ( m_bGateServerConnected == false )
-	{
-		CLogMgr::SharedLogMgr()->ErrorLog("can not send msg to gate , because gate is not connecting !") ;
-		return ;
-	}
-	stMsgTransferData msg ;
-	msg.cSysIdentifer = ID_MSG_GM2GA ;
-	msg.bBroadCast = bBroadcast ;
-	msg.nTargetPeerUID = nUserUID ;
-	memcpy(s_pBuffer,&msg,sizeof(stMsgTransferData));
-	memcpy((void*)(s_pBuffer + sizeof(stMsgTransferData)),pBuffer,nLen);
-	CNetWorkMgr::SharedNetWorkMgr()->SendMsg(s_pBuffer,nLen + sizeof(stMsgTransferData),m_nGateServerNetUID) ;
+	CGameServerApp::SharedGameServerApp()->SendMsgToGateServer(nUserUID,pBuffer,nLen,bBroadcast) ;
 }
 
 void CPlayerManager::SendMsgToDBServer( const char* pBuffer , int nLen )
 {
-	if ( m_bDBserverConnected == false )
-	{
-		CLogMgr::SharedLogMgr()->ErrorLog("can not send msg to gate , because DBServer is not connecting !") ;
-		return ;
-	}
-	CNetWorkMgr::SharedNetWorkMgr()->SendMsg(pBuffer,nLen,m_nDBServerNetUID) ;
+	CGameServerApp::SharedGameServerApp()->SendMsgToDBServer(pBuffer,nLen);
 }
 
 CPlayer* CPlayerManager::GetPlayerByUserUID( unsigned int nUserUID )

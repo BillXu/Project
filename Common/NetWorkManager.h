@@ -32,7 +32,11 @@ public:
     virtual ~CNetMessageDelegate(){} ;
     virtual bool OnMessage( RakNet::Packet* pMsg ) = 0 ;
     virtual bool OnLostSever(RakNet::Packet* pMsg){ return  false; };
-    virtual bool OnConnectStateChanged( eConnectState eSate ){ return false ;} ;
+    virtual bool OnConnectStateChanged( eConnectState eSate ){ return false ;} 
+	void SetPriority( unsigned int nPriority  );
+	unsigned GetPriority(){ return m_nPriority ;}
+protected:
+	unsigned short m_nPriority ;  // big first , small later ;
 };
 
 class CNetWorkMgr
@@ -59,7 +63,8 @@ public:
     bool SendMsg( const char* pbuffer , int iSize );
 	bool SendMsg( const char* pbuffer , int iSize,RakNet::RakNetGUID& nServerNetUID );
     
-    void AddMessageDelegate(CNetMessageDelegate * pDelegate );
+    void AddMessageDelegate(CNetMessageDelegate * pDelegate, unsigned short nPrio );
+	void AddMessageDelegate(CNetMessageDelegate *pDelegate) ;
     void RemoveMessageDelegate(CNetMessageDelegate* pDelegate);
     void RemoveAllDelegate();
     eConnectType GetCurrentConnectType(){ return m_eConnectType ;}

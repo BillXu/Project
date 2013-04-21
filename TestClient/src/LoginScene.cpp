@@ -65,8 +65,8 @@ bool CLoginScene::OnMessage( RakNet::Packet* pPacket )
 
 void CLoginScene::OnVerifyed()
 {
-	//Register("myGameName","firstAccount","123456",1);
-	Login("firstAccount","123456");
+	//Register("HelloWorld","SecondAccount","123456",1);
+	Login("SecondAccount","123456");
 }
 
 void CLoginScene::Login( const char* pAccound , const char* pPassword )

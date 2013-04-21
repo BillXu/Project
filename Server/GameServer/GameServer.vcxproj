@@ -236,6 +236,7 @@
     <ClInclude Include="..\..\Common\ServerMessageDefine.h" />
     <ClInclude Include="..\..\Common\Timer.h" />
     <ClInclude Include="..\..\Common\Utility.h" />
+    <ClInclude Include="src\GameServerApp.h" />
     <ClInclude Include="src\main.h" />
     <ClInclude Include="src\Player.h" />
     <ClInclude Include="src\PlayerManager.h" />
@@ -343,6 +344,7 @@
     <ClCompile Include="..\..\Common\NetWorkManager.cpp" />
     <ClCompile Include="..\..\Common\Timer.cpp" />
     <ClCompile Include="..\..\Common\Utility.cpp" />
+    <ClCompile Include="src\GameServerApp.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\Player.cpp" />
     <ClCompile Include="src\PlayerManager.cpp" />
