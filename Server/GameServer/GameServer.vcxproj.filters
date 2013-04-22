@@ -505,6 +505,12 @@
     <ClInclude Include="src\GameServerApp.h">
       <Filter>head</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Common\CardPoker.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\PeerCard.h">
+      <Filter>Common</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
@@ -824,6 +830,12 @@
     </ClCompile>
     <ClCompile Include="src\GameServerApp.cpp">
       <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\CardPoker.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\PeerCard.cpp">
+      <Filter>Common</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

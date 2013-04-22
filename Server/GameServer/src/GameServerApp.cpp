@@ -4,6 +4,7 @@
 #include "LogManager.h"
 #include "PlayerManager.h"
 #include "ServerMessageDefine.h"
+#include <ctime>
 
 #ifndef USHORT_MAX
 #define USHORT_MAX 65535 
@@ -16,8 +17,10 @@ CGameServerApp* CGameServerApp::SharedGameServerApp()
 	return &g_sApp ;
 }
 
+#include "CardPoker.h"
 void CGameServerApp::Init()
 {
+	srand(time(0));
 	if ( s_pBuffer == NULL )
 	{
 		s_pBuffer = new char[MAX_MSG_BUFFER_LEN] ;

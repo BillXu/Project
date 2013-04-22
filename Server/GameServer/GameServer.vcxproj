@@ -78,6 +78,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Common\BaseData.h" />
+    <ClInclude Include="..\..\Common\CardPoker.h" />
     <ClInclude Include="..\..\Common\CommonDefine.h" />
     <ClInclude Include="..\..\Common\ConfigReader.h" />
     <ClInclude Include="..\..\Common\LogManager.h" />
@@ -233,6 +234,7 @@
     <ClInclude Include="..\..\Common\NetLib\XBox360Includes.h" />
     <ClInclude Include="..\..\Common\NetLib\_FindFirst.h" />
     <ClInclude Include="..\..\Common\NetWorkManager.h" />
+    <ClInclude Include="..\..\Common\PeerCard.h" />
     <ClInclude Include="..\..\Common\ServerMessageDefine.h" />
     <ClInclude Include="..\..\Common\Timer.h" />
     <ClInclude Include="..\..\Common\Utility.h" />
@@ -243,6 +245,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Common\BaseData.cpp" />
+    <ClCompile Include="..\..\Common\CardPoker.cpp" />
     <ClCompile Include="..\..\Common\ConfigReader.cpp" />
     <ClCompile Include="..\..\Common\LogManager.cpp" />
     <ClCompile Include="..\..\Common\NetLib\BitStream.cpp" />
@@ -342,6 +345,7 @@
     <ClCompile Include="..\..\Common\NetLib\WSAStartupSingleton.cpp" />
     <ClCompile Include="..\..\Common\NetLib\_FindFirst.cpp" />
     <ClCompile Include="..\..\Common\NetWorkManager.cpp" />
+    <ClCompile Include="..\..\Common\PeerCard.cpp" />
     <ClCompile Include="..\..\Common\Timer.cpp" />
     <ClCompile Include="..\..\Common\Utility.cpp" />
     <ClCompile Include="src\GameServerApp.cpp" />
