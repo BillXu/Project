@@ -18,6 +18,7 @@ CGameServerApp* CGameServerApp::SharedGameServerApp()
 }
 
 #include "CardPoker.h"
+#include "PeerCard.h"
 void CGameServerApp::Init()
 {
 	srand(time(0));
@@ -26,7 +27,34 @@ void CGameServerApp::Init()
 		s_pBuffer = new char[MAX_MSG_BUFFER_LEN] ;
 	}
 	m_bGateServerConnected = m_bDBserverConnected = false ;
-
+	// test begin
+	int nItems = 100 ;
+	CPoker pocker ;
+	int A1Win = 0 ;
+	int A2Win = 0 ;
+	while( --nItems )
+	{
+		CPeerCard* pd = new CPeerCard ;
+		pocker.ComfirmKeepCard(6) ;
+		pd->SetPeerCardByNumber(pocker.GetCardWithCompositeNum(),pocker.GetCardWithCompositeNum(),pocker.GetCardWithCompositeNum());
+		pd->LogInfo();
+		CPeerCard* pd2 = new CPeerCard ;
+		pd2->SetPeerCardByNumber(pocker.GetCardWithCompositeNum(),pocker.GetCardWithCompositeNum(),pocker.GetCardWithCompositeNum());
+		pd2->LogInfo();
+		bool bWin = pd2->PKPeerCard(pd);
+		if ( bWin )
+		{
+			printf("A2 win\n");
+			++A2Win;
+		}
+		else
+		{
+			printf("A1 win\n");
+			++A1Win;
+		}
+	}
+	printf( "A1 win %d , A2 win %d \n" ,A1Win,A2Win);
+	// test end ;
 	m_strDBIP = "" ;
 	m_strGateIP = "";
 	m_nDBPort = 8000;

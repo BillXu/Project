@@ -29,6 +29,7 @@ public:
 	enum 
 	{
 		ePoker_Card_Count = 52 , // this poker do n't have two joke ;
+		ePoker_Card_Count_After_Clip = 32, // remove  2,3,4,5,6
 	};
 public:
 	CPoker();
@@ -37,8 +38,10 @@ public:
 	void ComfirmKeepCard( unsigned char nCardLeft = 3 * 5 ); // 开局发牌之前，一定要确认牌堆里是否有足够的牌。 .
 protected:
 	void RestAllPoker();
+	void ClipCards();
 protected:
 	unsigned char m_vAllCard[ePoker_Card_Count] ;
 	unsigned char m_vCardHelpReset[ePoker_Card_Count] ;
+	unsigned char m_vCardAfterClip[ePoker_Card_Count_After_Clip] ;
 	unsigned char m_nCurrentCardIndex ;
 };

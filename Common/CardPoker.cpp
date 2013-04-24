@@ -69,14 +69,14 @@ CPoker::~CPoker()
 
 unsigned char CPoker::GetCardWithCompositeNum()
 {
-	if ( m_nCurrentCardIndex >= ePoker_Card_Count )	
+	if ( m_nCurrentCardIndex >= ePoker_Card_Count_After_Clip )	
 		RestAllPoker();
-	return m_vAllCard[m_nCurrentCardIndex++] ;
+	return m_vCardAfterClip[m_nCurrentCardIndex++] ;
 }
 
 void CPoker::ComfirmKeepCard( unsigned char nCardLeft )
 {
-	if ( ePoker_Card_Count - m_nCurrentCardIndex < nCardLeft )
+	if ( ePoker_Card_Count_After_Clip - m_nCurrentCardIndex < nCardLeft )
 		RestAllPoker();
 }
 
@@ -106,6 +106,29 @@ void CPoker::RestAllPoker()
 			 }
 		}
 	}
+	ClipCards();
 	m_nCurrentCardIndex = 0 ;
+}
+
+void CPoker::ClipCards()
+{
+	int nIdx = 0 ;
+	for ( int i = 0 ; i < ePoker_Card_Count ; ++i )
+	{
+		int nCard = m_vAllCard[i];
+		bool bContinue = false ;
+		for ( int nMul = 0 ; nMul < 4 ; ++nMul )
+		{
+			if ( nCard >= ( 2 + 13 * nMul) && nCard <= (6 + 13 * nMul) )
+			{
+				bContinue = true;
+				break;
+			}
+		}
+
+		if ( bContinue )
+			continue ;
+		m_vCardAfterClip[nIdx++] = nCard;
+	}
 }
 
