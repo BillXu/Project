@@ -511,6 +511,12 @@
     <ClInclude Include="..\..\Common\PeerCard.h">
       <Filter>Common</Filter>
     </ClInclude>
+    <ClInclude Include="src\IPlayerComponent.h">
+      <Filter>head</Filter>
+    </ClInclude>
+    <ClInclude Include="src\RoomPeer.h">
+      <Filter>head</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
@@ -836,6 +842,12 @@
     </ClCompile>
     <ClCompile Include="..\..\Common\PeerCard.cpp">
       <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="src\IPlayerComponent.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RoomPeer.cpp">
+      <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

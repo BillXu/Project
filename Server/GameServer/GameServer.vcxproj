@@ -239,9 +239,11 @@
     <ClInclude Include="..\..\Common\Timer.h" />
     <ClInclude Include="..\..\Common\Utility.h" />
     <ClInclude Include="src\GameServerApp.h" />
+    <ClInclude Include="src\IPlayerComponent.h" />
     <ClInclude Include="src\main.h" />
     <ClInclude Include="src\Player.h" />
     <ClInclude Include="src\PlayerManager.h" />
+    <ClInclude Include="src\RoomPeer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Common\BaseData.cpp" />
@@ -349,9 +351,11 @@
     <ClCompile Include="..\..\Common\Timer.cpp" />
     <ClCompile Include="..\..\Common\Utility.cpp" />
     <ClCompile Include="src\GameServerApp.cpp" />
+    <ClCompile Include="src\IPlayerComponent.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\Player.cpp" />
     <ClCompile Include="src\PlayerManager.cpp" />
+    <ClCompile Include="src\RoomPeer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\Common\NetLib\build.sh" />

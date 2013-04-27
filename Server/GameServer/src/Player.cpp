@@ -4,17 +4,36 @@
 #include "PlayerManager.h"
 CPlayer::CPlayer( unsigned int nUserUID )
 {
+	for ( int i = ePlayerComponent_None; i < ePlayerComponent_Max ; ++i )
+	{
+		 m_vAllComponents[i] = NULL;
+	}
 	Reset(nUserUID);
 }
 
 CPlayer::~CPlayer()
 {
-
+	for ( int i = ePlayerComponent_None; i < ePlayerComponent_Max ; ++i )
+	{
+		IPlayerComponent* p = m_vAllComponents[i] ;
+		if ( p )
+			delete p ;
+		m_vAllComponents[i] = NULL ;
+	}
 }
 
 void CPlayer::Reset( unsigned int nUserUID )
 {
 	m_nUserUID = nUserUID ;
+	// inform components;
+	for ( int i = ePlayerComponent_None; i < ePlayerComponent_Max ; ++i )
+	{
+		IPlayerComponent* p = m_vAllComponents[i] ;
+		if ( p )
+		{
+			p->Reset();
+		}
+	}
 }
 
 void CPlayer::OnMessage(stMsg* pMsg )
@@ -35,22 +54,47 @@ void CPlayer::OnMessage(stMsg* pMsg )
 
 void CPlayer::OnDisconnect()
 {
-
+	// inform components;
+	for ( int i = ePlayerComponent_None; i < ePlayerComponent_Max ; ++i )
+	{
+		IPlayerComponent* p = m_vAllComponents[i] ;
+		if ( p )
+		{
+			p->OnDisconnect();
+		}
+	}
 }
 
 void CPlayer::OnGateServerLost()
 {
-
+	// inform components;
+	// inform components;
+	for ( int i = ePlayerComponent_None; i < ePlayerComponent_Max ; ++i )
+	{
+		IPlayerComponent* p = m_vAllComponents[i] ;
+		if ( p )
+		{
+			p->OnLostServer(true);
+		}
+	}
 }
 
 void CPlayer::OnDBServerLost()
 {
-
+	// inform components;
+	for ( int i = ePlayerComponent_None; i < ePlayerComponent_Max ; ++i )
+	{
+		IPlayerComponent* p = m_vAllComponents[i] ;
+		if ( p )
+		{
+			p->OnLostServer(false);
+		}
+	}
 }
 
-void CPlayer::SendMsgToClient(const char* pBuffer, unsigned short nLen )
+void CPlayer::SendMsgToClient(const char* pBuffer, unsigned short nLen,bool bBrocat )
 {
-	CPlayerManager::SharedPlayerMgr()->SendMsgToGateServer(GetUserUID(),pBuffer,nLen) ;
+	CPlayerManager::SharedPlayerMgr()->SendMsgToGateServer(GetUserUID(),pBuffer,nLen,bBrocat) ;
 }
 
 void CPlayer::SendMsgToDBServer( const char* pBuffer, unsigned short nLen )
@@ -60,7 +104,14 @@ void CPlayer::SendMsgToDBServer( const char* pBuffer, unsigned short nLen )
 
 void CPlayer::ProcessLogicMessage(stMsg* pMsg )
 {
-
+	for ( int i = ePlayerComponent_None; i < ePlayerComponent_Max ; ++i )
+	{
+		IPlayerComponent* p = m_vAllComponents[i] ;
+		if ( p )
+		{
+			p->OnMessage(pMsg) ;
+		}
+	}
 }
 
 void CPlayer::ProcessDBMessage(stMsg* pMsg )

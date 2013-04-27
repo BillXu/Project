@@ -69,5 +69,22 @@ public:
 	unsigned char nRetFlag ;  // 1 account don't exsit , 2 password error ;
 };
 
+// room message ;
+struct stMsgRoomAction
+	:public stMsg
+{
+public:
+	stMsgRoomAction(){cSysIdentifer = ID_MSG_C2S; usMsgType = MSG_ROOM_ACTION ;}
+	unsigned char nActionType ;  // eRoomPeerAction 
+};
+
+struct stMsgRoomActionRet
+	:public stMsg
+{
+public:
+	stMsgRoomActionRet(){cSysIdentifer = ID_MSG_S2C ; usMsgType = MSG_ROOM_ACTION_RET ; }
+	unsigned char nErr ; 
+};
+
 
 #pragma pack(pop)
