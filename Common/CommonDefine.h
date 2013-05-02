@@ -5,7 +5,9 @@
 #define MAX_MSG_BUFFER_LEN 1024
 #define RESEVER_GAME_SERVER_PLAYERS 100 
 #define PEER_CARD_COUNT 3
-
+#define MAX_ROOM_PEER 5
+#define TIMER_WAIT_TO_READY 10
+#define TIMER_WAIT_ACTION 30
 enum eRoomPeerAction
 {
 	eRoomPeerAction_None,
@@ -21,4 +23,21 @@ enum eRoomPeerAction
 	eRoomPeerAction_SpeakDefault,
 	eRoomPeerAction_SpeakWord,
 	eRoomPeerAction_Max
+};
+
+enum eRoomFlag
+{
+	eRoomFlag_None ,
+	eRoomFlag_ShowCard  ,
+	eRoomFlag_TimesPK ,
+	eRoomFlag_ChangeCard,
+	eRoomFlag_Max,
+};
+
+enum eRoomState
+{
+	eRoom_Wait,
+	eRoom_Playing,
+	eRoom_End,
+	eRoom_Max,
 };

@@ -517,6 +517,9 @@
     <ClInclude Include="src\RoomPeer.h">
       <Filter>head</Filter>
     </ClInclude>
+    <ClInclude Include="src\Room.h">
+      <Filter>head</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
@@ -847,6 +850,9 @@
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="src\RoomPeer.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Room.cpp">
       <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>

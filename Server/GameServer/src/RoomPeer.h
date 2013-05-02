@@ -30,7 +30,7 @@ public:
 	void OnGetCard( unsigned char nCardA, unsigned char nCardB , unsigned char nCardC );
 protected:
 	CPeerCard m_PeerCard ;
-	unsigned char m_nTimesMoneyForPK ;
+	unsigned char m_nTimesMoneyForPK ; // ±ÈÅÆ·­±¶µÄ±¶Êý 
 	unsigned int m_nBetMoney;
 	eRoomPeerState m_eState ;
 	CRoom* m_pRoom ;

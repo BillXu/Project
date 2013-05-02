@@ -5,7 +5,7 @@ class CTimer ;
 class CTimerDelegate
 {
 public:
-	typedef void (CTimerDelegate::*lpTimerSelector)(float fTimeElaps );
+	typedef void (CTimerDelegate::*lpTimerSelector)(float fTimeElaps,unsigned int nTimerID );
 public:
 	CTimerDelegate();
 	virtual ~CTimerDelegate();

@@ -82,7 +82,7 @@ void CTimer::Update(float fTimeElaps)
 
 	// invoke funcion ;
 	m_fIntervalKeeper -= m_fInterval ;
-    (m_pDelegate->*m_pTimerFunc)(fTimeElaps);
+    (m_pDelegate->*m_pTimerFunc)(fTimeElaps,GetTimerID());
 }
 
 // timer manager ;
