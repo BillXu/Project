@@ -13,7 +13,7 @@ CTimerDelegate::~CTimerDelegate()
 		CTimerManager::SharedTimerManager()->RemoveTimer(m_pUpdateTimer) ;
 }
 
-void CTimerDelegate::Update(float fTimeElpas )
+void CTimerDelegate::Update(float fTimeElpas , unsigned int nTimerID )
 {
 
 }

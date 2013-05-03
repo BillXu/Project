@@ -3,6 +3,7 @@
 #include <string>
 #include "MessageDefine.h"
 #include "Timer.h"
+#include "CardPoker.h"
 class CRoomPeer ;
 class CTimer ;
 class CRoom
@@ -17,15 +18,22 @@ public:
 	void OnRoomMsg(stMsg* pMsg , CRoomPeer* pPeer );
 	void SendMsgToRoomPeers( char* pbuffer ,unsigned short nLen ,CRoomPeer* pExcept );
 	void TimerFunc(float fTimeElaps,unsigned int nTimerID );
-	unsigned char RoomPeerCount();
+	unsigned char GetRoomPeerCount();
 	unsigned int GetRoomID();
 	void SetRoomID(unsigned int nRoomId );
 	void OnPlayerEnter( CRoomPeer* pPeerToEnter );
 	void OnPlayerExit( CRoomPeer* pPeerToEnter );
+	void OnProcessPlayerAction(stMsgRoomActionCmd* pActMsg, CRoomPeer* pPeer );
+	eRoomState GetRoomState(){ return m_eState ;}
+protected:
+	unsigned char GetReadyPeerCount();
+	void DistributeCard();
+	bool CheckAllPlayerReady();
 protected:
 	unsigned int m_nRoomID ;
 	std::string m_strRoomName ;
 	int m_nflag ;
+	CPoker m_Poker ;
 	
 	CRoomPeer* m_pAllPeers[MAX_ROOM_PEER] ;
 	CTimer* m_pTimerToReady ;   // 等待所有玩家准备 .
@@ -33,6 +41,7 @@ protected:
 
 	char m_nCurActionPeerIndex;
 	char m_nMainPeerIndex ; // 本局庄家的索引.
+	eRoomState m_eState ;
 	
 	unsigned int m_nAllBetMoney ;
 	char m_nRound ;

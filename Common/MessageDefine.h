@@ -87,7 +87,7 @@ struct stMsgRoomEnterRet
 
 struct stRoomPeerBrifData
 {
-	unsigned int nTempUID ;
+	unsigned int nUserUID ;
 	char pName[MAX_LEN_CHARACTER_NAME] ;
 	unsigned int nAllMoney ;
 	unsigned int nBetMoney ;
@@ -107,13 +107,32 @@ public:
 	unsigned int nRoomID ;
 	unsigned int nAllBetMoney ;
 	unsigned int nSingleBetMoney ;
-	unsigned char m_nRound ;
+	unsigned char nRound ;
 	unsigned char nRoomState ;  // eRoomState ;
 	unsigned char nMainPlayerIdx ;
 	unsigned char nCurPlayerIdx;
-	unsigned int n_RunWaitSecond ;
+	unsigned int nRunWaitSecond ;
 	stRoomPeerBrifData* pAllPeer ;
 	unsigned char peerCount ;
+};
+
+struct stMsgOtherPlayerEnter
+	:public stMsg
+{
+public:
+	stMsgOtherPlayerEnter(){cSysIdentifer = ID_MSG_S2C; usMsgType = MSG_ROOM_OTHER_PLAYER_ENTER  ;}
+	unsigned int pPlayerUID ;
+	unsigned char nPeerIdx ;
+	unsigned int nAllMoney ;
+	unsigned int nTitle ;
+};
+
+struct stMsgOtherPlayerExit
+	:public stMsg
+{
+public:
+	stMsgOtherPlayerExit(){ cSysIdentifer = ID_MSG_S2C; usMsgType = MSG_ROOM_OTHER_PLAYER_EXIT ;}
+	unsigned nRoomIdx ;
 };
 
 struct stMsgRoomActionCmd
@@ -124,12 +143,39 @@ public:
 	unsigned char nActionType ;  // eRoomPeerAction 
 };
 
+struct stMsgOtherPlayerCmd
+	:public stMsg
+{
+public:
+	stMsgOtherPlayerCmd(){cSysIdentifer = ID_MSG_C2S; usMsgType = MSG_ROOM_OTHER_PLAYER_ACTION ; }
+	unsigned char nPeerIdx ;
+	unsigned char nActionType ;  // eRoomPeerAction 
+};
+
 struct stMsgRoomActionRet
 	:public stMsg
 {
 public:
 	stMsgRoomActionRet(){cSysIdentifer = ID_MSG_S2C ; usMsgType = MSG_ROOM_ACTION_RET ; }
-	unsigned char nErr ; 
+	unsigned char nErr ;  // 1 room state is not suiteable ;
+};
+
+struct stGetCardPeer
+{
+	unsigned char nPeerIdx ;
+	unsigned char vCard[PEER_CARD_COUNT];
+};
+struct stMsgRoomDistributeCard
+	:public stMsg
+{
+public:
+	stMsgRoomDistributeCard()
+	{
+		cSysIdentifer = ID_MSG_S2C ;
+		usMsgType = MSG_ROOM_DISTRIBUTE_CARD ;
+	}
+	unsigned char nCount ;
+	stGetCardPeer* pGetCarPeer ;
 };
 
 

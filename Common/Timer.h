@@ -9,7 +9,7 @@ public:
 public:
 	CTimerDelegate();
 	virtual ~CTimerDelegate();
-	virtual void Update(float fTimeElpas );
+	virtual void Update(float fTimeElpas, unsigned int nTimerID );
 	void SetEnableUpdate( bool bEnable );
 protected:
 	CTimer* m_pUpdateTimer ;

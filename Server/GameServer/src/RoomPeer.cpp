@@ -44,3 +44,13 @@ void CRoomPeer::OnGetCard( unsigned char nCardA, unsigned char nCardB , unsigned
 {
 	m_PeerCard.SetPeerCardByNumber(nCardA,nCardB,nCardC) ;
 }
+
+void CRoomPeer::OnEnterRoom(CRoom* pRoom )
+{
+
+}
+
+void CRoomPeer::OnExitRoom(CRoom* pRoom)
+{
+
+}
