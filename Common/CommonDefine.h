@@ -8,6 +8,9 @@
 #define MAX_ROOM_PEER 5
 #define TIMER_WAIT_TO_READY 10
 #define TIMER_WAIT_ACTION 30
+#define TIMER_WAIT_DISTRIBUTE 3
+#define TIMER_WAIT_PK 5
+#define TIMER_WAIT_FINISH 6
 enum eRoomPeerAction
 {
 	eRoomPeerAction_None,
@@ -16,12 +19,12 @@ enum eRoomPeerAction
 	eRoomPeerAction_Follow,
 	eRoomPeerAction_Add,
 	eRoomPeerAction_PK,
-	eRooPeerAction_GiveUp,
+	eRoomPeerAction_GiveUp,
 	eRoomPeerAction_ShowCard,
+	eRoomPeerAction_ViewCard,
 	eRoomPeerAction_TimesMoneyPk,
-	eRoomPeerAction_LevelRoom,
-	eRoomPeerAction_SpeakDefault,
-	eRoomPeerAction_SpeakWord,
+	eRoomPeerAction_LeaveRoom,
+	eRoomPeerAction_Speak,
 	eRoomPeerAction_Max
 };
 

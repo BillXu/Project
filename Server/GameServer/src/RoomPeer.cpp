@@ -33,6 +33,7 @@ void CRoomPeer::Reset()
 	m_nBetMoney = 0 ;
 	m_eState = eState_Wait ;
 	m_pRoom = NULL ;
+	bViewdCard = false ;
 }
 
 stBaseData* CRoomPeer::GetPlayerBaseData()

@@ -141,6 +141,15 @@ struct stMsgRoomActionCmd
 public:
 	stMsgRoomActionCmd(){cSysIdentifer = ID_MSG_C2S; usMsgType = MSG_ROOM_ACTION ;}
 	unsigned char nActionType ;  // eRoomPeerAction 
+	unsigned int nArgument ; // meanning depond on ActionType ;
+};
+
+struct stMsgRoomActionSpeak
+	:public stMsgRoomActionCmd
+{
+	bool bDefault ; // default or user input;
+	bool bText ; // default text id  or face id ;  id stored in nArgument ;
+	char* pContent ; // len stored in nArgument 
 };
 
 struct stMsgOtherPlayerCmd
@@ -150,6 +159,15 @@ public:
 	stMsgOtherPlayerCmd(){cSysIdentifer = ID_MSG_C2S; usMsgType = MSG_ROOM_OTHER_PLAYER_ACTION ; }
 	unsigned char nPeerIdx ;
 	unsigned char nActionType ;  // eRoomPeerAction 
+	unsigned int nArgument ; // meanning depond on ActionType ;
+};
+
+struct stMsgOtherPlayerSpeak
+	:public stMsgOtherPlayerCmd
+{
+	bool bDefault ; // default or user input;
+	bool bText ; // default text id  or face id ;  id stored in nArgument ;
+	char* pContent ; // len stored in nArgument 
 };
 
 struct stMsgRoomActionRet
@@ -157,13 +175,24 @@ struct stMsgRoomActionRet
 {
 public:
 	stMsgRoomActionRet(){cSysIdentifer = ID_MSG_S2C ; usMsgType = MSG_ROOM_ACTION_RET ; }
-	unsigned char nErr ;  // 1 room state is not suiteable ;
+	unsigned char nErr ;  // 1 room state is not suiteable ; 2  it is not your turn , can not do this action ; 3 . argument error ;
 };
 
 struct stGetCardPeer
+	:public stMsg
 {
+public:
+	stGetCardPeer(){cSysIdentifer = ID_MSG_S2C ; usMsgType = MSG_ROOM_DISTRIBUTE_CARD ;}
 	unsigned char nPeerIdx ;
 	unsigned char vCard[PEER_CARD_COUNT];
+};
+
+struct stMsgPlayerActionTurn
+	:public stMsg
+{
+public:
+	stMsgPlayerActionTurn(){cSysIdentifer = ID_MSG_S2C; usMsgType = MSG_ROOM_PLAYER_ACTION_TURN ;}
+	unsigned char nPlayerIdx ;
 };
 struct stMsgRoomDistributeCard
 	:public stMsg

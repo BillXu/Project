@@ -29,6 +29,11 @@ protected:
 	unsigned char GetReadyPeerCount();
 	void DistributeCard();
 	bool CheckAllPlayerReady();
+	bool NextActionPeerIdx();
+	bool CanPlayerDoThisAction(eRoomPeerAction eAction , CRoomPeer* pPeer );
+	void NextTurn();
+	void FinishThisMatch(CRoomPeer* peerWin );
+	void OnRestarMatch();
 protected:
 	unsigned int m_nRoomID ;
 	std::string m_strRoomName ;
@@ -38,6 +43,9 @@ protected:
 	CRoomPeer* m_pAllPeers[MAX_ROOM_PEER] ;
 	CTimer* m_pTimerToReady ;   // 等待所有玩家准备 .
 	CTimer* m_pTimerToAction ;  // 等待某个玩家执行操作. 
+	CTimer* m_pTimerWaitDistribute; // 等待发牌动画结束；
+	CTimer* m_pTimerWaitPK ; //   等待PK画面结束；
+	CTimer* m_pTimerWaitFinish; // 等待结束画面；
 
 	char m_nCurActionPeerIndex;
 	char m_nMainPeerIndex ; // 本局庄家的索引.

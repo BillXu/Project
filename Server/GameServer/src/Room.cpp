@@ -17,6 +17,15 @@ CRoom::CRoom( unsigned int nRoomID )
 	m_pTimerToAction = CTimerManager::SharedTimerManager()->AddTimer(this,(CTimerDelegate::lpTimerSelector)&CRoom::TimerFunc);
 	m_pTimerToAction->SetInterval(TIMER_WAIT_ACTION);
 
+	m_pTimerWaitDistribute = CTimerManager::SharedTimerManager()->AddTimer(this,(CTimerDelegate::lpTimerSelector)&CRoom::TimerFunc);
+	m_pTimerWaitDistribute->SetInterval(TIMER_WAIT_DISTRIBUTE);
+
+	m_pTimerWaitPK = CTimerManager::SharedTimerManager()->AddTimer(this,(CTimerDelegate::lpTimerSelector)&CRoom::TimerFunc);
+	m_pTimerWaitPK->SetInterval(TIMER_WAIT_PK);
+
+	m_pTimerWaitFinish = CTimerManager::SharedTimerManager()->AddTimer(this,(CTimerDelegate::lpTimerSelector)&CRoom::TimerFunc);
+	m_pTimerWaitFinish->SetInterval(TIMER_WAIT_FINISH);
+
 	m_nCurActionPeerIndex = 0 ;
 	m_nMainPeerIndex = 0; // 本局庄家的索引.
 
@@ -29,6 +38,9 @@ CRoom::~CRoom()
 {
 	CTimerManager::SharedTimerManager()->RemoveTimer(m_pTimerToReady);
 	CTimerManager::SharedTimerManager()->RemoveTimer(m_pTimerToAction);
+	CTimerManager::SharedTimerManager()->RemoveTimer(m_pTimerWaitDistribute);
+	CTimerManager::SharedTimerManager()->RemoveTimer(m_pTimerWaitPK);
+	CTimerManager::SharedTimerManager()->RemoveTimer(m_pTimerWaitFinish);
 }
 
 void CRoom::Init()
@@ -95,6 +107,24 @@ void CRoom::TimerFunc(float fTimeElaps,unsigned int nTimerID )
 			return ;
 		}
 		DistributeCard() ;
+	}
+	else if ( nTimerID == m_pTimerWaitDistribute->GetTimerID() )
+	{
+		stMsgPlayerActionTurn msg ;
+		msg.nPlayerIdx = m_nMainPeerIndex ;
+		SendMsgToRoomPeers((char*)&msg,sizeof(msg),NULL) ;
+		m_pTimerToAction->Reset();
+		m_pTimerToAction->Start();
+	}
+	else if ( nTimerID == m_pTimerWaitPK->GetTimerID() )
+	{
+		m_pTimerWaitPK->Stop() ;
+		NextTurn();
+	}
+	else if ( nTimerID == m_pTimerWaitFinish->GetTimerID() )
+	{
+		m_pTimerWaitFinish->Stop() ;
+		OnRestarMatch();
 	}
 }
 
@@ -200,32 +230,151 @@ void CRoom::OnPlayerExit( CRoomPeer* pPeerToEnter )
 
 void CRoom::OnProcessPlayerAction(stMsgRoomActionCmd* pActMsg, CRoomPeer* pPeer )
 {
+	if ( CanPlayerDoThisAction((eRoomPeerAction)pActMsg->nActionType,pPeer) == false )
+		return ;
+
+	stMsgOtherPlayerCmd cmdmsg ;
+	cmdmsg.nPeerIdx = pPeer->m_nPeerIdx ;
+	cmdmsg.nActionType = pActMsg->nActionType ;
+	cmdmsg.nArgument = pActMsg->nArgument ;
+
 	switch( pActMsg->nActionType )
 	{
 	case eRoomPeerAction_Ready:
 		{
-			if ( m_eState != eRoom_Wait )
-			{
-				stMsgRoomActionRet RetMsg ;
-				RetMsg.nErr = 1 ; 
-				pPeer->SendMsgToClient((char*)&RetMsg,sizeof(RetMsg)) ;
-				return ;
-			}
 			//m_pTimerToReady->Reset();
 			//m_pTimerToReady->Start() ;
 			pPeer->m_eState = CRoomPeer::eState_Ready ;
-
-			stMsgOtherPlayerCmd msg ;
-			msg.nActionType = pActMsg->nActionType ;
-			msg.nPeerIdx = pPeer->m_nPeerIdx ;
-			SendMsgToRoomPeers((char*)&msg,sizeof(msg),pPeer) ;
+			SendMsgToRoomPeers((char*)&cmdmsg,sizeof(cmdmsg),NULL) ;
 			// check if all player ready ?
 			if ( CheckAllPlayerReady() )
 			{
 				DistributeCard();
 			}
 		}
+	case eRoomPeerAction_Follow:
+		{
+			int nBet = m_nSingleBetMoney * (pPeer->m_bViewdCard ? 2 : 1 );
+			if ( !pPeer->AddBet(nBet) )
+			{
+				cmdmsg.nActionType = eRoomPeerAction_GiveUp ;
+				pPeer->m_eState = CRoomPeer::eState_GiveUp ;
+			}
+			else
+			{
+				m_nAllBetMoney += nBet ;
+			}
+			SendMsgToRoomPeers((char*)&cmdmsg,sizeof(cmdmsg),NULL) ;
+			// go to next turn ;
+			NextTurn();
+		}
 		break;
+	case eRoomPeerAction_Add:
+		{ 
+			int nBet = (m_nSingleBetMoney + pActMsg->nArgument) * (pPeer->m_bViewdCard ? 2 : 1 );
+			if ( !pPeer->AddBet(nBet) )
+			{
+				cmdmsg.nActionType = eRoomPeerAction_GiveUp ;
+				pPeer->m_eState = CRoomPeer::eState_GiveUp ;
+			}
+			else
+			{
+				m_nSingleBetMoney += pActMsg->nArgument ;
+				m_nAllBetMoney += nBet ;
+			}
+			SendMsgToRoomPeers((char*)&cmdmsg,sizeof(cmdmsg),NULL) ;
+			// go to next turn ;
+			NextTurn();
+		}
+		break;
+	case eRoomPeerAction_PK:
+		{
+			if ( (pActMsg->nArgument < 0 || pActMsg->nArgument >= MAX_ROOM_PEER) || m_pAllPeers[pActMsg->nArgument] == NULL )
+			{
+				CLogMgr::SharedLogMgr()->ErrorLog("Error target idx = %d",pActMsg->nArgument);
+				return ;
+			}
+
+			CRoomPeer* pPKTarget = m_pAllPeers[pActMsg->nArgument] ;
+			int nBet = m_nSingleBetMoney * (pPKTarget->m_nTimesMoneyForPK + pPeer->m_bViewdCard ? 1 : 0 );
+			pPeer->AddBet(nBet) ;
+			m_nAllBetMoney += nBet ;
+			bool bwin = pPeer->m_PeerCard.PKPeerCard(&pPKTarget->m_PeerCard) ;
+			if ( bwin )
+			{
+				pPKTarget->m_eState = CRoomPeer::eState_Failed ;
+			}
+			else
+			{
+				pPeer->m_eState = CRoomPeer::eState_Failed ;
+			}
+			SendMsgToRoomPeers((char*)&cmdmsg,sizeof(cmdmsg),NULL) ;
+			m_pTimerWaitPK->Reset();
+			m_pTimerWaitPK->Start() ;
+		}
+		break;
+	case eRoomPeerAction_GiveUp:
+		{
+			pPeer->m_eState = CRoomPeer::eState_GiveUp ;
+			SendMsgToRoomPeers((char*)&cmdmsg,sizeof(cmdmsg),NULL) ;
+			// go to next turn ;
+			NextTurn();
+		}
+		break;
+	case eRoomPeerAction_ShowCard:
+		{
+			if ( pActMsg->nArgument <= 0 || pActMsg->nArgument > 52 )
+			{
+				CLogMgr::SharedLogMgr()->ErrorLog("Can not Show card = %d",pActMsg->nArgument ) ;
+				stMsgRoomActionRet msgRet ;
+				msgRet.nErr = 3 ;
+				pPeer->SendMsgToClient((char*)&msgRet,sizeof(msgRet));
+				return ;
+			}
+			pPeer->m_PeerCard.ShowCardByNumber(pActMsg->nArgument) ;
+			SendMsgToRoomPeers((char*)&cmdmsg,sizeof(cmdmsg),NULL) ;
+		}
+		break;
+	case eRoomPeerAction_TimesMoneyPk:
+		{
+			pPeer->m_nTimesMoneyForPK = pActMsg->nArgument ;
+			SendMsgToRoomPeers((char*)&cmdmsg,sizeof(cmdmsg),NULL) ;
+		}
+		break;
+	case eRoomPeerAction_ViewCard:
+		{
+			SendMsgToRoomPeers((char*)&cmdmsg,sizeof(cmdmsg),NULL) ;
+			pPeer->m_bViewdCard = true ;
+		}
+		break;
+	case eRoomPeerAction_Speak:
+		{
+			stMsgRoomActionSpeak* pSpeakMsg = (stMsgRoomActionSpeak*)pActMsg ;
+			stMsgOtherPlayerSpeak pSendMsg ;
+			pSendMsg.bDefault = pSpeakMsg->bDefault ;
+			pSendMsg.bText = pSpeakMsg->bText ;
+			pSendMsg.nActionType = eRoomPeerAction_Speak ;
+			pSendMsg.nArgument = pSpeakMsg->nArgument ;
+			pSendMsg.nPeerIdx = pPeer->m_nPeerIdx ;
+			pSendMsg.pContent = NULL ;
+			if (pSendMsg.bDefault )
+			{
+				SendMsgToRoomPeers((char*)&pSendMsg,sizeof(pSendMsg),NULL) ;
+			}
+			else
+			{
+				char * pBuffer = new char[ sizeof(pSendMsg) + sizeof(char) * pSendMsg.nArgument ] ;
+				memcpy(pBuffer,&pSendMsg,sizeof(pSendMsg));
+				memcpy(pBuffer + sizeof(pSendMsg),((char*)&pActMsg) + sizeof(stMsgRoomActionSpeak), pSpeakMsg->nArgument );
+				SendMsgToRoomPeers(pBuffer,sizeof(pSendMsg) + sizeof(char) * pSendMsg.nArgument,NULL) ;
+				delete[]pBuffer ;
+			}
+		}
+		break; 
+	default:
+		{
+			CLogMgr::SharedLogMgr()->ErrorLog("Unknown player action type , playerName = %s",pPeer->GetPlayerBaseData()->strName);
+		} 
 	}
 }
 
@@ -295,4 +444,99 @@ unsigned char CRoom::GetReadyPeerCount()
 		}
 	}
 	return nCount ;
+}
+
+bool CRoom::NextActionPeerIdx()
+{
+	// check if just left one ;
+	int iLeftNum = 0 ;
+	unsigned char leftIdx = -1 ;
+	for ( int ndx = 0 ; ndx < MAX_ROOM_PEER; ++ndx )
+	{
+		if ( m_pAllPeers[ndx] && m_pAllPeers[ndx]->m_eState == CRoomPeer::eState_Playing )
+		{
+			++iLeftNum ;
+			leftIdx = ndx ;
+		}
+	}
+	if ( iLeftNum == 1 )
+	{
+		FinishThisMatch(m_pAllPeers[leftIdx]) ;
+		return false ;
+	}
+	// next ;
+	unsigned char nNextId = -1 ;
+	for ( int ndx = m_nCurActionPeerIndex +1 ; ndx < MAX_ROOM_PEER; ++ndx )
+	{
+		if ( m_pAllPeers[ndx] && m_pAllPeers[ndx]->m_eState == CRoomPeer::eState_Playing )
+		{
+			nNextId = ndx ;
+			break;
+		}
+	}
+	if ( nNextId >= 0 )
+	{
+		m_nCurActionPeerIndex = nNextId ;
+		return true;
+	}
+
+	for ( int ndx = m_nCurActionPeerIndex - 1 ; ndx >= 0; --ndx )
+	{
+		if ( m_pAllPeers[ndx] && m_pAllPeers[ndx]->m_eState == CRoomPeer::eState_Playing )
+		{
+			nNextId = ndx ;
+			break;
+		}
+	}
+
+	if ( nNextId >= 0 )
+	{
+		m_nCurActionPeerIndex = nNextId ;
+		return true;
+	}
+
+	CLogMgr::SharedLogMgr()->ErrorLog("impossible error inCRoom::NextActionPeerIdx() ");
+	return true ;
+}
+
+bool CRoom::CanPlayerDoThisAction(eRoomPeerAction eAction , CRoomPeer* pPeer )
+{
+	// unfinished ; warning 
+	if ( pPeer->m_eState != CRoomPeer::eState_Playing )
+	{
+		stMsgRoomActionRet msgRet ;
+		msgRet.nErr = 1 ;
+		pPeer->SendMsgToClient((char*)&msgRet,sizeof(msgRet));
+		return ;
+	}
+
+	if ( pPeer->m_nPeerIdx != m_nCurActionPeerIndex )
+	{
+		stMsgRoomActionRet msgRet ;
+		msgRet.nErr = 2 ;
+		pPeer->SendMsgToClient((char*)&msgRet,sizeof(msgRet)) ;
+		return ;
+	}
+}
+
+void CRoom::NextTurn()
+{
+	if ( NextActionPeerIdx() )
+	{
+		m_pTimerToAction->Reset();
+		m_pTimerToAction->Start();
+		stMsgPlayerActionTurn actMsg ;
+		actMsg.nPlayerIdx = m_nCurActionPeerIndex ;
+		SendMsgToRoomPeers((char*)&actMsg,sizeof(actMsg),NULL) ;
+	}
+}
+
+void CRoom::FinishThisMatch(CRoomPeer* peerWin )
+{
+
+}
+
+void CRoom::OnRestarMatch()
+{
+
 }

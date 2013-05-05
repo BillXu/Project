@@ -30,6 +30,7 @@ public:
 	void OnGetCard( unsigned char nCardA, unsigned char nCardB , unsigned char nCardC );
 	void OnEnterRoom(CRoom* pRoom );
 	void OnExitRoom(CRoom* pRoom);
+	bool AddBet( int nBetMoney ) ;
 protected:
 	friend CRoom ;
 protected:
@@ -39,4 +40,5 @@ protected:
 	eRoomPeerState m_eState ;
 	CRoom* m_pRoom ;
 	int m_nPeerIdx ;// index used in room ;
+	bool m_bViewdCard ;
 };
