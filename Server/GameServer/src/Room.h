@@ -23,7 +23,7 @@ public:
 	void SetRoomID(unsigned int nRoomId );
 	void OnPlayerEnter( CRoomPeer* pPeerToEnter );
 	void OnPlayerExit( CRoomPeer* pPeerToEnter );
-	void OnProcessPlayerAction(stMsgRoomActionCmd* pActMsg, CRoomPeer* pPeer );
+	void OnProcessPlayerAction(stMsgActionCmd* pActMsg, CRoomPeer* pPeer );
 	eRoomState GetRoomState(){ return m_eState ;}
 protected:
 	unsigned char GetReadyPeerCount();
@@ -34,6 +34,7 @@ protected:
 	void NextTurn();
 	void FinishThisMatch(CRoomPeer* peerWin );
 	void OnRestarMatch();
+	void UpdateMainPlayerIndex();
 protected:
 	unsigned int m_nRoomID ;
 	std::string m_strRoomName ;

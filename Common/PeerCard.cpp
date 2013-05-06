@@ -210,3 +210,10 @@ void CPeerCard::LogInfo()
 			m_vCard[i]->LogCardInfo();
 	}
 }
+
+void CPeerCard::Reset()
+{
+	m_eCardType = ePeerCard_None ;
+	m_vRepacedCard.clear();
+	m_vShowedCard.clear() ;
+}

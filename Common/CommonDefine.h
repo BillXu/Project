@@ -24,7 +24,8 @@ enum eRoomPeerAction
 	eRoomPeerAction_ViewCard,
 	eRoomPeerAction_TimesMoneyPk,
 	eRoomPeerAction_LeaveRoom,
-	eRoomPeerAction_Speak,
+	eRoomPeerAction_Speak_Default,
+	eRoomPeerAction_Speak_Text,
 	eRoomPeerAction_Max
 };
 

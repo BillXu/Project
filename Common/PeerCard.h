@@ -25,6 +25,7 @@ public:
 	void ShowCardByNumber(unsigned char nCardNum);
 	ePeerCardType GetType(){ return m_eCardType ;}
 	void LogInfo();
+	void Reset();
 protected:
 	void ArrangeCard();
 protected:

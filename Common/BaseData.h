@@ -3,7 +3,7 @@
 // 这里面不能有指针，因为这个结构要发送消息.  
 struct stBaseData  
 {
-	long long nCoin ;
+	int nCoin ;
 	unsigned int nDiamoned ;
 	char strName[MAX_LEN_CHARACTER_NAME] ;
 public:
