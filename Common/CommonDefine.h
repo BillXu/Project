@@ -11,6 +11,7 @@
 #define TIMER_WAIT_DISTRIBUTE 3
 #define TIMER_WAIT_PK 5
 #define TIMER_WAIT_FINISH 6
+#define MAX_ROOM_LEVEL 3 
 enum eRoomPeerAction
 {
 	eRoomPeerAction_None,
@@ -40,8 +41,15 @@ enum eRoomFlag
 
 enum eRoomState
 {
-	eRoom_Wait,
-	eRoom_Playing,
-	eRoom_End,
-	eRoom_Max,
+	eRoomState_Wait,
+	eRoomState_Playing,
+	eRoomState_End,
+	eRoomState_Max,
+};
+
+enum eBigRoomType
+{
+	eRoomType_None,
+	eRoomType_Common = eRoomType_None,
+	eRoomType_Max,
 };

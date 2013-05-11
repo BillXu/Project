@@ -76,13 +76,17 @@ struct stMsgRoomEnter
 {
 public:
 	stMsgRoomEnter(){cSysIdentifer = ID_MSG_C2S; usMsgType = MSG_ENTER ;}
+	bool bVip ;
+	unsigned char nBigRoomType ;  // eBigRoomType 
+	unsigned char nRoomLevel ;
+	int nVipRoomID ;
 };
 
 struct stMsgRoomEnterRet
 	:public stMsg 
 {
 	stMsgRoomEnterRet(){cSysIdentifer = ID_MSG_S2C; usMsgType = MSG_ENTER ;}
-	unsigned char nRet ; // 0 ; success ; 1 condition do not meet ;
+	unsigned char nRet ; // 0 ; success ; 1 condition do not meet ; 2 room don't exsit ; 3 room is full ;
 };
 
 struct stRoomPeerBrifData

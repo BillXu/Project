@@ -244,6 +244,7 @@
     <ClInclude Include="src\Player.h" />
     <ClInclude Include="src\PlayerManager.h" />
     <ClInclude Include="src\Room.h" />
+    <ClInclude Include="src\RoomManager.h" />
     <ClInclude Include="src\RoomPeer.h" />
   </ItemGroup>
   <ItemGroup>
@@ -357,6 +358,7 @@
     <ClCompile Include="src\Player.cpp" />
     <ClCompile Include="src\PlayerManager.cpp" />
     <ClCompile Include="src\Room.cpp" />
+    <ClCompile Include="src\RoomManager.cpp" />
     <ClCompile Include="src\RoomPeer.cpp" />
   </ItemGroup>
   <ItemGroup>

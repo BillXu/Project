@@ -10,21 +10,22 @@ class CRoom
 	:public CTimerDelegate
 {
 public:
-	CRoom( unsigned int nRoomID );
+	CRoom(int nBaseMoney);
 	~CRoom();
 	void Init();
 	bool HasFlag(eRoomFlag eFlag );
 	void SetFlag(eRoomFlag eFlag );
+	void SetFinalFlag( int nFlag ){ m_nflag = nFlag ;}
 	void OnRoomMsg(stMsg* pMsg , CRoomPeer* pPeer );
 	void SendMsgToRoomPeers( char* pbuffer ,unsigned short nLen ,CRoomPeer* pExcept );
 	void TimerFunc(float fTimeElaps,unsigned int nTimerID );
 	unsigned char GetRoomPeerCount();
 	unsigned int GetRoomID();
-	void SetRoomID(unsigned int nRoomId );
 	void OnPlayerEnter( CRoomPeer* pPeerToEnter );
 	void OnPlayerExit( CRoomPeer* pPeerToEnter );
 	void OnProcessPlayerAction(stMsgActionCmd* pActMsg, CRoomPeer* pPeer );
 	eRoomState GetRoomState(){ return m_eState ;}
+	void SetRoomName(const char* pName ){ m_strRoomName = pName ;}
 protected:
 	unsigned char GetReadyPeerCount();
 	void DistributeCard();
@@ -36,9 +37,12 @@ protected:
 	void OnRestarMatch();
 	void UpdateMainPlayerIndex();
 protected:
+	static unsigned int s_RoomID ;
+protected:
 	unsigned int m_nRoomID ;
 	std::string m_strRoomName ;
 	int m_nflag ;
+	int m_nBaseBetMoney ;
 	CPoker m_Poker ;
 	
 	CRoomPeer* m_pAllPeers[MAX_ROOM_PEER] ;

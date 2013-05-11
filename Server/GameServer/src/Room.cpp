@@ -3,9 +3,12 @@
 #include "RoomPeer.h"
 #include "Player.h"
 #include "LogManager.h"
-CRoom::CRoom( unsigned int nRoomID )
-	:m_nRoomID(nRoomID),m_strRoomName(""),m_nflag(0)
+unsigned int CRoom::s_RoomID = 0 ;
+CRoom::CRoom( int nBaseMoney)
+	:m_nBaseBetMoney(nBaseMoney),m_strRoomName(""),m_nflag(0)
 {
+	m_nRoomID = ++s_RoomID ;
+
 	for ( int i = 0 ; i < MAX_ROOM_PEER ; ++i )
 	{
 		m_pAllPeers[i] = NULL ;
@@ -32,6 +35,7 @@ CRoom::CRoom( unsigned int nRoomID )
 	m_nAllBetMoney = 0 ;
 	m_nRound = 0  ;
 	m_nSingleBetMoney = 0 ; 
+	OnRestarMatch();
 }
 
 CRoom::~CRoom()
@@ -152,11 +156,6 @@ unsigned char CRoom::GetRoomPeerCount()
 unsigned int CRoom::GetRoomID()
 {
 	return m_nRoomID ;
-}
-
-void CRoom::SetRoomID(unsigned int nRoomId )
-{
-	m_nRoomID = nRoomId ;
 }
 
 void CRoom::OnPlayerEnter( CRoomPeer* pPeerToEnter )
@@ -493,7 +492,7 @@ void CRoom::DistributeCard()
 	SendMsgToRoomPeers(pBuffer,nLen,NULL) ;
 	delete[] pBuffer ;
 	delete[] pVGetCardPeer ;
-	m_eState = eRoom_Playing ;
+	m_eState = eRoomState_Playing ;
 }
 
 bool CRoom::CheckAllPlayerReady()
@@ -656,7 +655,7 @@ void CRoom::FinishThisMatch(CRoomPeer* peerWin )
 	SendMsgToRoomPeers((char*)&msg,sizeof(msg),NULL) ;
 	m_pTimerWaitFinish->Reset() ;
 	m_pTimerWaitFinish->Start() ;
-	m_eState = eRoom_End ;
+	m_eState = eRoomState_End ;
 }
 
 void CRoom::OnRestarMatch()
@@ -677,11 +676,11 @@ void CRoom::OnRestarMatch()
 
 	m_nMainPeerIndex = 0 ;
 	m_nCurActionPeerIndex = m_nMainPeerIndex ;
-	m_eState = eRoom_Wait ;
+	m_eState = eRoomState_Wait ;
 
 	m_nAllBetMoney = 0 ;
 	m_nRound = 1 ;
-	m_nSingleBetMoney = 1000 ;
+	m_nSingleBetMoney = m_nBaseBetMoney ;
 }
 
 void CRoom::UpdateMainPlayerIndex()

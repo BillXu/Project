@@ -5,6 +5,7 @@
 #include "PlayerManager.h"
 #include "ServerMessageDefine.h"
 #include <ctime>
+#include "Timer.h"
 
 #ifndef USHORT_MAX
 #define USHORT_MAX 65535 
@@ -63,6 +64,8 @@ void CGameServerApp::Init()
 	CNetWorkMgr::SharedNetWorkMgr()->AddMessageDelegate(this,USHORT_MAX); // process first ;
 	CNetWorkMgr::SharedNetWorkMgr()->AddMessageDelegate(CPlayerManager::SharedPlayerMgr());
 	ConnectToOtherServer();
+	// init component ;
+	m_pRoomMgr.Init() ;
 }
 
 bool CGameServerApp::OnMessage( RakNet::Packet* pMsg )
@@ -121,6 +124,7 @@ bool CGameServerApp::OnConnectStateChanged( eConnectState eSate )
 bool CGameServerApp::Run()
 {
 	CNetWorkMgr::SharedNetWorkMgr()->ReciveMessage() ;
+	CTimerManager::SharedTimerManager()->Update();
 	return true ;
 }
 

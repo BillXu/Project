@@ -2,6 +2,7 @@
 #include "Player.h"
 #include "Room.h"
 #include "LogManager.h"
+#include "GameServerApp.h"
 CRoomPeer::CRoomPeer(CPlayer* pPlayer )
 	:IPlayerComponent(pPlayer)
 {
@@ -18,7 +19,55 @@ CRoomPeer::~CRoomPeer()
 
 bool CRoomPeer::OnMessage(stMsg* pMsg )
 {
-	if ( pMsg->usMsgType > MSG_ROOM_MSG_BEGIN && pMsg->usMsgType < MSG_ROOM_MSG_END )
+	if ( pMsg->usMsgType == MSG_ENTER )
+	{
+		stMsgRoomEnter* pRealMsg = (stMsgRoomEnter*)pMsg ;
+		stMsgRoomEnterRet msgRet ;
+		msgRet.nRet = 0 ;
+		CRoom* pRoom = NULL ;
+		if ( pRealMsg->bVip )
+		{
+			if ( GetPlayerBaseData()->nVipLevel <= 0 )
+			{
+				msgRet.nRet = 1 ;
+			}
+			else
+			{
+				pRoom = CGameServerApp::SharedGameServerApp()->GetRoomMgr()->GetVipRoom(pRealMsg->nVipRoomID) ;
+				if ( !pRoom )
+				{
+					msgRet.nRet = 2 ;
+				}
+				else if ( pRoom->GetRoomPeerCount() >= MAX_ROOM_PEER )
+				{
+					msgRet.nRet = 3 ;
+				}
+			}
+		}
+		else
+		{
+			if ( CGameServerApp::SharedGameServerApp()->GetRoomMgr()->CanEnterRoom((eBigRoomType)pRealMsg->nBigRoomType,pRealMsg->nRoomLevel,GetPlayer()))
+			{
+				pRoom = CGameServerApp::SharedGameServerApp()->GetRoomMgr()->GetRoomToEnter((eBigRoomType)pRealMsg->nBigRoomType,pRealMsg->nRoomLevel);
+				if ( !pRoom )
+				{
+					msgRet.nRet = 2 ;
+				}
+			}
+			else
+			{
+				msgRet.nRet = 1 ;
+			}
+		}
+
+		SendMsgToClient((char*)&msgRet,sizeof(msgRet));
+		if ( msgRet.nRet == 0 )
+		{
+			pRoom->OnPlayerEnter(this) ;
+			m_pRoom = pRoom ;
+		}
+	}
+	else if ( pMsg->usMsgType > MSG_ROOM_MSG_BEGIN && pMsg->usMsgType < MSG_ROOM_MSG_END )
 	{
 		if ( m_pRoom )
 		{

@@ -1,5 +1,6 @@
 #pragma once
 #include "NetWorkManager.h"
+#include "RoomManager.h"
 class CGameServerApp
 	:public CNetMessageDelegate
 {
@@ -14,6 +15,7 @@ public:
 
 	void SendMsgToGateServer( unsigned int nUserUID , const char* pBuffer , int nLen, bool bBroadcast = false );
 	void SendMsgToDBServer( const char* pBuffer , int nLen );
+	CRoomManager* GetRoomMgr(){ return &m_pRoomMgr;}
 protected:
 	void ConnectToOtherServer();
 public:
@@ -30,4 +32,6 @@ protected:
 	RakNet::RakNetGUID m_nDBServerNetUID ;
 	bool m_bGateServerConnected ;
 	bool m_bDBserverConnected ;
+	// conpentent ;
+	CRoomManager m_pRoomMgr ;
 };
