@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		9A3E6F8A174A302900DCC974 /* fileLookup.plist in Resources */ = {isa = PBXBuildFile; fileRef = 9A3E6F84174A302900DCC974 /* fileLookup.plist */; };
 		9A3E6F8B174A302900DCC974 /* iphonehd in Resources */ = {isa = PBXBuildFile; fileRef = 9A3E6F85174A302900DCC974 /* iphonehd */; };
-		9A3E6F8C174A302900DCC974 /* main.js in Sources */ = {isa = PBXBuildFile; fileRef = 9A3E6F86174A302900DCC974 /* main.js */; };
 		9A3E6F8D174A302900DCC974 /* iphone in Resources */ = {isa = PBXBuildFile; fileRef = 9A3E6F87174A302900DCC974 /* iphone */; };
 		9A3E6F8E174A302900DCC974 /* UIScene in Resources */ = {isa = PBXBuildFile; fileRef = 9A3E6F88174A302900DCC974 /* UIScene */; };
 		9A3E6F8F174A302900DCC974 /* resources-iphone in Resources */ = {isa = PBXBuildFile; fileRef = 9A3E6F89174A302900DCC974 /* resources-iphone */; };
@@ -390,7 +389,6 @@
 /* Begin PBXFileReference section */
 		9A3E6F84174A302900DCC974 /* fileLookup.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = fileLookup.plist; path = Resources/fileLookup.plist; sourceTree = "<group>"; };
 		9A3E6F85174A302900DCC974 /* iphonehd */ = {isa = PBXFileReference; lastKnownFileType = folder; name = iphonehd; path = Resources/iphonehd; sourceTree = "<group>"; };
-		9A3E6F86174A302900DCC974 /* main.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = main.js; path = Resources/main.js; sourceTree = "<group>"; };
 		9A3E6F87174A302900DCC974 /* iphone */ = {isa = PBXFileReference; lastKnownFileType = folder; name = iphone; path = Resources/iphone; sourceTree = "<group>"; };
 		9A3E6F88174A302900DCC974 /* UIScene */ = {isa = PBXFileReference; lastKnownFileType = folder; name = UIScene; path = Resources/UIScene; sourceTree = "<group>"; };
 		9A3E6F89174A302900DCC974 /* resources-iphone */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "resources-iphone"; path = "Resources/resources-iphone"; sourceTree = "<group>"; };
@@ -1303,7 +1301,6 @@
 			children = (
 				9A3E6F84174A302900DCC974 /* fileLookup.plist */,
 				9A3E6F85174A302900DCC974 /* iphonehd */,
-				9A3E6F86174A302900DCC974 /* main.js */,
 				9A3E6F87174A302900DCC974 /* iphone */,
 				9A3E6F88174A302900DCC974 /* UIScene */,
 				9A3E6F89174A302900DCC974 /* resources-iphone */,
@@ -3103,7 +3100,6 @@
 				9A41C754174A12820000B945 /* NetWorkManager.cpp in Sources */,
 				9A41C755174A12820000B945 /* PeerCard.cpp in Sources */,
 				9A41C75A174A12820000B945 /* Utility.cpp in Sources */,
-				9A3E6F8C174A302900DCC974 /* main.js in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
