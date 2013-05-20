@@ -165,3 +165,11 @@ pip-log.txt
 .DS_Store
 *.png
 *.xcuserstate
+
+*.xcuserstate
+
+Client/.DS_Store
+
+Client/.DS_Store
+
+Client/GoldenPoker.xcodeproj/project.xcworkspace/xcuserdata/BillSky.xcuserdatad/UserInterfaceState.xcuserstate
