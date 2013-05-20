@@ -173,3 +173,15 @@ Client/.DS_Store
 Client/.DS_Store
 
 Client/GoldenPoker.xcodeproj/project.xcworkspace/xcuserdata/BillSky.xcuserdatad/UserInterfaceState.xcuserstate
+
+*.ccbi
+
+*.ccbi
+
+*.plist
+
+Client/GoldenPoker/Resources/fileLookup.plist
+
+Client/GoldenPoker/Resources/main.js
+
+*.js
