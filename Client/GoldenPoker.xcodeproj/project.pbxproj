@@ -378,7 +378,6 @@
 		9A41C753174A12820000B945 /* WSAStartupSingleton.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A41C6D0174A12820000B945 /* WSAStartupSingleton.cpp */; };
 		9A41C754174A12820000B945 /* NetWorkManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A41C6D3174A12820000B945 /* NetWorkManager.cpp */; };
 		9A41C755174A12820000B945 /* PeerCard.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A41C6D5174A12820000B945 /* PeerCard.cpp */; };
-		9A41C757174A12820000B945 /* ServerNetwork.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A41C6DE174A12820000B945 /* ServerNetwork.cpp */; };
 		9A41C75A174A12820000B945 /* Utility.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A41C6E4174A12820000B945 /* Utility.cpp */; };
 /* End PBXBuildFile section */
 
@@ -1216,8 +1215,6 @@
 		9A41C6D4174A12820000B945 /* NetWorkManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NetWorkManager.h; sourceTree = "<group>"; };
 		9A41C6D5174A12820000B945 /* PeerCard.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PeerCard.cpp; sourceTree = "<group>"; };
 		9A41C6D6174A12820000B945 /* PeerCard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PeerCard.h; sourceTree = "<group>"; };
-		9A41C6DE174A12820000B945 /* ServerNetwork.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ServerNetwork.cpp; sourceTree = "<group>"; };
-		9A41C6DF174A12820000B945 /* ServerNetwork.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ServerNetwork.h; sourceTree = "<group>"; };
 		9A41C6E4174A12820000B945 /* Utility.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Utility.cpp; sourceTree = "<group>"; };
 		9A41C6E5174A12820000B945 /* Utility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Utility.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -2393,8 +2390,6 @@
 				9A41C6D4174A12820000B945 /* NetWorkManager.h */,
 				9A41C6D5174A12820000B945 /* PeerCard.cpp */,
 				9A41C6D6174A12820000B945 /* PeerCard.h */,
-				9A41C6DE174A12820000B945 /* ServerNetwork.cpp */,
-				9A41C6DF174A12820000B945 /* ServerNetwork.h */,
 				9A41C6E4174A12820000B945 /* Utility.cpp */,
 				9A41C6E5174A12820000B945 /* Utility.h */,
 			);
@@ -3084,7 +3079,6 @@
 				9A41C753174A12820000B945 /* WSAStartupSingleton.cpp in Sources */,
 				9A41C754174A12820000B945 /* NetWorkManager.cpp in Sources */,
 				9A41C755174A12820000B945 /* PeerCard.cpp in Sources */,
-				9A41C757174A12820000B945 /* ServerNetwork.cpp in Sources */,
 				9A41C75A174A12820000B945 /* Utility.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
