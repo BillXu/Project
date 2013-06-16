@@ -39,14 +39,14 @@ struct stMsgRegisterRet
 	//unsigned char nPaswordLen ; // used when visitor register  // Password = pAccount ;
 };
 
-struct stMsgConnectRet
-	:public stMsg
-{
-public:
-	stMsgConnectRet(){ cSysIdentifer = ID_MSG_S2C ; usMsgType = MSG_CONNECT_RET ; }
-	bool bOk ;
-	unsigned char nErr ; // 1 ; no proper server ;
-};
+//struct stMsgConnectRet
+//	:public stMsg
+//{
+//public:
+//	stMsgConnectRet(){ cSysIdentifer = ID_MSG_S2C ; usMsgType = MSG_CONNECT_RET ; }
+//	bool bOk ;
+//	unsigned char nErr ; // 1 ; no proper server ;
+//};
 
 struct stMsgLogin
 	:public stMsg
@@ -65,11 +65,54 @@ public:
 	stMsgLoginRet()
 	{
 		cSysIdentifer = ID_MSG_S2C ; usMsgType = MSG_LOGIN;
+		nPlayerUID = 0 ;
 	}
 	bool bOk ; 
 	unsigned char nRetFlag ;  // 1 account don't exsit , 2 password error ;
+	unsigned int nPlayerUID ; 
 };
 
+struct stMsgUIDLogin
+	:public stMsg
+{
+	stMsgUIDLogin()
+	{
+		cSysIdentifer = ID_MSG_C2S; usMsgType = MSG_UID_LOGIN ;
+	}
+	unsigned int nPlayerUID ;
+};
+
+struct stMsgUIDLoginRet
+	:public stMsg
+{
+public:
+	stMsgUIDLoginRet()
+	{
+		cSysIdentifer = ID_MSG_S2C; usMsgType = MSG_UID_LOGIN ;
+	}
+	unsigned char nRet ;  // zero success ; 1 , don't have active peer , 2 don't have idle server ;
+};
+
+struct stMsgReconnect
+	:public stMsg
+{
+	stMsgReconnect()
+	{
+		cSysIdentifer = ID_MSG_C2S ; usMsgType = MSG_RECONNECT ;
+	}
+	unsigned int nPlayerUID ;
+};
+
+struct stMsgReconnectRet
+	:public stMsg
+{
+	stMsgReconnectRet()
+	{
+		cSysIdentifer = ID_MSG_S2C ; usMsgType = MSG_RECONNECT ;
+	}
+
+	bool bSuccess ;
+};
 // room message ;
 struct stMsgRoomEnter
 	:public stMsg 

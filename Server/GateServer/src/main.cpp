@@ -42,7 +42,8 @@ int main()
 	while( true )
 	{
 		CServerNetwork::SharedNetwork()->RecieveMsg();
+		CGatePeerMgr::SharedGatePeerMgr()->Update(0) ;
 		Sleep(5);
 	}
 	return 0 ; 
-}
+}                                           

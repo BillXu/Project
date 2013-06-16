@@ -4,6 +4,7 @@
 #include "ServerNetwork.h"
 #include "ServerMessageDefine.h"
 #include "CommonDefine.h"
+#include "GameServerPeer.h"
 #define SERVER_IDEAL_PLAYER_COUNT 2000
 #define RESERVE_PEER_COUN 200
 CGatePeerMgr* CGatePeerMgr::SharedGatePeerMgr()
@@ -24,57 +25,19 @@ CGatePeerMgr::~CGatePeerMgr()
 
 bool CGatePeerMgr::OnMessage( RakNet::Packet* pData )
 {
-	stMsg* pMsg = (stMsg*)pData->data ;
-	if ( pMsg->cSysIdentifer == ID_MSG_VERIFY && MSG_VERIFY_GMS == pMsg->usMsgType )
+	if ( ProcessGateLogicMsg(pData ) )
 	{
-		// confirm this peer is game Server ;
-		CGatePeer* Peer = GetReserveGatePeer();
-		if ( Peer )
-		{
-			Peer->Reset(GeneratePeerUID(),pData->guid) ;
-		}
-		else
-		{
-			Peer = new CGatePeer(GeneratePeerUID(),pData->guid) ;
-		}
-		m_vAllGatePeers[pData->guid] = Peer ;
-		Peer->SetServer(true) ;
-		m_vServerPeers[Peer->GetSelfNetGUID()] = Peer ;
-		CLogMgr::SharedLogMgr()->PrintLog("A GameServer Entered : %s", pData->systemAddress.ToString(true) );
-		return true;
-	}
-	else if ( pMsg->cSysIdentifer == ID_MSG_VERIFY && MSG_VERIFY_CLIENT == pMsg->usMsgType )
-	{
-#ifdef DEBUG
-		CLogMgr::SharedLogMgr()->PrintLog("A Client Entered : %s",pData->systemAddress.ToString(true) );
-#endif
-		if ( m_vAllGatePeers.find(pData->guid) != m_vAllGatePeers.end())
-		{
-			CLogMgr::SharedLogMgr()->PrintLog("Don't verify Client More than once , IP:%s",pData->systemAddress.ToString(false));
-			return true ;
-		}
-		CGatePeer* Peer = GetReserveGatePeer();
-		if ( Peer )
-		{
-			Peer->Reset(GeneratePeerUID(),pData->guid) ;
-		}
-		else
-		{
-			Peer = new CGatePeer(GeneratePeerUID(),pData->guid) ;
-		}
-		m_vAllGatePeers[pData->guid] = Peer ;
-		AddPeerToServer(Peer);
-		return true;
+		return true ;
 	}
 
-	MAP_GATEPEER::iterator iter = m_vAllGatePeers.find(pData->guid) ;
-	if ( iter == m_vAllGatePeers.end() )
+	CGatePeer* pMeessagePeer = GetAcitvePeer(pData->guid) ;
+	if ( pMeessagePeer == NULL )
 	{
 		CLogMgr::SharedLogMgr()->ErrorLog( "Receive unknown message , Address : %s ",pData->systemAddress.ToString(true)) ;
 		CServerNetwork::SharedNetwork()->ClosePeerConnection(pData->guid) ;
 		return true ;
 	}
-	iter->second->OnMessage(pData) ;
+	pMeessagePeer->OnMessage(pData) ;
 	return false ;
 }
 
@@ -90,58 +53,52 @@ void CGatePeerMgr::OnNewPeerConnected(RakNet::RakNetGUID& nNewPeer, RakNet::Pack
 
 void CGatePeerMgr::OnPeerDisconnected(RakNet::RakNetGUID& nPeerDisconnected, RakNet::Packet* pData )
 {
-	MAP_GATEPEER::iterator iter = m_vAllGatePeers.find(pData->guid) ;
-	if ( iter == m_vAllGatePeers.end() || iter->second == NULL )
+	CGatePeer* pMeessagePeer = GetAcitvePeer(pData->guid) ;
+	if ( pMeessagePeer == NULL )
 	{
 		CLogMgr::SharedLogMgr()->ErrorLog( "Unknown peer Disconnected , info : %s",pData->systemAddress.ToString(true)) ;
 		return ;
 	}
-	CGatePeer* pPeer = iter->second ;
-	pPeer->OnDisconnected();
-	RemovePeer(pPeer);
+	pMeessagePeer->OnDisconnected();
 	CLogMgr::SharedLogMgr()->PrintLog("A peer Disconnected : IP = %s",pData->systemAddress.ToString(true) ) ;
 }
 
-unsigned int CGatePeerMgr::GeneratePeerUID()
+unsigned int CGatePeerMgr::GenerateSessionID()
 {
 	static unsigned int g_sPeerUID = 1 ;
 	return ++g_sPeerUID ;
 }
 
-bool CGatePeerMgr::AddPeerToServer(CGatePeer* pClientPeer )
+bool CGatePeerMgr::AddPeerToServer(CClientPeer* pClientPeer )
 {
-	stMsgConnectRet msg ;
-	CGatePeer* pServerPeer = GetProperGameServerToAddClient();
+	CGameServerPeer* pServerPeer = (CGameServerPeer*)GetProperGameServerToAddClient();
 	if ( pServerPeer == NULL )
 	{
-		msg.bOk = false ;
-		msg.nErr = 1 ;
 		CLogMgr::SharedLogMgr()->PrintLog("Don't have Proper GameServer To Join") ;
+		return false ;
 	}
 	else
 	{
-		pClientPeer->SetGameServerPeer(pServerPeer) ;
-		pServerPeer->OnAddPeerToThisServer(pClientPeer);
-		msg.bOk = true ;
-		msg.nErr = 0 ;
+		pClientPeer->JoinToServer(pServerPeer) ;
+		pServerPeer->AddClientPeer(pClientPeer);
+		return true ;
 	}
-	CServerNetwork::SharedNetwork()->SendMsg((char*)&msg,sizeof(msg),pClientPeer->GetSelfNetGUID(),false) ;
-	return msg.bOk ;
+	return false ;
 }
 
 int CGatePeerMgr::GetAllOnLinePeerCount()
 {
-	return m_vAllGatePeers.size() - m_vServerPeers.size() ;
+	return m_vClientPeers.size();
 }
 
 CGatePeer* CGatePeerMgr::GetProperGameServerToAddClient()
 {
-	MAP_GATEPEER::iterator iter = m_vServerPeers.begin();
-	CGatePeer* pServer = NULL ;
-	for ( ; iter != m_vServerPeers.end(); ++iter )
+	MAP_GATEPEER::iterator iter = m_vGameServerPeers.begin();
+	CGameServerPeer* pServer = NULL ;
+	for ( ; iter != m_vGameServerPeers.end(); ++iter )
 	{
-		pServer = iter->second ;
-		if ( pServer->GetOwnPlayers() >= SERVER_IDEAL_PLAYER_COUNT )
+		pServer = (CGameServerPeer*)iter->second ;
+		if ( pServer->GetClientPeerCount() >= SERVER_IDEAL_PLAYER_COUNT )
 		{
 			continue;
 		}
@@ -152,16 +109,16 @@ CGatePeer* CGatePeerMgr::GetProperGameServerToAddClient()
 	}
 
 	// find the idle server to join 
-	iter = m_vServerPeers.begin() ;
-	if ( iter != m_vServerPeers.end() )
-		pServer = iter->second ;
+	iter = m_vGameServerPeers.begin() ;
+	if ( iter != m_vGameServerPeers.end() )
+		pServer = (CGameServerPeer*)iter->second ;
 	else
 		return NULL ;
-	for ( ; iter != m_vServerPeers.end(); ++iter )
+	for ( ; iter != m_vGameServerPeers.end(); ++iter )
 	{
-		if ( pServer->GetOwnPlayers() > iter->second->GetOwnPlayers() )
+		if ( pServer->GetClientPeerCount() > ((CGameServerPeer*)iter->second)->GetClientPeerCount() )
 		{
-			pServer = iter->second ;
+			pServer = (CGameServerPeer*)iter->second ;
 			continue; 
 		}
 	}
@@ -184,24 +141,33 @@ void  CGatePeerMgr::ClearPeers(MAP_GATEPEER&vPeers)
 
 void CGatePeerMgr::ClearAll()
 {
-	ClearPeers(m_vAllGatePeers);
-	LIST_GATEPEER::iterator iter = m_vReservePeers.begin() ;
-	for ( ; iter != m_vReservePeers.end(); ++iter )
+	ClearPeers(m_vGameServerPeers);
+	ClearPeers(m_vClientPeers);
+	MAP_UID_CLIENT_PEER::iterator iter = m_vWaitReconnectedClientPeers.begin() ;
+	for ( ; iter != m_vWaitReconnectedClientPeers.end(); ++iter )
 	{
-		delete *iter ;
-		*iter = NULL ;
+		if ( iter->second )
+		{
+			delete iter->second ;
+			iter->second = NULL ;
+		}
 	}
-	m_vReservePeers.clear() ;
+	m_vWaitReconnectedClientPeers.clear() ;
 }
 
-CGatePeer* CGatePeerMgr::GetReserveGatePeer()
+CGatePeer* CGatePeerMgr::GetReserveGatePeer(CGatePeer::eGatePeerType eType)
 {
 	CGatePeer* pPeer = NULL ;
 	LIST_GATEPEER::iterator iter = m_vReservePeers.begin() ;
-	if ( iter == m_vReservePeers.end() )
-		return NULL ;
-	pPeer = *iter ;
-	m_vReservePeers.erase(iter) ;
+	for ( ; iter != m_vReservePeers.end(); ++iter )
+	{
+		if ( *iter != NULL && (*iter)->GetPeerType() == eType )
+		{
+			pPeer = *iter ;
+			m_vReservePeers.erase(iter) ;
+			return pPeer ;
+		}
+	}
 	return pPeer ;
 }
 
@@ -217,18 +183,213 @@ void CGatePeerMgr::AddToReservePeers(CGatePeer* pPeer )
 
 void CGatePeerMgr::RemovePeer(CGatePeer* pPeer )
 {
-	if ( !pPeer)
+	m_vWillRemove.push_back(pPeer) ;
+}
+
+void CGatePeerMgr::Update(float fTimeElsps )
+{
+	// process m_vWillRemove ;
+	LIST_GATEPEER::iterator iter = m_vWillRemove.begin() ;
+	CGatePeer* pPeer = NULL ;
+	bool bFind = false ;
+	for ( ; iter != m_vWillRemove.end(); ++iter )
+	{
+		bFind = false  ;
+		pPeer =  *iter ;
+		assert(pPeer->IsRemove() && "this peer may not shouldn't remove !" );
+		if ( pPeer->IsRemove() == false )
+		{
+			CLogMgr::SharedLogMgr()->ErrorLog("this peer may not shouldn't remove !");
+		}
+
+		if ( pPeer->GetPeerType() == CGatePeer::eGatePeer_Client )
+		{
+			MAP_GATEPEER::iterator iter_map = m_vClientPeers.begin();
+			for ( ; iter_map != m_vClientPeers.end(); ++iter_map )
+			{
+				if ( pPeer == iter_map->second )
+				{
+					AddToReservePeers(pPeer) ;
+					m_vClientPeers.erase(iter_map) ;
+					bFind = true ;
+					break; 
+				}
+			}
+		}
+		else if ( pPeer->GetPeerType() == CGatePeer::eGatePeer_GameServer )
+		{
+			MAP_GATEPEER::iterator iter_map = m_vGameServerPeers.begin();
+			for ( ; iter_map != m_vGameServerPeers.end(); ++iter_map )
+			{
+				if ( pPeer == iter_map->second )
+				{
+					AddToReservePeers(pPeer) ;
+					m_vGameServerPeers.erase(iter_map) ;
+					bFind = true ;
+					break; 
+				}
+			}
+		}
+
+		// wait reconnected 
+		MAP_UID_CLIENT_PEER::iterator iter_UID = m_vWaitReconnectedClientPeers.begin();
+		for ( ; iter_UID != m_vWaitReconnectedClientPeers.end(); ++iter_UID )
+		{
+			if (  pPeer == iter_UID->second )
+			{
+				bFind = true ;
+				AddToReservePeers(pPeer) ;
+				m_vWaitReconnectedClientPeers.erase(iter_UID) ;
+				break; 
+			}
+		}
+	}
+	m_vWillRemove.clear() ;
+}
+
+CGatePeer* CGatePeerMgr::GetAcitvePeer(RakNet::RakNetGUID& nNetUID )
+{
+	MAP_GATEPEER::iterator iter = m_vGameServerPeers.find(nNetUID) ;
+	if ( iter != m_vGameServerPeers.end() )
+	{
+		return iter->second ;
+	}
+
+	iter = m_vClientPeers.find(nNetUID);
+	if ( iter != m_vGameServerPeers.end() )
+	{
+		return iter->second ;
+	}
+	return NULL ;
+}
+
+void CGatePeerMgr::AddNewPeer(CGatePeer* pNewPeer )
+{
+	CGatePeer* pOld = GetAcitvePeer(pNewPeer->GetSelfNetGUID() );
+	assert(pOld == NULL && "add one peer more than once !" );
+	if ( pOld )
+	{
+		RemovePeer(pNewPeer) ;
+		CLogMgr::SharedLogMgr()->ErrorLog("add one peer more than once !, IP = %s",pNewPeer->GetSelfNetGUID().ToString());
 		return ;
-	MAP_GATEPEER::iterator iter = m_vServerPeers.find(pPeer->GetSelfNetGUID()) ;
-	if ( iter != m_vServerPeers.end() )
-	{
-		m_vServerPeers.erase(iter) ;
 	}
-	
-	iter = m_vAllGatePeers.find(pPeer->GetSelfNetGUID()) ;
-	if ( iter != m_vAllGatePeers.end() )
+
+	if ( pNewPeer->GetPeerType() == CGatePeer::eGatePeer_Client )
 	{
-		m_vAllGatePeers.erase(iter) ;
+		m_vClientPeers[pNewPeer->GetSelfNetGUID()] = pNewPeer ;	
 	}
-	AddToReservePeers(pPeer) ;
+	else if ( pNewPeer->GetPeerType() == CGatePeer::eGatePeer_GameServer )
+	{
+		m_vGameServerPeers[pNewPeer->GetSelfNetGUID()] = pNewPeer ;
+	}
+	else
+	{
+		assert( 0 && "UNknow peer type" );
+	}
+}
+
+void CGatePeerMgr::AddWaitForReconnected(CClientPeer* peerWait)
+{
+	if ( !peerWait )
+		return ;
+
+	MAP_UID_CLIENT_PEER::iterator iter = m_vWaitReconnectedClientPeers.find(peerWait->GetPlayerUID()) ;
+	if ( iter != m_vWaitReconnectedClientPeers.end() )
+	{
+		assert(0 &&"cannot add twice ");
+		return ;
+	}
+	m_vWaitReconnectedClientPeers[peerWait->GetPlayerUID()] =  peerWait ;
+}
+
+bool CGatePeerMgr::ProcessGateLogicMsg(RakNet::Packet* pData)
+{
+	stMsg* pMsg = (stMsg*)pData->data ;
+	if ( pMsg->cSysIdentifer == ID_MSG_VERIFY && MSG_VERIFY_GMS == pMsg->usMsgType )
+	{
+		// confirm this peer is game Server ;
+		CGatePeer* Peer = GetReserveGatePeer(CGatePeer::eGatePeer_GameServer);
+		if ( Peer )
+		{
+			Peer->Reset(GenerateSessionID(),pData->guid) ;
+		}
+		else
+		{
+			Peer = new CGameServerPeer() ;
+			Peer->Init(GenerateSessionID(),pData->guid);
+		}
+		AddNewPeer(Peer) ;
+		CLogMgr::SharedLogMgr()->PrintLog("A GameServer Entered : %s", pData->systemAddress.ToString(true) );
+		return true;
+	}
+	else if ( pMsg->cSysIdentifer == ID_MSG_VERIFY && MSG_VERIFY_CLIENT == pMsg->usMsgType )
+	{
+#ifdef DEBUG
+		CLogMgr::SharedLogMgr()->PrintLog("A Client Entered : %s",pData->systemAddress.ToString(true) );
+		if ( m_vClientPeers.find(pData->guid) != m_vAllGatePeers.end())
+		{
+			CLogMgr::SharedLogMgr()->PrintLog("Don't verify Client More than once , IP:%s",pData->systemAddress.ToString(false));
+			return true ;
+		}
+#endif
+		CGatePeer* Peer = GetReserveGatePeer(CGatePeer::eGatePeer_Client);
+		if ( Peer )
+		{
+			Peer->Reset(GenerateSessionID(),pData->guid) ;
+		}
+		else
+		{
+			Peer = new CClientPeer;
+			Peer->Init(GenerateSessionID(),pData->guid) ;
+		}
+		AddNewPeer(Peer);
+		return true;
+	}
+	else if ( MSG_RECONNECT == pMsg->usMsgType && ID_MSG_S2C == pMsg->cSysIdentifer )
+	{
+		stMsgReconnectRet msgBack ;
+		stMsgReconnect* pRetMsg = (stMsgReconnect*)pMsg ;
+		MAP_UID_CLIENT_PEER::iterator iter = m_vWaitReconnectedClientPeers.find(pRetMsg->nPlayerUID);
+		if ( iter->second )
+		{
+			iter->second->SetNewSelfNetUID(pData->guid) ;
+			RemovePeer(GetAcitvePeer(pData->guid)) ;
+			AddNewPeer(iter->second) ;
+			m_vWaitReconnectedClientPeers.erase(iter) ;
+			msgBack.bSuccess = true ;
+		}
+		else
+		{
+			msgBack.bSuccess = false ;
+		}
+		CServerNetwork::SharedNetwork()->SendMsg((char*)&msgBack,sizeof(msgBack),pData->guid,false) ;
+	}
+	else if (  MSG_UID_LOGIN == pMsg->usMsgType && ID_MSG_S2C == pMsg->cSysIdentifer  )
+	{
+		stMsgUIDLogin* pMsgRet = (stMsgUIDLogin*)pMsg ;
+
+		stMsgUIDLoginRet MsgBack ;
+		CClientPeer* pClientPeer = (CClientPeer*)GetAcitvePeer(pData->guid) ;
+		assert(pClientPeer && "UID Login , client peer is NULL " ) ;
+		if ( !pClientPeer )
+		{
+			CLogMgr::SharedLogMgr()->ErrorLog("UID login client peer = null , ip = %s",pData->systemAddress.ToString(false));
+			MsgBack.nRet = 1 ;
+		}
+		else if ( AddPeerToServer(pClientPeer) )
+		{
+			MsgBack.nRet = 0 ;
+			// send msg to server to tell crate new player ;
+			stMsgPlayerUIDLogin msgToGameServer ;
+			msgToGameServer.nPlayerUID = pMsgRet->nPlayerUID ;
+			msgToGameServer.nSessionID = pClientPeer->GetSessionID() ;
+			CServerNetwork::SharedNetwork()->SendMsg((char*)&msgToGameServer,sizeof(msgToGameServer),pClientPeer->GetGameServerPeer()->GetSelfNetGUID(),false) ;
+		}
+		else
+		{
+			MsgBack.nRet = 2 ;
+		}
+		CServerNetwork::SharedNetwork()->SendMsg((char*)&MsgBack,sizeof(MsgBack),pData->guid,false) ;
+	}
+	return false ;
 }
