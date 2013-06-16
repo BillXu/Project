@@ -347,6 +347,7 @@ bool CGatePeerMgr::ProcessGateLogicMsg(RakNet::Packet* pData)
 	}
 	else if ( MSG_RECONNECT == pMsg->usMsgType && ID_MSG_S2C == pMsg->cSysIdentifer )
 	{
+		CHECK_MSG_SIZE(stMsgReconnect,pData->length) ;
 		stMsgReconnectRet msgBack ;
 		stMsgReconnect* pRetMsg = (stMsgReconnect*)pMsg ;
 		MAP_UID_CLIENT_PEER::iterator iter = m_vWaitReconnectedClientPeers.find(pRetMsg->nPlayerUID);
@@ -366,8 +367,8 @@ bool CGatePeerMgr::ProcessGateLogicMsg(RakNet::Packet* pData)
 	}
 	else if (  MSG_UID_LOGIN == pMsg->usMsgType && ID_MSG_S2C == pMsg->cSysIdentifer  )
 	{
+		CHECK_MSG_SIZE(stMsgUIDLogin,pData->length) ;
 		stMsgUIDLogin* pMsgRet = (stMsgUIDLogin*)pMsg ;
-
 		stMsgUIDLoginRet MsgBack ;
 		CClientPeer* pClientPeer = (CClientPeer*)GetAcitvePeer(pData->guid) ;
 		assert(pClientPeer && "UID Login , client peer is NULL " ) ;
@@ -379,11 +380,7 @@ bool CGatePeerMgr::ProcessGateLogicMsg(RakNet::Packet* pData)
 		else if ( AddPeerToServer(pClientPeer) )
 		{
 			MsgBack.nRet = 0 ;
-			// send msg to server to tell crate new player ;
-			stMsgPlayerUIDLogin msgToGameServer ;
-			msgToGameServer.nPlayerUID = pMsgRet->nPlayerUID ;
-			msgToGameServer.nSessionID = pClientPeer->GetSessionID() ;
-			CServerNetwork::SharedNetwork()->SendMsg((char*)&msgToGameServer,sizeof(msgToGameServer),pClientPeer->GetGameServerPeer()->GetSelfNetGUID(),false) ;
+			pClientPeer->OnMessage(pData);
 		}
 		else
 		{

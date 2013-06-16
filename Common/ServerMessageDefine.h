@@ -45,18 +45,6 @@ struct stMsgPeerDisconnect
 	
 };
 
-struct stMsgPlayerUIDLogin
-	:public stMsg
-{
-	stMsgPlayerUIDLogin()
-	{
-		cSysIdentifer = ID_MSG_GA2GM ;
-		usMsgType = MSG_UID_LOGIN ;
-	}
-	unsigned int nSessionID ;
-	unsigned int nPlayerUID ;
-};
-
 struct stMsgTransferData
 	:public stMsg
 {
