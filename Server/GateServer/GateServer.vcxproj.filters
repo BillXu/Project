@@ -505,6 +505,9 @@
     <ClInclude Include="..\..\Common\Timer.h">
       <Filter>Common</Filter>
     </ClInclude>
+    <ClInclude Include="src\LoginServerPeer.h">
+      <Filter>head</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
@@ -824,6 +827,9 @@
     </ClCompile>
     <ClCompile Include="..\..\Common\Timer.cpp">
       <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="src\LoginServerPeer.cpp">
+      <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

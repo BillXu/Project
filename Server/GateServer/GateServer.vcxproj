@@ -238,6 +238,7 @@
     <ClInclude Include="src\ClientPeer.h" />
     <ClInclude Include="src\GatePeer.h" />
     <ClInclude Include="src\GatePeerManager.h" />
+    <ClInclude Include="src\LoginServerPeer.h" />
     <ClInclude Include="src\main.h" />
     <ClInclude Include="src\GameServerPeer.h" />
   </ItemGroup>
@@ -346,6 +347,7 @@
     <ClCompile Include="src\ClientPeer.cpp" />
     <ClCompile Include="src\GatePeer.cpp" />
     <ClCompile Include="src\GatePeerManager.cpp" />
+    <ClCompile Include="src\LoginServerPeer.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\GameServerPeer.cpp" />
   </ItemGroup>

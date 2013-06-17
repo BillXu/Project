@@ -5,6 +5,7 @@
 #include "ServerMessageDefine.h"
 #include "CommonDefine.h"
 #include "GameServerPeer.h"
+#include "LoginServerPeer.h"
 #define SERVER_IDEAL_PLAYER_COUNT 2000
 #define RESERVE_PEER_COUN 200
 CGatePeerMgr* CGatePeerMgr::SharedGatePeerMgr()
@@ -15,11 +16,16 @@ CGatePeerMgr* CGatePeerMgr::SharedGatePeerMgr()
 
 CGatePeerMgr::CGatePeerMgr()
 {
+	m_pLoginServer = NULL ;
 	ClearAll();
 }
 
 CGatePeerMgr::~CGatePeerMgr()
 {
+	if ( m_pLoginServer )
+	{
+		delete m_pLoginServer ;
+	}
 	ClearAll();
 }
 
@@ -196,6 +202,11 @@ void CGatePeerMgr::Update(float fTimeElsps )
 	{
 		bFind = false  ;
 		pPeer =  *iter ;
+		if ( !pPeer )
+		{
+			CLogMgr::SharedLogMgr()->ErrorLog("this peer is NULL shouldn't remove !");
+			continue;
+		}
 		assert(pPeer->IsRemove() && "this peer may not shouldn't remove !" );
 		if ( pPeer->IsRemove() == false )
 		{
@@ -204,30 +215,20 @@ void CGatePeerMgr::Update(float fTimeElsps )
 
 		if ( pPeer->GetPeerType() == CGatePeer::eGatePeer_Client )
 		{
-			MAP_GATEPEER::iterator iter_map = m_vClientPeers.begin();
-			for ( ; iter_map != m_vClientPeers.end(); ++iter_map )
+			MAP_GATEPEER::iterator iter_map = m_vClientPeers.find(pPeer->GetSelfNetGUID());
+			if ( iter_map != m_vClientPeers.end() )
 			{
-				if ( pPeer == iter_map->second )
-				{
-					AddToReservePeers(pPeer) ;
-					m_vClientPeers.erase(iter_map) ;
-					bFind = true ;
-					break; 
-				}
+				m_vClientPeers.erase(iter_map) ;
+				bFind = true ;
 			}
 		}
 		else if ( pPeer->GetPeerType() == CGatePeer::eGatePeer_GameServer )
 		{
-			MAP_GATEPEER::iterator iter_map = m_vGameServerPeers.begin();
-			for ( ; iter_map != m_vGameServerPeers.end(); ++iter_map )
+			MAP_GATEPEER::iterator iter_map = m_vGameServerPeers.find(pPeer->GetSelfNetGUID());
+			if ( iter_map != m_vGameServerPeers.end() )
 			{
-				if ( pPeer == iter_map->second )
-				{
-					AddToReservePeers(pPeer) ;
-					m_vGameServerPeers.erase(iter_map) ;
-					bFind = true ;
-					break; 
-				}
+				m_vGameServerPeers.erase(iter_map) ;
+				bFind = true ;
 			}
 		}
 
@@ -238,10 +239,18 @@ void CGatePeerMgr::Update(float fTimeElsps )
 			if (  pPeer == iter_UID->second )
 			{
 				bFind = true ;
-				AddToReservePeers(pPeer) ;
 				m_vWaitReconnectedClientPeers.erase(iter_UID) ;
 				break; 
 			}
+		}
+
+		if ( bFind )
+		{
+			AddToReservePeers(pPeer) ;
+		}
+		else
+		{
+			CLogMgr::SharedLogMgr()->ErrorLog("cannot find the peer to Remove it ");
 		}
 	}
 	m_vWillRemove.clear() ;
@@ -249,6 +258,11 @@ void CGatePeerMgr::Update(float fTimeElsps )
 
 CGatePeer* CGatePeerMgr::GetAcitvePeer(RakNet::RakNetGUID& nNetUID )
 {
+	if ( m_pLoginServer && m_pLoginServer->GetSelfNetGUID() == nNetUID )
+	{
+		return m_pLoginServer ;
+	}
+
 	MAP_GATEPEER::iterator iter = m_vGameServerPeers.find(nNetUID) ;
 	if ( iter != m_vGameServerPeers.end() )
 	{
@@ -305,7 +319,22 @@ void CGatePeerMgr::AddWaitForReconnected(CClientPeer* peerWait)
 bool CGatePeerMgr::ProcessGateLogicMsg(RakNet::Packet* pData)
 {
 	stMsg* pMsg = (stMsg*)pData->data ;
-	if ( pMsg->cSysIdentifer == ID_MSG_VERIFY && MSG_VERIFY_GMS == pMsg->usMsgType )
+	
+	if (pMsg->cSysIdentifer == ID_MSG_VERIFY && MSG_VERIFY_LOGIN == pMsg->usMsgType )
+	{
+		if ( m_pLoginServer )
+		{
+			m_pLoginServer->Reset(GenerateSessionID(),pData->guid) ;
+		}
+		else
+		{
+			m_pLoginServer = new CLoginServerPeer() ;
+			m_pLoginServer->Init(GenerateSessionID(),pData->guid);
+			m_pLoginServer->SetGatePeerMgr(this);
+		}
+		CLogMgr::SharedLogMgr()->PrintLog("LoginServer Entered : %s", pData->systemAddress.ToString(true) );
+	}
+	else if ( pMsg->cSysIdentifer == ID_MSG_VERIFY && MSG_VERIFY_GMS == pMsg->usMsgType )
 	{
 		// confirm this peer is game Server ;
 		CGatePeer* Peer = GetReserveGatePeer(CGatePeer::eGatePeer_GameServer);
@@ -380,6 +409,7 @@ bool CGatePeerMgr::ProcessGateLogicMsg(RakNet::Packet* pData)
 		else if ( AddPeerToServer(pClientPeer) )
 		{
 			MsgBack.nRet = 0 ;
+			pClientPeer->SetPlayerUID(pMsgRet->nPlayerUID) ;
 			pClientPeer->OnMessage(pData);
 		}
 		else
@@ -389,4 +419,25 @@ bool CGatePeerMgr::ProcessGateLogicMsg(RakNet::Packet* pData)
 		CServerNetwork::SharedNetwork()->SendMsg((char*)&MsgBack,sizeof(MsgBack),pData->guid,false) ;
 	}
 	return false ;
+}
+
+CGatePeer* CGatePeerMgr::GetAcitveClientPeerBySessionID(unsigned int nSessionID )
+{
+	MAP_GATEPEER::iterator iter = m_vClientPeers.begin();
+	for ( ; iter != m_vClientPeers.end(); ++iter )
+	{
+		if ( iter->second->GetSessionID() == nSessionID )
+		{
+			return iter->second ;
+		}
+	}
+	return NULL ;
+}
+
+bool CGatePeerMgr::TransferMsgToLoginServer(char* pBuffer, unsigned short nLen )
+{
+	if ( !m_pLoginServer || m_pLoginServer->IsActive() == false )
+		return false ;
+	CServerNetwork::SharedNetwork()->SendMsg(pBuffer,nLen,m_pLoginServer->GetSelfNetGUID(),false) ;
+	return true ;
 }

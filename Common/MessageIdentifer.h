@@ -3,6 +3,7 @@
 enum 
 {
 	ID_MSG_C2S = ID_USER_PACKET_ENUM + 1 ,
+	ID_MSG_C2LOGIN,
 	ID_MSG_S2C,
 	ID_MSG_GM2GA,  // GM = game server , GA = gate server ;
 	ID_MSG_GA2GM,
@@ -17,6 +18,7 @@ enum eMsgType
 	// the msg title used between servers 
 	MSG_SERVERS_USE,
 	MSG_VERIFY_GMS,  // verify that is game server ;
+	MSG_VERIFY_LOGIN, // verify login server ;
 	MSG_VERIFY_CLIENT, // verify that is client ;
 	MSG_VERIFY_GA, // verify that is gate server 
 	MSG_VERIFY_DB,  // verify that is DBserver ;

@@ -55,7 +55,7 @@ struct stMsgTransferData
 		bBroadCast = false ;
 		pData = 0 ;
 	}
-	unsigned int nTargetPeerUID ;
+	unsigned int nSessionID ;
 	bool bBroadCast ;
 	char* pData ;
 };

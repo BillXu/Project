@@ -19,10 +19,10 @@ void CGameServerPeer::OnMessage( RakNet::Packet* pData )
 	// transfer this message 
 	// parse message , then send it the specail client ;
 	stMsgTransferData* pRealMsg = (stMsgTransferData*)pData->data ;
-	CClientPeer* pClientPeer = GetClientPeer(pRealMsg->nTargetPeerUID);
+	CClientPeer* pClientPeer = GetClientPeer(pRealMsg->nSessionID);
 	if ( pClientPeer == NULL )
 	{
-		CLogMgr::SharedLogMgr()->ErrorLog( "Can not find the peerUID = %d on the server %s " ,pRealMsg->nTargetPeerUID,m_nSelfNetGUID.ToString());
+		CLogMgr::SharedLogMgr()->ErrorLog( "Can not find the peerUID = %d on the server %s " ,pRealMsg->nSessionID,m_nSelfNetGUID.ToString());
 		return ;
 	}
 

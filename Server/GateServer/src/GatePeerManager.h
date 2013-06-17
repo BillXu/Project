@@ -3,6 +3,7 @@
 #include "ClientPeer.h"
 #include <map>
 #include <list>
+class CLoginServerPeer ;
 class CGatePeer ;
 class CGatePeerMgr
 	:public CServerNetworkDelegate
@@ -23,6 +24,8 @@ public:
 	void RemovePeer(CGatePeer* pPeer );
 	void Update(float fTimeElsps );
 	void AddWaitForReconnected(CClientPeer* peerWait);
+	CGatePeer* GetAcitveClientPeerBySessionID(unsigned int nSessionID );
+	bool TransferMsgToLoginServer(char* pBuffer, unsigned short nLen );
 protected:
 	unsigned int GenerateSessionID();
 	CGatePeer* GetProperGameServerToAddClient();  // ¸ºÔØ¾ùºâ²ßÂÔ£»
@@ -34,6 +37,7 @@ protected:
 	CGatePeer* GetAcitvePeer(RakNet::RakNetGUID& nNetUID );
 	bool ProcessGateLogicMsg(RakNet::Packet* pData);
 protected:
+	CLoginServerPeer* m_pLoginServer ;
 	MAP_GATEPEER m_vGameServerPeers ;
 	MAP_GATEPEER m_vClientPeers ;
 

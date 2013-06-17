@@ -48,10 +48,22 @@ void CClientPeer::OnMessage( RakNet::Packet* pData )
 
 	stMsgTransferData msgToSend ;
 	msgToSend.cSysIdentifer = ID_MSG_GA2GM ;
-	msgToSend.nTargetPeerUID = GetSessionID();
+	msgToSend.nSessionID = GetSessionID();
 	memcpy(s_pBuffer,(void*)&msgToSend,sizeof(msgToSend));
 	memcpy(s_pBuffer + sizeof(msgToSend),pData->data,pData->length) ;
-	CServerNetwork::SharedNetwork()->SendMsg(s_pBuffer,pData->length + sizeof(stMsgTransferData),m_pGameServer->GetSelfNetGUID(),false) ;
+	stMsg* pmsgReal = (stMsg*)pData->data ;
+	if ( pmsgReal->cSysIdentifer == ID_MSG_C2LOGIN )
+	{
+		if ( !CGatePeerMgr::SharedGatePeerMgr()->TransferMsgToLoginServer(s_pBuffer,pData->length + sizeof(stMsgTransferData)) )
+		{
+			// send error msg ;
+			CLogMgr::SharedLogMgr()->ErrorLog("Login Server invalid");
+		}
+	}
+	else
+	{
+		CServerNetwork::SharedNetwork()->SendMsg(s_pBuffer,pData->length + sizeof(stMsgTransferData),m_pGameServer->GetSelfNetGUID(),false) ;
+	}	
 }
 
 void CClientPeer::OnDisconnected()
