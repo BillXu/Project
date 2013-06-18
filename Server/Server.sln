@@ -9,6 +9,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GameServer", "GameServer\Ga
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestClient", "..\TestClient\TestClient.vcxproj", "{26BB2684-CC5F-4DFA-AE3C-6A8532601859}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LoginServer", "LoginServer\LoginServer.vcxproj", "{5F75781A-C153-4F43-8AF3-B7C4285F471E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -31,6 +33,10 @@ Global
 		{26BB2684-CC5F-4DFA-AE3C-6A8532601859}.Debug|Win32.Build.0 = Debug|Win32
 		{26BB2684-CC5F-4DFA-AE3C-6A8532601859}.Release|Win32.ActiveCfg = Release|Win32
 		{26BB2684-CC5F-4DFA-AE3C-6A8532601859}.Release|Win32.Build.0 = Release|Win32
+		{5F75781A-C153-4F43-8AF3-B7C4285F471E}.Debug|Win32.ActiveCfg = Debug|Win32
+		{5F75781A-C153-4F43-8AF3-B7C4285F471E}.Debug|Win32.Build.0 = Debug|Win32
+		{5F75781A-C153-4F43-8AF3-B7C4285F471E}.Release|Win32.ActiveCfg = Release|Win32
+		{5F75781A-C153-4F43-8AF3-B7C4285F471E}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

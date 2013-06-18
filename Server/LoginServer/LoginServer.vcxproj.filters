@@ -1,0 +1,810 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Common">
+      <UniqueIdentifier>{317fc4f9-5633-4d59-b814-59beea98e454}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Common\NetLib">
+      <UniqueIdentifier>{b21b9fe0-0f37-4971-8c3a-b7eb760dff46}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="head">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="src">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\Common\NetLib\_FindFirst.h">
+      <Filter>Common\NetLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\NetLib\AutopatcherPatchContext.h">
+      <Filter>Common\NetLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\NetLib\AutopatcherRepositoryInterface.h">
+      <Filter>Common\NetLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\NetLib\BitStream.h">
+      <Filter>Common\NetLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\NetLib\CCRakNetSlidingWindow.h">
+      <Filter>Common\NetLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\NetLib\CCRakNetUDT.h">
+      <Filter>Common\NetLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\NetLib\CheckSum.h">
+      <Filter>Common\NetLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\NetLib\CloudClient.h">
+      <Filter>Common\NetLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\NetLib\CloudCommon.h">
+      <Filter>Common\NetLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\NetLib\CloudServer.h">
+      <Filter>Common\NetLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\NetLib\CommandParserInterface.h">
+      <Filter>Common\NetLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\NetLib\ConnectionGraph2.h">
+      <Filter>Common\NetLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\NetLib\ConsoleServer.h">
+      <Filter>Common\NetLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\NetLib\DataCompressor.h">
+      <Filter>Common\NetLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\NetLib\DirectoryDeltaTransfer.h">
+      <Filter>Common\NetLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\NetLib\DS_BinarySearchTree.h">
+      <Filter>Common\NetLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\NetLib\DS_BPlusTree.h">
+      <Filter>Common\NetLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\NetLib\DS_BytePool.h">
+      <Filter>Common\NetLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\NetLib\DS_ByteQueue.h">
+      <Filter>Common\NetLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\NetLib\DS_Hash.h">
+      <Filter>Common\NetLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\NetLib\DS_Heap.h">
+      <Filter>Common\NetLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\NetLib\DS_HuffmanEncodingTree.h">
+      <Filter>Common\NetLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\NetLib\DS_HuffmanEncodingTreeFactory.h">
+      <Filter>Common\NetLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\NetLib\DS_HuffmanEncodingTreeNode.h">
+      <Filter>Common\NetLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\NetLib\DS_LinkedList.h">
+      <Filter>Common\NetLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\NetLib\DS_List.h">
+      <Filter>Common\NetLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\NetLib\DS_Map.h">
+      <Filter>Common\NetLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\NetLib\DS_MemoryPool.h">
+      <Filter>Common\NetLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\NetLib\DS_Multilist.h">
+      <Filter>Common\NetLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\NetLib\DS_OrderedChannelHeap.h">
+      <Filter>Common\NetLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\NetLib\DS_OrderedList.h">
+      <Filter>Common\NetLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\NetLib\DS_Queue.h">
+      <Filter>Common\NetLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\NetLib\DS_QueueLinkedList.h">
+      <Filter>Common\NetLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\NetLib\DS_RangeList.h">
+      <Filter>Common\NetLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\NetLib\DS_Table.h">
+      <Filter>Common\NetLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\NetLib\DS_ThreadsafeAllocatingQueue.h">
+      <Filter>Common\NetLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\NetLib\DS_Tree.h">
+      <Filter>Common\NetLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\NetLib\DS_WeightedGraph.h">
+      <Filter>Common\NetLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\NetLib\DynDNS.h">
+      <Filter>Common\NetLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\NetLib\EmailSender.h">
+      <Filter>Common\NetLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\NetLib\EpochTimeToString.h">
+      <Filter>Common\NetLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\NetLib\Export.h">
+      <Filter>Common\NetLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\NetLib\FileList.h">
+      <Filter>Common\NetLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\NetLib\FileListNodeContext.h">
+      <Filter>Common\NetLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\NetLib\FileListTransfer.h">
+      <Filter>Common\NetLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\NetLib\FileListTransferCBInterface.h">
+      <Filter>Common\NetLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\NetLib\FileOperations.h">
+      <Filter>Common\NetLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\NetLib\FormatString.h">
+      <Filter>Common\NetLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\NetLib\FullyConnectedMesh2.h">
+      <Filter>Common\NetLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\NetLib\Getche.h">
+      <Filter>Common\NetLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\NetLib\Gets.h">
+      <Filter>Common\NetLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\NetLib\GetTime.h">
+      <Filter>Common\NetLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\NetLib\gettimeofday.h">
+      <Filter>Common\NetLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\NetLib\GridSectorizer.h">
+      <Filter>Common\NetLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\NetLib\HTTPConnection.h">
+      <Filter>Common\NetLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\NetLib\IncrementalReadInterface.h">
+      <Filter>Common\NetLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\NetLib\InternalPacket.h">
+      <Filter>Common\NetLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\NetLib\Itoa.h">
+      <Filter>Common\NetLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\NetLib\Kbhit.h">
+      <Filter>Common\NetLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\NetLib\LinuxStrings.h">
+      <Filter>Common\NetLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\NetLib\LocklessTypes.h">
+      <Filter>Common\NetLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\NetLib\LogCommandParser.h">
+      <Filter>Common\NetLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\NetLib\MessageFilter.h">
+      <Filter>Common\NetLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\NetLib\MessageIdentifiers.h">
+      <Filter>Common\NetLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\NetLib\MTUSize.h">
+      <Filter>Common\NetLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\NetLib\NativeFeatureIncludes.h">
+      <Filter>Common\NetLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\NetLib\NativeFeatureIncludesOverrides.h">
+      <Filter>Common\NetLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\NetLib\NativeTypes.h">
+      <Filter>Common\NetLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\NetLib\NatPunchthroughClient.h">
+      <Filter>Common\NetLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\NetLib\NatPunchthroughServer.h">
+      <Filter>Common\NetLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\NetLib\NatTypeDetectionClient.h">
+      <Filter>Common\NetLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\NetLib\NatTypeDetectionCommon.h">
+      <Filter>Common\NetLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\NetLib\NatTypeDetectionServer.h">
+      <Filter>Common\NetLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\NetLib\NetworkIDManager.h">
+      <Filter>Common\NetLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\NetLib\NetworkIDObject.h">
+      <Filter>Common\NetLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\NetLib\PacketConsoleLogger.h">
+      <Filter>Common\NetLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\NetLib\PacketFileLogger.h">
+      <Filter>Common\NetLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\NetLib\PacketizedTCP.h">
+      <Filter>Common\NetLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\NetLib\PacketLogger.h">
+      <Filter>Common\NetLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\NetLib\PacketOutputWindowLogger.h">
+      <Filter>Common\NetLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\NetLib\PacketPool.h">
+      <Filter>Common\NetLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\NetLib\PacketPriority.h">
+      <Filter>Common\NetLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\NetLib\PluginInterface2.h">
+      <Filter>Common\NetLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\NetLib\PS3Includes.h">
+      <Filter>Common\NetLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\NetLib\Rackspace.h">
+      <Filter>Common\NetLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\NetLib\RakAlloca.h">
+      <Filter>Common\NetLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\NetLib\RakAssert.h">
+      <Filter>Common\NetLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\NetLib\RakMemoryOverride.h">
+      <Filter>Common\NetLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\NetLib\RakNetCommandParser.h">
+      <Filter>Common\NetLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\NetLib\RakNetDefines.h">
+      <Filter>Common\NetLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\NetLib\RakNetDefinesOverrides.h">
+      <Filter>Common\NetLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\NetLib\RakNetSmartPtr.h">
+      <Filter>Common\NetLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\NetLib\RakNetSocket.h">
+      <Filter>Common\NetLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\NetLib\RakNetStatistics.h">
+      <Filter>Common\NetLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\NetLib\RakNetTime.h">
+      <Filter>Common\NetLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\NetLib\RakNetTransport2.h">
+      <Filter>Common\NetLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\NetLib\RakNetTypes.h">
+      <Filter>Common\NetLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\NetLib\RakNetVersion.h">
+      <Filter>Common\NetLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\NetLib\RakPeer.h">
+      <Filter>Common\NetLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\NetLib\RakPeerInterface.h">
+      <Filter>Common\NetLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\NetLib\RakSleep.h">
+      <Filter>Common\NetLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\NetLib\RakString.h">
+      <Filter>Common\NetLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\NetLib\RakThread.h">
+      <Filter>Common\NetLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\NetLib\RakWString.h">
+      <Filter>Common\NetLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\NetLib\Rand.h">
+      <Filter>Common\NetLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\NetLib\rdlmalloc.h">
+      <Filter>Common\NetLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\NetLib\rdlmalloc-options.h">
+      <Filter>Common\NetLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\NetLib\ReadyEvent.h">
+      <Filter>Common\NetLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\NetLib\RefCountedObj.h">
+      <Filter>Common\NetLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\NetLib\ReliabilityLayer.h">
+      <Filter>Common\NetLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\NetLib\ReplicaEnums.h">
+      <Filter>Common\NetLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\NetLib\ReplicaManager3.h">
+      <Filter>Common\NetLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\NetLib\Router2.h">
+      <Filter>Common\NetLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\NetLib\RPC4Plugin.h">
+      <Filter>Common\NetLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\NetLib\SecureHandshake.h">
+      <Filter>Common\NetLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\NetLib\SendToThread.h">
+      <Filter>Common\NetLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\NetLib\SHA1.h">
+      <Filter>Common\NetLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\NetLib\SignaledEvent.h">
+      <Filter>Common\NetLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\NetLib\SimpleMutex.h">
+      <Filter>Common\NetLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\NetLib\SimpleTCPServer.h">
+      <Filter>Common\NetLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\NetLib\SingleProducerConsumer.h">
+      <Filter>Common\NetLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\NetLib\SocketDefines.h">
+      <Filter>Common\NetLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\NetLib\SocketIncludes.h">
+      <Filter>Common\NetLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\NetLib\SocketLayer.h">
+      <Filter>Common\NetLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\NetLib\StatisticsHistory.h">
+      <Filter>Common\NetLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\NetLib\StringCompressor.h">
+      <Filter>Common\NetLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\NetLib\StringTable.h">
+      <Filter>Common\NetLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\NetLib\SuperFastHash.h">
+      <Filter>Common\NetLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\NetLib\TableSerializer.h">
+      <Filter>Common\NetLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\NetLib\TCPInterface.h">
+      <Filter>Common\NetLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\NetLib\TeamBalancer.h">
+      <Filter>Common\NetLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\NetLib\TeamManager.h">
+      <Filter>Common\NetLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\NetLib\TelnetTransport.h">
+      <Filter>Common\NetLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\NetLib\ThreadPool.h">
+      <Filter>Common\NetLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\NetLib\ThreadsafePacketLogger.h">
+      <Filter>Common\NetLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\NetLib\TransportInterface.h">
+      <Filter>Common\NetLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\NetLib\TwoWayAuthentication.h">
+      <Filter>Common\NetLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\NetLib\UDPForwarder.h">
+      <Filter>Common\NetLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\NetLib\UDPProxyClient.h">
+      <Filter>Common\NetLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\NetLib\UDPProxyCommon.h">
+      <Filter>Common\NetLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\NetLib\UDPProxyCoordinator.h">
+      <Filter>Common\NetLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\NetLib\UDPProxyServer.h">
+      <Filter>Common\NetLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\NetLib\VariableDeltaSerializer.h">
+      <Filter>Common\NetLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\NetLib\VariableListDeltaTracker.h">
+      <Filter>Common\NetLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\NetLib\VariadicSQLParser.h">
+      <Filter>Common\NetLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\NetLib\VitaIncludes.h">
+      <Filter>Common\NetLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\NetLib\WindowsIncludes.h">
+      <Filter>Common\NetLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\NetLib\WSAStartupSingleton.h">
+      <Filter>Common\NetLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\NetLib\XBox360Includes.h">
+      <Filter>Common\NetLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\Utility.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\CommonDefine.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\ConfigReader.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\LogManager.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\MessageDefine.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\MessageIdentifer.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\NetWorkManager.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\ServerMessageDefine.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\Timer.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="src\main.h">
+      <Filter>head</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\Common\NetLib\_FindFirst.cpp">
+      <Filter>Common\NetLib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\NetLib\BitStream.cpp">
+      <Filter>Common\NetLib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\NetLib\CCRakNetSlidingWindow.cpp">
+      <Filter>Common\NetLib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\NetLib\CCRakNetUDT.cpp">
+      <Filter>Common\NetLib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\NetLib\CheckSum.cpp">
+      <Filter>Common\NetLib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\NetLib\CloudClient.cpp">
+      <Filter>Common\NetLib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\NetLib\CloudCommon.cpp">
+      <Filter>Common\NetLib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\NetLib\CloudServer.cpp">
+      <Filter>Common\NetLib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\NetLib\CommandParserInterface.cpp">
+      <Filter>Common\NetLib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\NetLib\ConnectionGraph2.cpp">
+      <Filter>Common\NetLib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\NetLib\ConsoleServer.cpp">
+      <Filter>Common\NetLib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\NetLib\DataCompressor.cpp">
+      <Filter>Common\NetLib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\NetLib\DirectoryDeltaTransfer.cpp">
+      <Filter>Common\NetLib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\NetLib\DS_BytePool.cpp">
+      <Filter>Common\NetLib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\NetLib\DS_ByteQueue.cpp">
+      <Filter>Common\NetLib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\NetLib\DS_HuffmanEncodingTree.cpp">
+      <Filter>Common\NetLib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\NetLib\DS_Table.cpp">
+      <Filter>Common\NetLib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\NetLib\DynDNS.cpp">
+      <Filter>Common\NetLib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\NetLib\EmailSender.cpp">
+      <Filter>Common\NetLib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\NetLib\EncodeClassName.cpp">
+      <Filter>Common\NetLib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\NetLib\EpochTimeToString.cpp">
+      <Filter>Common\NetLib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\NetLib\FileList.cpp">
+      <Filter>Common\NetLib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\NetLib\FileListTransfer.cpp">
+      <Filter>Common\NetLib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\NetLib\FileOperations.cpp">
+      <Filter>Common\NetLib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\NetLib\FormatString.cpp">
+      <Filter>Common\NetLib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\NetLib\FullyConnectedMesh2.cpp">
+      <Filter>Common\NetLib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\NetLib\Getche.cpp">
+      <Filter>Common\NetLib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\NetLib\Gets.cpp">
+      <Filter>Common\NetLib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\NetLib\GetTime.cpp">
+      <Filter>Common\NetLib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\NetLib\gettimeofday.cpp">
+      <Filter>Common\NetLib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\NetLib\GridSectorizer.cpp">
+      <Filter>Common\NetLib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\NetLib\HTTPConnection.cpp">
+      <Filter>Common\NetLib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\NetLib\IncrementalReadInterface.cpp">
+      <Filter>Common\NetLib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\NetLib\Itoa.cpp">
+      <Filter>Common\NetLib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\NetLib\LinuxStrings.cpp">
+      <Filter>Common\NetLib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\NetLib\LocklessTypes.cpp">
+      <Filter>Common\NetLib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\NetLib\LogCommandParser.cpp">
+      <Filter>Common\NetLib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\NetLib\MessageFilter.cpp">
+      <Filter>Common\NetLib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\NetLib\NatPunchthroughClient.cpp">
+      <Filter>Common\NetLib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\NetLib\NatPunchthroughServer.cpp">
+      <Filter>Common\NetLib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\NetLib\NatTypeDetectionClient.cpp">
+      <Filter>Common\NetLib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\NetLib\NatTypeDetectionCommon.cpp">
+      <Filter>Common\NetLib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\NetLib\NatTypeDetectionServer.cpp">
+      <Filter>Common\NetLib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\NetLib\NetworkIDManager.cpp">
+      <Filter>Common\NetLib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\NetLib\NetworkIDObject.cpp">
+      <Filter>Common\NetLib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\NetLib\PacketConsoleLogger.cpp">
+      <Filter>Common\NetLib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\NetLib\PacketFileLogger.cpp">
+      <Filter>Common\NetLib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\NetLib\PacketizedTCP.cpp">
+      <Filter>Common\NetLib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\NetLib\PacketLogger.cpp">
+      <Filter>Common\NetLib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\NetLib\PacketOutputWindowLogger.cpp">
+      <Filter>Common\NetLib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\NetLib\PluginInterface2.cpp">
+      <Filter>Common\NetLib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\NetLib\Rackspace.cpp">
+      <Filter>Common\NetLib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\NetLib\RakMemoryOverride.cpp">
+      <Filter>Common\NetLib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\NetLib\RakNetCommandParser.cpp">
+      <Filter>Common\NetLib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\NetLib\RakNetSocket.cpp">
+      <Filter>Common\NetLib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\NetLib\RakNetStatistics.cpp">
+      <Filter>Common\NetLib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\NetLib\RakNetTransport2.cpp">
+      <Filter>Common\NetLib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\NetLib\RakNetTypes.cpp">
+      <Filter>Common\NetLib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\NetLib\RakPeer.cpp">
+      <Filter>Common\NetLib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\NetLib\RakSleep.cpp">
+      <Filter>Common\NetLib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\NetLib\RakString.cpp">
+      <Filter>Common\NetLib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\NetLib\RakThread.cpp">
+      <Filter>Common\NetLib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\NetLib\RakWString.cpp">
+      <Filter>Common\NetLib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\NetLib\Rand.cpp">
+      <Filter>Common\NetLib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\NetLib\rdlmalloc.cpp">
+      <Filter>Common\NetLib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\NetLib\ReadyEvent.cpp">
+      <Filter>Common\NetLib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\NetLib\ReliabilityLayer.cpp">
+      <Filter>Common\NetLib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\NetLib\ReplicaManager3.cpp">
+      <Filter>Common\NetLib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\NetLib\Router2.cpp">
+      <Filter>Common\NetLib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\NetLib\RPC4Plugin.cpp">
+      <Filter>Common\NetLib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\NetLib\SecureHandshake.cpp">
+      <Filter>Common\NetLib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\NetLib\SendToThread.cpp">
+      <Filter>Common\NetLib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\NetLib\SHA1.cpp">
+      <Filter>Common\NetLib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\NetLib\SignaledEvent.cpp">
+      <Filter>Common\NetLib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\NetLib\SimpleMutex.cpp">
+      <Filter>Common\NetLib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\NetLib\SocketLayer.cpp">
+      <Filter>Common\NetLib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\NetLib\StatisticsHistory.cpp">
+      <Filter>Common\NetLib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\NetLib\StringCompressor.cpp">
+      <Filter>Common\NetLib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\NetLib\StringTable.cpp">
+      <Filter>Common\NetLib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\NetLib\SuperFastHash.cpp">
+      <Filter>Common\NetLib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\NetLib\TableSerializer.cpp">
+      <Filter>Common\NetLib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\NetLib\TCPInterface.cpp">
+      <Filter>Common\NetLib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\NetLib\TeamBalancer.cpp">
+      <Filter>Common\NetLib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\NetLib\TeamManager.cpp">
+      <Filter>Common\NetLib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\NetLib\TelnetTransport.cpp">
+      <Filter>Common\NetLib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\NetLib\ThreadsafePacketLogger.cpp">
+      <Filter>Common\NetLib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\NetLib\TwoWayAuthentication.cpp">
+      <Filter>Common\NetLib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\NetLib\UDPForwarder.cpp">
+      <Filter>Common\NetLib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\NetLib\UDPProxyClient.cpp">
+      <Filter>Common\NetLib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\NetLib\UDPProxyCoordinator.cpp">
+      <Filter>Common\NetLib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\NetLib\UDPProxyServer.cpp">
+      <Filter>Common\NetLib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\NetLib\VariableDeltaSerializer.cpp">
+      <Filter>Common\NetLib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\NetLib\VariableListDeltaTracker.cpp">
+      <Filter>Common\NetLib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\NetLib\VariadicSQLParser.cpp">
+      <Filter>Common\NetLib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\NetLib\VitaIncludes.cpp">
+      <Filter>Common\NetLib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\NetLib\WSAStartupSingleton.cpp">
+      <Filter>Common\NetLib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\Utility.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\ConfigReader.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\LogManager.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\NetWorkManager.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\Timer.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="src\main.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
