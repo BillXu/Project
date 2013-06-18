@@ -498,6 +498,9 @@
     <ClInclude Include="src\main.h">
       <Filter>head</Filter>
     </ClInclude>
+    <ClInclude Include="src\LoginPeer.h">
+      <Filter>head</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Common\NetLib\_FindFirst.cpp">
@@ -804,6 +807,9 @@
       <Filter>Common</Filter>
     </ClCompile>
     <ClCompile Include="src\main.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\LoginPeer.cpp">
       <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>
