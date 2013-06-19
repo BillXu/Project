@@ -28,11 +28,11 @@ public:
         eConnect_Max,
     };
 public:
-    CNetMessageDelegate(){};
-    virtual ~CNetMessageDelegate(){} ;
-    virtual bool OnMessage( RakNet::Packet* pMsg ) = 0 ;
-    virtual bool OnLostSever(RakNet::Packet* pMsg){ return  false; };
-    virtual bool OnConnectStateChanged( eConnectState eSate ){ return false ;} 
+	CNetMessageDelegate(){};
+	virtual ~CNetMessageDelegate(){} ;
+	virtual bool OnMessage( RakNet::Packet* pMsg ) = 0 ;
+	virtual bool OnLostSever(RakNet::Packet* pMsg){ return  false; };
+	virtual bool OnConnectStateChanged( eConnectState eSate){ return false ;} 
 	void SetPriority( unsigned int nPriority  );
 	unsigned GetPriority(){ return m_nPriority ;}
 protected:
@@ -63,27 +63,24 @@ public:
     bool SendMsg( const char* pbuffer , int iSize );
 	bool SendMsg( const char* pbuffer , int iSize,RakNet::RakNetGUID& nServerNetUID );
     
-    void AddMessageDelegate(CNetMessageDelegate * pDelegate, unsigned short nPrio );
+	void AddMessageDelegate(CNetMessageDelegate * pDelegate, unsigned short nPrio );
 	void AddMessageDelegate(CNetMessageDelegate *pDelegate) ;
-    void RemoveMessageDelegate(CNetMessageDelegate* pDelegate);
-    void RemoveAllDelegate();
-    eConnectType GetCurrentConnectType(){ return m_eConnectType ;}
-    bool IsConnected(){ return m_eConnectType == eConnectType_Connected ;}
-    void EnumDeleagte( CNetWorkMgr* pTarget, lpfunc pFunc, void* pData );
-    void DisconnectServer( RakNet::RakNetGUID& nServerNetUID );
+	void RemoveMessageDelegate(CNetMessageDelegate* pDelegate);
+	void RemoveAllDelegate();
+	void EnumDeleagte( CNetWorkMgr* pTarget, lpfunc pFunc, void* pData );
+	void DisconnectServer( RakNet::RakNetGUID& nServerNetUID );
     
     void ShutDown();
 public:
     static int s_nCurrentDataSize ;
 protected:
-    bool OnLostServer( CNetMessageDelegate* pDeleate,void* pData );
-    bool OnReciveLogicMessage( CNetMessageDelegate* pDeleate,void* pData );
-    bool OnConnectSateChanged( CNetMessageDelegate* pDeleate,void* pData );
+	bool OnLostServer( CNetMessageDelegate* pDeleate,void* pData );
+	bool OnReciveLogicMessage( CNetMessageDelegate* pDeleate,void* pData );
+	bool OnConnectSateChanged( CNetMessageDelegate* pDeleate,void* pData );
 protected:
     LIST_DELEGATE m_vAllDelegate;
     RakNet::RakPeerInterface* m_pNetPeer;
     RakNet::RakNetGUID m_nCurrentServer ;  // the newest accepted Server ; 
-    eConnectType m_eConnectType ;
 	short m_nConnectedTo ;
 	short m_nMaxConnectTo ;
 };

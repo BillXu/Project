@@ -23,26 +23,24 @@ void CNetMessageDelegate::SetPriority( unsigned int nPriority )
 CNetWorkMgr::CNetWorkMgr()
 {
     m_pNetPeer = NULL ;
-    m_eConnectType = eConnectType_None;
 	m_nMaxConnectTo = 0;
 	m_nConnectedTo = 0 ;
 }
 
 CNetWorkMgr::~CNetWorkMgr()
 {
-    if ( m_pNetPeer )
-    {
-        RakNet::RakPeerInterface::DestroyInstance(m_pNetPeer) ;
-        m_pNetPeer = NULL ;
-    }
-    RemoveAllDelegate() ;
+	if ( m_pNetPeer )
+	{
+		RakNet::RakPeerInterface::DestroyInstance(m_pNetPeer) ;
+		m_pNetPeer = NULL ;
+	}
+	RemoveAllDelegate() ;
 }
 
 void CNetWorkMgr::ShutDown()
 {
     if ( m_pNetPeer )
     {
-        m_eConnectType = eConnectType_None;
         m_pNetPeer->Shutdown(1);
         RakNet::RakPeerInterface::DestroyInstance(m_pNetPeer) ;
         m_pNetPeer = NULL ;
@@ -84,7 +82,6 @@ bool CNetWorkMgr::ConnectToServer(const char *pSeverIP, unsigned short nPort)
 	}
 
 	RakNet::ConnectionAttemptResult cReslt = m_pNetPeer->Connect(pSeverIP, nPort, NULL ,0) ;
-    m_eConnectType = eConnectType_Connecting ;
     switch (cReslt)
     {
         case RakNet::CONNECTION_ATTEMPT_STARTED:
@@ -125,10 +122,10 @@ bool CNetWorkMgr::ConnectToServer(const char *pSeverIP, unsigned short nPort)
 
 void CNetWorkMgr::ReciveMessage()
 {
-    if ( m_pNetPeer == NULL )
-        return ;
-    RakNet::Packet* packet = NULL ;
-    while ( (packet = m_pNetPeer->Receive()))
+	if ( m_pNetPeer == NULL )
+		return ;
+	RakNet::Packet* packet = NULL ;
+	while ( (packet = m_pNetPeer->Receive()))
     {
         unsigned char nMessageID = packet->data[0] ;
         s_nCurrentDataSize = packet->length ;
@@ -137,25 +134,20 @@ void CNetWorkMgr::ReciveMessage()
             case ID_DISCONNECTION_NOTIFICATION:
             case ID_CONNECTION_LOST:
             {
-                if ( m_eConnectType == eConnectType_Connected )
-                {
-                    m_eConnectType = eConnectType_Disconnectd ;
-                }
-                EnumDeleagte(this, (lpfunc)(&CNetWorkMgr::OnLostServer),packet) ;
+				--m_nConnectedTo;
+				EnumDeleagte(this, (lpfunc)(&CNetWorkMgr::OnLostServer),packet) ;
             }
                 break ;
             case ID_CONNECTION_REQUEST_ACCEPTED:
             {
 				++m_nConnectedTo;
-                m_nCurrentServer = packet->guid ;
-                CLogMgr::SharedLogMgr()->PrintLog("Connected To Server ");
-                m_eConnectType = eConnectType_Connected;
-                EnumDeleagte(this, (lpfunc)(&CNetWorkMgr::OnConnectSateChanged),&nMessageID) ;
+				m_nCurrentServer = packet->guid ;
+				CLogMgr::SharedLogMgr()->PrintLog("Connected To Server ");
+				EnumDeleagte(this, (lpfunc)(&CNetWorkMgr::OnConnectSateChanged),&nMessageID) ;
             }
                 break ;
             case ID_CONNECTION_ATTEMPT_FAILED:
             {
-                m_eConnectType = eConnectType_None ;
                 CLogMgr::SharedLogMgr()->ErrorLog(" Cann't Connect Server ");
                 EnumDeleagte(this, (lpfunc)(&CNetWorkMgr::OnConnectSateChanged),&nMessageID) ;
             }
@@ -163,20 +155,18 @@ void CNetWorkMgr::ReciveMessage()
             case ID_NO_FREE_INCOMING_CONNECTIONS:
             {
                 CLogMgr::SharedLogMgr()->ErrorLog("Server is full and busy !");
-                m_eConnectType = eConnectType_None ;
                 EnumDeleagte(this, (lpfunc)(&CNetWorkMgr::OnConnectSateChanged),&nMessageID) ;
             }
                 break ;
             case ID_CONNECTION_BANNED:
             {
                 CLogMgr::SharedLogMgr()->ErrorLog("BANNED By targeted Server");
-                m_eConnectType = eConnectType_None ;
                 EnumDeleagte(this, (lpfunc)(&CNetWorkMgr::OnConnectSateChanged),&nMessageID) ;
             }
                 break ;
             default:
 				{
-					if ( nMessageID >= ID_USER_PACKET_ENUM && nMessageID <= 138 )
+					if ( nMessageID >= ID_USER_PACKET_ENUM )
 					{
 						EnumDeleagte(this, (lpfunc)(&CNetWorkMgr::OnReciveLogicMessage),packet) ;
 					}
@@ -247,7 +237,6 @@ void CNetWorkMgr::RemoveMessageDelegate(CNetMessageDelegate *pDelegate)
 
 bool CNetWorkMgr::OnLostServer( CNetMessageDelegate* pDeleate,void* pData )
 {
-	--m_nConnectedTo;
     return pDeleate->OnLostSever((RakNet::Packet*)pData) ;
 }
 
@@ -272,7 +261,6 @@ void CNetWorkMgr::DisconnectServer( RakNet::RakNetGUID& nServerNetUID )
     {
         m_pNetPeer->CloseConnection(nServerNetUID, true) ;
     }
-    m_eConnectType = eConnectType_None ;
 }
 
 bool CNetWorkMgr::OnConnectSateChanged( CNetMessageDelegate* pDeleate,void* pData )
@@ -304,6 +292,6 @@ bool CNetWorkMgr::OnConnectSateChanged( CNetMessageDelegate* pDeleate,void* pDat
         default:
             return true ;
     }
-    return pDeleate->OnConnectStateChanged(eSate) ;
+	return pDeleate->OnConnectStateChanged(eSate) ;
 }
 

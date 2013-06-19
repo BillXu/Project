@@ -169,7 +169,9 @@
     <ClInclude Include="..\..\Common\ServerMessageDefine.h" />
     <ClInclude Include="..\..\Common\Timer.h" />
     <ClInclude Include="..\..\Common\Utility.h" />
+    <ClInclude Include="src\LoginApp.h" />
     <ClInclude Include="src\LoginPeer.h" />
+    <ClInclude Include="src\LoginPeerMgr.h" />
     <ClInclude Include="src\main.h" />
   </ItemGroup>
   <ItemGroup>
@@ -274,7 +276,9 @@
     <ClCompile Include="..\..\Common\NetWorkManager.cpp" />
     <ClCompile Include="..\..\Common\Timer.cpp" />
     <ClCompile Include="..\..\Common\Utility.cpp" />
+    <ClCompile Include="src\LoginApp.cpp" />
     <ClCompile Include="src\LoginPeer.cpp" />
+    <ClCompile Include="src\LoginPeerMgr.cpp" />
     <ClCompile Include="src\main.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
