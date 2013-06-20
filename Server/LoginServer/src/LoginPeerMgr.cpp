@@ -1,8 +1,13 @@
 #include "LoginPeerMgr.h"
 #include "LoginPeer.h"
-CLoginPeerMgr::CLoginPeerMgr()
+#include "LoginApp.h"
+#include "MessageDefine.h"
+#include "LogManager.h"
+#include "ServerMessageDefine.h"
+CLoginPeerMgr::CLoginPeerMgr(CLoginApp* app )
 {
 	ClearAll();
+	m_pApp = app ;
 }
 
 CLoginPeerMgr::~CLoginPeerMgr()
@@ -12,7 +17,26 @@ CLoginPeerMgr::~CLoginPeerMgr()
 
 void CLoginPeerMgr::OnMessage(RakNet::Packet* pMsg )
 {
-
+	CHECK_MSG_SIZE_VOID(stMsg,pMsg->length);
+	stMsg* pRet = (stMsg*)pMsg->data;
+	if ( pRet->usMsgType == MSG_TRANSER_DATA )
+	{
+		CHECK_MSG_SIZE_VOID(stMsgTransferData,pMsg->length);
+		stMsgTransferData* pReal = (stMsgTransferData*)pRet ;
+		CLoginPeer* pPeer = GetPeerBySessionID(pReal->nSessionID);
+		if ( !pPeer )
+		{
+			pPeer = GetReserverPeer();
+			if ( !pPeer )
+			{
+				pPeer = new CLoginPeer(this) ;
+				pPeer->Reset(pReal->nSessionID) ;
+				m_vAllPeers[pReal->nSessionID] = pPeer ;
+			}
+			pPeer->Reset(pReal->nSessionID) ;
+		}
+		pPeer->OnMessage(pMsg) ;
+	}
 }
 
 CLoginPeer* CLoginPeerMgr::GetPeerBySessionID(unsigned int nSessionID )
@@ -40,12 +64,14 @@ CLoginPeer* CLoginPeerMgr::GetReserverPeer()
 bool CLoginPeerMgr::SendMsgToDB(const char* pBuffer , int nLen )
 {
 	// net work object 
+	m_pApp->SendMsg(pBuffer,nLen,false);
 	return true ;
 }
 
 bool CLoginPeerMgr::SendMsgToGate(const char* pBuffer , int nLen )
 {
 	// net work object
+	m_pApp->SendMsg(pBuffer,nLen,true);
 	return true ;
 }
 

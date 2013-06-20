@@ -3,8 +3,8 @@
 #include "Timer.h"
 class CLoginPeerMgr;
 class CLoginApp
-	:public CNetMessageDelegate
-	,public CTimerDelegate
+	:public CTimerDelegate
+	,public CNetMessageDelegate
 {
 public:
 	struct stServerInfo 
@@ -22,10 +22,14 @@ public:
 	void MainLoop();
 	virtual bool OnMessage( RakNet::Packet* pMsg );
 	virtual bool OnLostSever(RakNet::Packet* pMsg);
+	virtual bool OnConnectStateChanged( eConnectState eSate, RakNet::Packet* pMsg);
 	bool SendMsg( const char* pBuffer , unsigned int nLen , bool bGate );
+	void ReconnectDB(float fTimeElaps,unsigned int nTimerID );
+	void ReconnectGate(float fTimeElaps,unsigned int nTimerID );
 protected:
 	bool SendMsgToGate(const char* pBuffer , unsigned int nLen);
 	bool SendMsgToDB(const char* pBuffer , unsigned int nLen);
+	void TryConnect(bool bGate );
 protected:
 	stServerInfo m_stGateServer ;
 

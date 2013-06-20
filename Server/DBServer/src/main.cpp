@@ -93,7 +93,7 @@ public:
 	{
 		printf("a peer connected : %s\n",pData->systemAddress.ToString());
 	}
-	
+
 	virtual void OnPeerDisconnected(RakNet::RakNetGUID& nPeerDisconnected, RakNet::Packet* pData )
 	{
 		printf("a peer Disconnected : %s\n",nPeerDisconnected.ToString());

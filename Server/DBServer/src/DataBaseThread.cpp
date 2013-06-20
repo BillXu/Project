@@ -72,6 +72,7 @@ bool CDataBaseThread::ProcessRequest()
 		vProcessedResult.push_back(pResult);
 		pResult->nRequestFlag = pRequest->nRequestFlag ;
 		pResult->nRequestUID = pRequest->nRequestUID ;
+		pResult->pUserData = pRequest->pUserData ;
 		if ( mysql_real_query(m_pMySql,pRequest->pSqlBuffer,pRequest->nSqlBufferLen) )
 		{
 			CLogMgr::SharedLogMgr()->ErrorLog("query DB Error Info , Operate Flag = %d : %s \n", pRequest->nRequestFlag, mysql_error(m_pMySql));

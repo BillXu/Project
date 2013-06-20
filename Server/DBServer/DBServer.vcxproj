@@ -240,6 +240,8 @@
     <ClInclude Include="..\..\Common\ThreadMod.h" />
     <ClInclude Include="..\..\Common\Utility.h" />
     <ClInclude Include="src\DataBaseThread.h" />
+    <ClInclude Include="src\DBApp.h" />
+    <ClInclude Include="src\DBManager.h" />
     <ClInclude Include="src\DBPlayer.h" />
     <ClInclude Include="src\DBPlayerManager.h" />
     <ClInclude Include="src\DBRequest.h" />
@@ -353,6 +355,8 @@
     <ClCompile Include="..\..\Common\ThreadMod.cpp" />
     <ClCompile Include="..\..\Common\Utility.cpp" />
     <ClCompile Include="src\DataBaseThread.cpp" />
+    <ClCompile Include="src\DBApp.cpp" />
+    <ClCompile Include="src\DBManager.cpp" />
     <ClCompile Include="src\DBPlayer.cpp" />
     <ClCompile Include="src\DBPlayerManager.cpp" />
     <ClCompile Include="src\DBRequest.cpp" />

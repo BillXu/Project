@@ -32,6 +32,7 @@ CDBRequestQueue::~CDBRequestQueue()
 
 void CDBRequestQueue::PushRequest(stDBRequest* request )
 {
+	assert(request->nRequestUID && "this can not be zero ,assign it with msg id" );
 	mRequestLock.Lock();
 	m_vAllRequest.push_back(request) ;
 	mRequestLock.Unlock() ;

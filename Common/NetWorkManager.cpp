@@ -143,25 +143,25 @@ void CNetWorkMgr::ReciveMessage()
 				++m_nConnectedTo;
 				m_nCurrentServer = packet->guid ;
 				CLogMgr::SharedLogMgr()->PrintLog("Connected To Server ");
-				EnumDeleagte(this, (lpfunc)(&CNetWorkMgr::OnConnectSateChanged),&nMessageID) ;
+				EnumDeleagte(this, (lpfunc)(&CNetWorkMgr::OnConnectSateChanged),packet) ;
             }
                 break ;
             case ID_CONNECTION_ATTEMPT_FAILED:
             {
                 CLogMgr::SharedLogMgr()->ErrorLog(" Cann't Connect Server ");
-                EnumDeleagte(this, (lpfunc)(&CNetWorkMgr::OnConnectSateChanged),&nMessageID) ;
+                EnumDeleagte(this, (lpfunc)(&CNetWorkMgr::OnConnectSateChanged),packet) ;
             }
                 break ;
             case ID_NO_FREE_INCOMING_CONNECTIONS:
             {
                 CLogMgr::SharedLogMgr()->ErrorLog("Server is full and busy !");
-                EnumDeleagte(this, (lpfunc)(&CNetWorkMgr::OnConnectSateChanged),&nMessageID) ;
+                EnumDeleagte(this, (lpfunc)(&CNetWorkMgr::OnConnectSateChanged),packet) ;
             }
                 break ;
             case ID_CONNECTION_BANNED:
             {
                 CLogMgr::SharedLogMgr()->ErrorLog("BANNED By targeted Server");
-                EnumDeleagte(this, (lpfunc)(&CNetWorkMgr::OnConnectSateChanged),&nMessageID) ;
+                EnumDeleagte(this, (lpfunc)(&CNetWorkMgr::OnConnectSateChanged),packet) ;
             }
                 break ;
             default:
@@ -265,7 +265,8 @@ void CNetWorkMgr::DisconnectServer( RakNet::RakNetGUID& nServerNetUID )
 
 bool CNetWorkMgr::OnConnectSateChanged( CNetMessageDelegate* pDeleate,void* pData )
 {
-    unsigned char nMessageID = *((unsigned char*)pData);
+	RakNet::Packet* packet = (RakNet::Packet*)pData ;
+    unsigned char nMessageID = packet->data[0];
     CNetMessageDelegate::eConnectState eSate = CNetMessageDelegate::eConnect_Accepted;
     switch (nMessageID)
     {
@@ -292,6 +293,6 @@ bool CNetWorkMgr::OnConnectSateChanged( CNetMessageDelegate* pDeleate,void* pDat
         default:
             return true ;
     }
-	return pDeleate->OnConnectStateChanged(eSate) ;
+	return pDeleate->OnConnectStateChanged(eSate,packet) ;
 }
 

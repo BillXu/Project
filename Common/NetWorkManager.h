@@ -32,7 +32,7 @@ public:
 	virtual ~CNetMessageDelegate(){} ;
 	virtual bool OnMessage( RakNet::Packet* pMsg ) = 0 ;
 	virtual bool OnLostSever(RakNet::Packet* pMsg){ return  false; };
-	virtual bool OnConnectStateChanged( eConnectState eSate){ return false ;} 
+	virtual bool OnConnectStateChanged( eConnectState eSate, RakNet::Packet* pMsg){ return false ;} 
 	void SetPriority( unsigned int nPriority  );
 	unsigned GetPriority(){ return m_nPriority ;}
 protected:

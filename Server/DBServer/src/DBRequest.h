@@ -20,6 +20,7 @@ struct stDBRequest
 	unsigned int nRequestFlag ; // 一般是msg,主要用来表示请求，用于对请求结果的处理. just ;
 	char pSqlBuffer[Max_Sql_String];
 	int nSqlBufferLen ;
+	void* pUserData ;
 protected:
 	stDBRequest(){}
 	friend class CDBRequestQueue;
@@ -35,6 +36,7 @@ public:
 	unsigned int nRequestUID ;
 	VEC_MYSQLROW vResultRows ;  
 	unsigned int nAffectRow ;
+	void* pUserData ;
 };
 
 class CDBRequestQueue

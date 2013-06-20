@@ -49,10 +49,18 @@ void CLogMgr::PrintLog(const char *sformate, ...)
 
 void CLogMgr::ErrorLog(const char *sformate, ...)
 {
-    va_list va ;
-    va_start(va,sformate);
-    Print(sformate, va,eLogState_Error);
-    va_end(va) ;
+	va_list va ;
+	va_start(va,sformate);
+	Print(sformate, va,eLogState_Error);
+	va_end(va) ;
+}
+
+void CLogMgr::SystemLog(const char* sformate , ...)
+{
+	va_list va ;
+	va_start(va,sformate);
+	Print(sformate, va,eLogState_System);
+	va_end(va) ;
 }
 
 void CLogMgr::SetOutputFile(const char *pFilename)
@@ -85,6 +93,10 @@ void CLogMgr::Print(const char *sFormate, va_list va , eLogState eSate )
     {
         sprintf(pBuffer, "Warnning: [%s, %s] %s \n",__DATE__,__TIME__,sFormate);
     }
+	else if ( eSate == eLogState_System )
+	{
+		sprintf(pBuffer, "System: [%s, %s] %s \n",__DATE__,__TIME__,sFormate);
+	}
     
     if ( bOutPutToFile && pFile )
     {

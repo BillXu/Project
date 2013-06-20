@@ -17,6 +17,7 @@ public:
         eLogState_Noraml,
         eLogState_Warnning,
         eLogState_Error,
+		eLogState_System,
         eLogState_Max,
     };
 public:
@@ -26,6 +27,7 @@ public:
     void SetDisablePrint( bool bEnable );
     void PrintLog( const char* sformate , ... );
     void ErrorLog( const char* sformate , ... );
+	void SystemLog(const char* sformate , ...);
     void SetOutputFile( const char* pFile );
     void CloseFile();
 protected:

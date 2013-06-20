@@ -520,6 +520,12 @@
     <ClInclude Include="src\DBRequestFlags.h">
       <Filter>head</Filter>
     </ClInclude>
+    <ClInclude Include="src\DBManager.h">
+      <Filter>head</Filter>
+    </ClInclude>
+    <ClInclude Include="src\DBApp.h">
+      <Filter>head</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
@@ -850,6 +856,12 @@
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="src\DBPlayerManager.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\DBManager.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\DBApp.cpp">
       <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>

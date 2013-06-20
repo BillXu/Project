@@ -63,3 +63,12 @@ enum eBigRoomType
 		return false; \
 	}\
 }
+
+#define CHECK_MSG_SIZE_VOID(CHECK_MSG,nLen) \
+{\
+	if (sizeof(CHECK_MSG) > (nLen) ) \
+{\
+	CLogMgr::SharedLogMgr()->ErrorLog("Msg Size Unlegal msg") ;	\
+	return; \
+	}\
+}

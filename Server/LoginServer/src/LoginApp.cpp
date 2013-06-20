@@ -1,30 +1,214 @@
 #include "LoginApp.h"
+#include "LogManager.h"
+#include "ServerMessageDefine.h"
+#include "LoginPeerMgr.h"
 CLoginApp::CLoginApp()
 {
-
+	m_pNetWork = NULL ;
+	m_pReconnctGate = NULL ;
+	m_pReconnectDB = NULL ;
+	m_pPeerMgr = NULL ;
 }
 
 CLoginApp::~CLoginApp()
 {
+	if ( m_pNetWork )
+	{
+		m_pNetWork->ShutDown();
+		delete m_pNetWork ;
+		m_pNetWork = NULL ;
+	}
 
+	if ( m_pReconnectDB )
+	{
+		CTimerManager::SharedTimerManager()->RemoveTimer(m_pReconnectDB) ;
+		m_pReconnectDB = NULL ;
+	}
+
+	if ( m_pReconnctGate )
+	{
+		CTimerManager::SharedTimerManager()->RemoveTimer(m_pReconnctGate) ;
+		m_pReconnctGate = NULL ;
+	}
+
+	if ( m_pPeerMgr )
+	{
+		delete m_pPeerMgr ;
+		m_pPeerMgr = NULL ;
+	}
 }
 
 void CLoginApp::Init()
 {
+	m_pNetWork = new CNetWorkMgr ;
+	m_pNetWork->SetupNetwork(2);
+	m_pNetWork->AddMessageDelegate(this);
 
+	// connected to Gate ;
+	m_stGateServer.m_bConnected = false ;
+	m_stGateServer.m_strIPAddress = "192.168.1.56";
+	m_stGateServer.m_nPort = 5600;
+	m_pNetWork->ConnectToServer(m_stGateServer.m_strIPAddress.c_str(),m_stGateServer.m_nPort) ;
+
+	// connected to DB ;
+	m_stDBServer.m_bConnected = false ;
+	m_stDBServer.m_strIPAddress = "192.168.1.66";
+	m_stDBServer.m_nPort = 5700;
+	m_pNetWork->ConnectToServer(m_stDBServer.m_strIPAddress.c_str(),m_stDBServer.m_nPort) ;
+
+	// Peer Mgr 
+	m_pPeerMgr = new CLoginPeerMgr(this);
 }
 
 void CLoginApp::MainLoop()
 {
-
+	while( true )
+	{
+		if ( m_pNetWork) 
+		{
+			m_pNetWork->ReciveMessage() ;
+		}
+		CTimerManager::SharedTimerManager()->Update();
+		Sleep(1);
+	}
 }
 
 bool CLoginApp::OnMessage( RakNet::Packet* pMsg )
 {
-
+	CHECK_MSG_SIZE(stMsg,pMsg->length) ;
+	stMsg* pmsg = (stMsg*)pMsg->data ;
+	if ( pmsg->cSysIdentifer == ID_MSG_VERIFY && MSG_VERIFY_GA == pmsg->usMsgType )
+	{
+		m_stGateServer.m_bConnected = true ;
+		m_stGateServer.m_nServerNetID = pMsg->guid ;
+		CLogMgr::SharedLogMgr()->SystemLog("Connected to GateServer!");
+	}
+	else if ( pmsg->cSysIdentifer == ID_MSG_VERIFY && MSG_VERIFY_DB == pmsg->usMsgType )
+	{
+		m_stDBServer.m_bConnected = true ;
+		m_stDBServer.m_nServerNetID = pMsg->guid ;
+		CLogMgr::SharedLogMgr()->SystemLog("Connected to DBServer!");
+	}
+	else
+	{
+		if ( m_pPeerMgr )
+		{
+			m_pPeerMgr->OnMessage(pMsg) ;
+		}
+	}
+	return true ;
 }
 
 bool CLoginApp::OnLostSever(RakNet::Packet* pMsg)
 {
+	if ( pMsg->guid == m_stDBServer.m_nServerNetID )
+	{
+		m_stDBServer.m_bConnected = false ;
+		CLogMgr::SharedLogMgr()->ErrorLog("DBServer Lost");
+		TryConnect(false);
+	}
+	else
+	{
+		m_stGateServer.m_bConnected = false ;
+		CLogMgr::SharedLogMgr()->ErrorLog("GateServer Lost");
+		TryConnect(true);
+	}
+	return true ;
+}
 
+bool CLoginApp::OnConnectStateChanged( eConnectState eSate, RakNet::Packet* pMsg)
+{
+	if ( eSate == eConnect_Accepted )
+	{
+		stMsg cMsg ;
+		cMsg.cSysIdentifer = ID_MSG_VERIFY ;
+		cMsg.usMsgType = MSG_VERIFY_LOGIN ;
+		m_pNetWork->SendMsg((char*)&cMsg,sizeof(stMsg),pMsg->guid) ;
+		return true ;
+	}
+
+	// connected failed ; try again ;
+	const char* pIP = pMsg->systemAddress.ToString(false) ;
+	if ( strcmp(pIP,m_stGateServer.m_strIPAddress.c_str()) == 0 && m_stGateServer.m_nPort == pMsg->systemAddress.GetPort() )
+	{
+		// gate connected failed ;
+		TryConnect(true);
+	}
+	else
+	{
+		// db connected failed ;
+		TryConnect(false);
+	}
+	return true ;
+}
+
+bool CLoginApp::SendMsg( const char* pBuffer , unsigned int nLen , bool bGate )
+{
+	if ( m_pNetWork == NULL )
+		return false ;
+	if ( bGate )
+	{
+		return SendMsgToGate(pBuffer,nLen) ;
+	}
+	else
+	{
+		return SendMsgToDB(pBuffer,nLen) ;
+	}
+}
+
+void CLoginApp::ReconnectDB(float fTimeElaps,unsigned int nTimerID )
+{
+	m_pReconnectDB->Stop();
+	CLogMgr::SharedLogMgr()->SystemLog("Try Connect to DBServer...");
+	m_pNetWork->ConnectToServer(m_stDBServer.m_strIPAddress.c_str(),m_stDBServer.m_nPort) ;
+}
+
+void CLoginApp::ReconnectGate(float fTimeElaps,unsigned int nTimerID )
+{
+	m_pReconnctGate->Stop() ;
+	CLogMgr::SharedLogMgr()->SystemLog("Try Connect to GateServer...");
+	m_pNetWork->ConnectToServer(m_stGateServer.m_strIPAddress.c_str(),m_stGateServer.m_nPort) ;
+}
+
+bool CLoginApp::SendMsgToGate(const char* pBuffer , unsigned int nLen)
+{
+	if ( m_stGateServer.m_bConnected == false )
+	{
+		return false ;
+	}
+	m_pNetWork->SendMsg(pBuffer,nLen,m_stGateServer.m_nServerNetID) ;
+	return true ;
+}
+
+bool CLoginApp::SendMsgToDB(const char* pBuffer , unsigned int nLen)
+{
+	if ( m_stDBServer.m_bConnected == false )
+	{
+		return false ;
+	}
+	m_pNetWork->SendMsg(pBuffer,nLen,m_stDBServer.m_nServerNetID) ;
+	return true ;
+}
+
+void CLoginApp::TryConnect(bool bGate )
+{
+	if ( !bGate )
+	{
+		if ( m_pReconnectDB == NULL )
+		{
+			m_pReconnectDB = CTimerManager::SharedTimerManager()->AddTimer(this,(CTimerDelegate::lpTimerSelector)&CLoginApp::ReconnectDB);
+			m_pReconnectDB->SetDelayTime(1500);
+		}
+		m_pReconnectDB->Reset();
+		m_pReconnectDB->Start() ;
+		return ;
+	}
+
+	if ( m_pReconnctGate == NULL )
+	{
+		m_pReconnctGate = CTimerManager::SharedTimerManager()->AddTimer(this,(CTimerDelegate::lpTimerSelector)&CLoginApp::ReconnectGate);
+		m_pReconnctGate->SetDelayTime(1500);
+	}
+	m_pReconnctGate->Reset();
+	m_pReconnctGate->Start() ;
 }
