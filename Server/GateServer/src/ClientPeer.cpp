@@ -105,10 +105,20 @@ void CClientPeer::OnGameServerCrashed(CGameServerPeer* pGameServer)
 void CClientPeer::OnRealRemove(float fTimeElaps,unsigned int nTimerID )
 {
 	CGatePeer::OnDisconnected();
+
+	stMsgPeerDisconnect msg ;
+	msg.nSessionID = GetSessionID() ;
+	
+	// tell game server
 	if ( m_pGameServer)
 	{
 		m_pGameServer->OnClientPeerDisconnected(this) ;
+		CServerNetwork::SharedNetwork()->SendMsg((char*)&msg,sizeof(msg),m_pGameServer->GetSelfNetGUID(),false) ;
 	}
+
+	// tell login server ;
+	CGatePeerMgr::SharedGatePeerMgr()->TransferMsgToLoginServer((char*)&msg,sizeof(msg));
+
 	m_TimerWaitForReconnected->Stop() ;
 }
 

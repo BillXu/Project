@@ -2,10 +2,12 @@
 #include "LogManager.h"
 #include "DBRequest.h"
 #include "ServerMessageDefine.h"
-CDBManager::CDBManager()
+#include "DBApp.h"
+CDBManager::CDBManager(CDBServerApp* theApp )
 {
 	m_vReserverArgData.clear();
 	m_vMsgFunc.clear();
+	m_pTheApp = theApp ;
 }
 
 CDBManager::~CDBManager()
@@ -50,6 +52,13 @@ void CDBManager::OnDBResult(stDBResult* pResult)
 		CLogMgr::SharedLogMgr()->ErrorLog("Get unregister DBResult ID , ID = %d",nid ) ;
 		return ;
 	}
+
+	if ( iter->second.dbretFunc == NULL )
+	{
+		CLogMgr::SharedLogMgr()->PrintLog("we don't mind the result of Msg = %d ", pResult->nRequestUID );
+		return ;
+	}
+
 	(this->*iter->second.dbretFunc)(pResult);
 	if ( pResult->pUserData != NULL )
 	{
@@ -87,10 +96,10 @@ void CDBManager::RegisterMsgFunc(unsigned int nMsg ,lpMsgFunc msgFunc , lpDBResu
 // common msg rand db ret func
 void RequestBaseDataMsg(RakNet::Packet*pmsg)
 {
-
+	// construct sql ;put request to request queue ;
 }
 
 void RequestBasetDataDBResult(stDBResult* pResult)
 {
-
+	// send msg to target ;
 }

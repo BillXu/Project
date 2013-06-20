@@ -4,6 +4,7 @@
 #include <list>
 #include <map>
 struct stDBResult ;
+class CDBServerApp ;
 class CDBManager
 {
 public:
@@ -27,7 +28,7 @@ protected:
 	};
 	typedef std::map<int,stMsgAndDBRetFunc> MAP_MSG_FUNC ;
 public:
-	CDBManager();
+	CDBManager(CDBServerApp* theApp);
 	~CDBManager();
 	void Init();
 	void OnMessage(RakNet::Packet* packet);
@@ -42,4 +43,5 @@ protected:
 protected:
 	LIST_ARG_DATA m_vReserverArgData ;
 	MAP_MSG_FUNC  m_vMsgFunc ;
+	CDBServerApp* m_pTheApp ;
 };

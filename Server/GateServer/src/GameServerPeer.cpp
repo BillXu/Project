@@ -67,10 +67,6 @@ void CGameServerPeer::OnClientPeerDisconnected(CClientPeer* pPeer )
 	if ( iter != m_vClientPeers.end() )
 	{
 		m_vClientPeers.erase(iter) ;
-
-		stMsgPeerDisconnect msg ;
-		msg.nSessionID = pPeer->GetSessionID() ;
-		CServerNetwork::SharedNetwork()->SendMsg((char*)&msg,sizeof(msg),GetSelfNetGUID(),false) ;
 	}
 	else
 	{

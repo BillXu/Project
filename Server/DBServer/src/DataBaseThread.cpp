@@ -32,10 +32,15 @@ void CDataBaseThread::StopWork()
 
 void CDataBaseThread::__run()
 {
-	while ( m_bRunning )
+	while ( true )
 	{
 		if ( ProcessRequest() )
 			break ;
+		if ( !m_bRunning )
+		{
+			ProcessRequest(); 
+			break;
+		}
 		Sleep(2);
 	}
 

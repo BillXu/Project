@@ -18,7 +18,21 @@ CLoginPeerMgr::~CLoginPeerMgr()
 void CLoginPeerMgr::OnMessage(RakNet::Packet* pMsg )
 {
 	CHECK_MSG_SIZE_VOID(stMsg,pMsg->length);
+	
 	stMsg* pRet = (stMsg*)pMsg->data;
+	if ( pRet->usMsgType = MSG_DISCONNECT ) // a peer disconnected ;
+	{
+		CHECK_MSG_SIZE_VOID(stMsgPeerDisconnect,pMsg->length);
+		stMsgPeerDisconnect* pReal = (stMsgPeerDisconnect*)pRet ;
+		MAP_LOGIN_PEER::iterator iter = m_vAllPeers.find(pReal->nSessionID) ;
+		if ( iter != m_vAllPeers.end() )
+		{
+			m_vReseverLoginPeers.push_back(iter->second) ;
+		}
+		CLogMgr::SharedLogMgr()->PrintLog("A peer disconnected !") ;
+		return ;
+	}
+
 	if ( pRet->usMsgType == MSG_TRANSER_DATA )
 	{
 		CHECK_MSG_SIZE_VOID(stMsgTransferData,pMsg->length);

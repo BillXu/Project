@@ -1,7 +1,7 @@
 #pragma once
 #include "ServerNetwork.h"
 #include <map>
-class stDBResult;
+struct stDBResult;
 class CDBPlayer;
 class stMsg ;
 class CDBPlayerManager
