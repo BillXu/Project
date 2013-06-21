@@ -94,12 +94,12 @@ void CDBManager::RegisterMsgFunc(unsigned int nMsg ,lpMsgFunc msgFunc , lpDBResu
 }
 
 // common msg rand db ret func
-void RequestBaseDataMsg(RakNet::Packet*pmsg)
+void CDBManager::RequestBaseDataMsg(RakNet::Packet*pmsg)
 {
 	// construct sql ;put request to request queue ;
 }
 
-void RequestBasetDataDBResult(stDBResult* pResult)
+void CDBManager::RequestBasetDataDBResult(stDBResult* pResult)
 {
 	// send msg to target ;
 }
