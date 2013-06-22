@@ -10,13 +10,13 @@ struct stMsg
 	unsigned char cSysIdentifer ;
 	unsigned short usMsgType ;
 public:
-	stMsg():cSysIdentifer( ID_USER_PACKET_ENUM  ),usMsgType(MSG_NONE){}
+	stMsg():cSysIdentifer( ID_MSG_C2S  ),usMsgType(MSG_NONE){}
 };
 
 struct stMsgRegister
 	:public stMsg
 {
-	stMsgRegister(){cSysIdentifer = ID_MSG_C2S ; usMsgType = MSG_REGISTE ;}
+	stMsgRegister(){cSysIdentifer = ID_MSG_C2LOGIN ; usMsgType = MSG_REGISTE ;}
 	char* pAccount;
 	char* pPassword;
 	char* pCharacterName;
@@ -29,16 +29,23 @@ struct stMsgRegister
 struct stMsgRegisterRet
 	:public stMsg
 {
-	stMsgRegisterRet(){ cSysIdentifer = ID_MSG_S2C; usMsgType = MSG_REGISTE ; }
-	unsigned char nAccountType ;  // 0 visitor login register , 1 ordinary register ,2 SINA WEIBO login register  3 QQ login register .   
-	bool bSuccess ; // 0 , success 
-	char nErrCode ; // 1 , accound repeated ;
-	char* pAccount;  // used when visitor register
-	//char* pPasswrold; // used when visitor register
-	unsigned char nAccountLen ; // used when visitor register
-	//unsigned char nPaswordLen ; // used when visitor register  // Password = pAccount ;
+	stMsgRegisterRet(){ cSysIdentifer = ID_MSG_LOGIN2C; usMsgType = MSG_REGISTE ; }
+	char nResultCode ; // 0 , success  1 , accound repeated ; 2 ,name repeate ;
+	unsigned int nUserUID ; // player Unique ID ;
 };
 
+struct stMsgQuickEnterRegister
+	:public stMsg
+{
+	stMsgQuickEnterRegister(){ cSysIdentifer = ID_MSG_C2LOGIN; usMsgType = MSG_QUICK_ENTER_REGISTER ; }
+};
+
+struct stMsgQuickEnterRegisterRet
+	:public stMsg
+{
+	stMsgQuickEnterRegisterRet(){ cSysIdentifer = ID_MSG_LOGIN2C; usMsgType = MSG_QUICK_ENTER_REGISTER ; }
+	unsigned int nUserUID ; // player UniqueID ;
+};
 //struct stMsgConnectRet
 //	:public stMsg
 //{

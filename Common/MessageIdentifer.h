@@ -2,8 +2,9 @@
 #include "MessageIdentifiers.h"
 enum 
 {
-	ID_MSG_C2S = ID_USER_PACKET_ENUM + 1 ,
+	ID_MSG_C2S = ID_USER_PACKET_ENUM + 1 , // client to game server 
 	ID_MSG_C2LOGIN,
+	ID_MSG_LOGIN2C,
 	ID_MSG_S2C,
 	ID_MSG_GM2GA,  // GM = game server , GA = gate server ;
 	ID_MSG_GA2GM,
@@ -24,10 +25,9 @@ enum eMsgType
 	MSG_VERIFY_DB,  // verify that is DBserver ;
 	MSG_TRANSER_DATA, // tranfer data between servers ;
 	MSG_DISCONNECT,
-	MSG_SERVERS_USE_END,
-	MSG_PUSH_BASE_DATA, // PUSH DATA FROM DB SERVER TO GAMER SERVER ;
 	// msg title used between server and client ;
 	MSG_REGISTE,
+	MSG_QUICK_ENTER_REGISTER,
 	MSG_CONNECT_RET,
 	MSG_GAME_SERVER_LOST,
 	MSG_LOGIN,
