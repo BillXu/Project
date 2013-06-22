@@ -36,7 +36,7 @@ void CDBServerApp::Init()
 	m_bRunning = true ;
 	// setup net work 
 	m_pNetWork = new CServerNetwork ;
-	m_pNetWork->StartupNetwork(5000,4) ;
+	m_pNetWork->StartupNetwork(DBServer_PORT,4) ;
 	m_pNetWork->AddDelegate(this);
 
 	// set up data base thread 
@@ -95,6 +95,11 @@ void CDBServerApp::OnNewPeerConnected(RakNet::RakNetGUID& nNewPeer, RakNet::Pack
 	msg.usMsgType = MSG_VERIFY_DB ;
 	m_pNetWork->SendMsg((char*)&msg,sizeof(msg),nNewPeer,false) ;
 	CLogMgr::SharedLogMgr()->SystemLog("a peer connected IP = %s",pData->systemAddress.ToString(true));
+}
+
+void CDBServerApp::OnPeerDisconnected(RakNet::RakNetGUID& nPeerDisconnected, RakNet::Packet* pData )
+{
+	CLogMgr::SharedLogMgr()->SystemLog("a peer Disconnected IP = %s",pData->systemAddress.ToString(true));
 }
 
 void CDBServerApp::SendMsg(const char* pBuffer, int nLen, RakNet::RakNetGUID& nTarget )

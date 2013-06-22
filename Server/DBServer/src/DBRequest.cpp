@@ -1,4 +1,5 @@
 #include "DBRequest.h"
+#include <assert.h>
 stDBResult::~stDBResult()
 {
 	VEC_MYSQLROW::iterator iter = vResultRows.begin();

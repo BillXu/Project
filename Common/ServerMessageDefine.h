@@ -4,6 +4,7 @@
 // Define message , used between Servers ;mainly DBServer and GameServer 
 #include "MessageDefine.h"
 #include "BaseData.h"
+#define DBServer_PORT 5001
 // WARNNING:变长字符串，我们不包括终结符 \0 ;
 
 //--------------------------------------------

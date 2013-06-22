@@ -10,11 +10,12 @@ CLoginServerPeer::CLoginServerPeer()
 
 void CLoginServerPeer::OnMessage( RakNet::Packet* pData )
 {
+	CHECK_MSG_SIZE_VOID(stMsgTransferData,pData->length);
 	stMsgTransferData* pRealMsg = (stMsgTransferData*)pData->data ;
 	CClientPeer* pClientPeer = (CClientPeer*)m_pGatePeerMgr->GetAcitveClientPeerBySessionID(pRealMsg->nSessionID);
 	if ( pClientPeer == NULL )
 	{
-		CLogMgr::SharedLogMgr()->ErrorLog( "Can not find the peerUID = %d on the server %s " ,pRealMsg->nSessionID,m_nSelfNetGUID.ToString());
+		CLogMgr::SharedLogMgr()->ErrorLog( "Can not find the peerUID = %d on the LoginServer %s " ,pRealMsg->nSessionID,m_nSelfNetGUID.ToString());
 		return ;
 	}
 

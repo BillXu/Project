@@ -46,18 +46,19 @@ void CLoginApp::Init()
 
 	// connected to Gate ;
 	m_stGateServer.m_bConnected = false ;
-	m_stGateServer.m_strIPAddress = "192.168.1.56";
-	m_stGateServer.m_nPort = 5600;
+	m_stGateServer.m_strIPAddress = "127.0.0.1";
+	m_stGateServer.m_nPort = GATE_SERVER_PORT;
 	m_pNetWork->ConnectToServer(m_stGateServer.m_strIPAddress.c_str(),m_stGateServer.m_nPort) ;
 
 	// connected to DB ;
 	m_stDBServer.m_bConnected = false ;
-	m_stDBServer.m_strIPAddress = "192.168.1.66";
-	m_stDBServer.m_nPort = 5700;
+	m_stDBServer.m_strIPAddress = "127.0.0.1";
+	m_stDBServer.m_nPort = DBServer_PORT;
 	m_pNetWork->ConnectToServer(m_stDBServer.m_strIPAddress.c_str(),m_stDBServer.m_nPort) ;
 
 	// Peer Mgr 
 	m_pPeerMgr = new CLoginPeerMgr(this);
+	CLogMgr::SharedLogMgr()->SystemLog("Start Login Server,Connecting to DB and Gate ");
 }
 
 void CLoginApp::MainLoop()
@@ -197,7 +198,7 @@ void CLoginApp::TryConnect(bool bGate )
 		if ( m_pReconnectDB == NULL )
 		{
 			m_pReconnectDB = CTimerManager::SharedTimerManager()->AddTimer(this,(CTimerDelegate::lpTimerSelector)&CLoginApp::ReconnectDB);
-			m_pReconnectDB->SetDelayTime(1500);
+			m_pReconnectDB->SetDelayTime(5);
 		}
 		m_pReconnectDB->Reset();
 		m_pReconnectDB->Start() ;
@@ -207,7 +208,7 @@ void CLoginApp::TryConnect(bool bGate )
 	if ( m_pReconnctGate == NULL )
 	{
 		m_pReconnctGate = CTimerManager::SharedTimerManager()->AddTimer(this,(CTimerDelegate::lpTimerSelector)&CLoginApp::ReconnectGate);
-		m_pReconnctGate->SetDelayTime(1500);
+		m_pReconnctGate->SetDelayTime(5);
 	}
 	m_pReconnctGate->Reset();
 	m_pReconnctGate->Start() ;

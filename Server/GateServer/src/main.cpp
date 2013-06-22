@@ -2,6 +2,7 @@
 #include "GatePeerManager.h"
 #include "LogManager.h"
 #include "GatePeer.h"
+#include "CommonDefine.h"
 
 BOOL WINAPI ConsoleHandler(DWORD msgType)
 {    
@@ -37,7 +38,7 @@ int main()
 {
 	SetConsoleCtrlHandler(ConsoleHandler, TRUE); 
 	CLogMgr::SharedLogMgr()->PrintLog("Starting Gate Server");
-	CServerNetwork::SharedNetwork()->StartupNetwork(3000,25535);
+	CServerNetwork::SharedNetwork()->StartupNetwork(GATE_SERVER_PORT,25535);
 	CServerNetwork::SharedNetwork()->AddDelegate(CGatePeerMgr::SharedGatePeerMgr());
 	while( true )
 	{

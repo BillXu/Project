@@ -15,6 +15,7 @@ protected:
 	CTimer* m_pUpdateTimer ;
 };
 
+//warning : time merasuse by second ;
 class CTimer
 {
 public:

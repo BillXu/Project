@@ -1,6 +1,6 @@
 #include"main.h"
 #include <iostream>
-//#include "ThreadMod.h"
+#include "ThreadMod.h"
 //#include "mutex.h"
 //#include <my_global.h>
 //#include "mysql.h"
@@ -13,6 +13,25 @@
 //#include "DBPlayerManager.h"
 
 #include "DBApp.h"
+CDBServerApp theApp ;
+class CGetInput
+	:public CThreadT
+{
+	void __run()
+	{
+		char c ;
+		while ( 1 )
+		{
+			c = getchar();
+			if ( c == 'q' || c == 'Q')
+			{
+				theApp.Stop();
+				break; 
+			}
+			Sleep(10);
+		}
+	}
+};
 //class A
 //	:public CThreadT
 //{
@@ -102,17 +121,20 @@
 //	}
 //};
 
-BOOL WINAPI ConsoleHandler(DWORD msgType)
-{    
-	CServerNetwork::SharedNetwork()->ShutDown(); 
-	return TRUE;
-} 
+//BOOL WINAPI ConsoleHandler(DWORD msgType)
+//{    
+//	theApp.Stop();
+//	theApp.OnExit();
+//	Sleep(3000) ; // wait other thread finish work ;
+//	return TRUE;
+//} 
 
 int main()
 {
-	SetConsoleCtrlHandler(ConsoleHandler, TRUE); 
-	CDBServerApp theApp ;
+	//SetConsoleCtrlHandler(ConsoleHandler, TRUE); 
 	theApp.Init();
+	CGetInput input ;
+	input.Start();
 	while (  theApp.IsRunning() )
 	{
 		theApp.MainLoop() ;

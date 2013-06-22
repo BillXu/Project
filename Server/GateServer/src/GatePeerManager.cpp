@@ -54,7 +54,7 @@ void CGatePeerMgr::OnNewPeerConnected(RakNet::RakNetGUID& nNewPeer, RakNet::Pack
 	msg.cSysIdentifer = ID_MSG_VERIFY ;
 	msg.usMsgType = MSG_VERIFY_GA ;
 	CServerNetwork::SharedNetwork()->SendMsg((char*)&msg,sizeof(msg),nNewPeer,false) ;
-	CLogMgr::SharedLogMgr()->PrintLog("A Peer connected IP = %s",pData->systemAddress.ToString(true)) ;
+	//CLogMgr::SharedLogMgr()->PrintLog("A Peer connected IP = %s",pData->systemAddress.ToString(true)) ;
 }
 
 void CGatePeerMgr::OnPeerDisconnected(RakNet::RakNetGUID& nPeerDisconnected, RakNet::Packet* pData )
@@ -66,7 +66,22 @@ void CGatePeerMgr::OnPeerDisconnected(RakNet::RakNetGUID& nPeerDisconnected, Rak
 		return ;
 	}
 	pMeessagePeer->OnDisconnected();
-	CLogMgr::SharedLogMgr()->PrintLog("A peer Disconnected : IP = %s",pData->systemAddress.ToString(true) ) ;
+	if ( pMeessagePeer->GetPeerType() == CGatePeer::eGatePeer_Client )
+	{
+		CLogMgr::SharedLogMgr()->PrintLog("A Client Disconnected : IP = %s",pData->systemAddress.ToString(true) ) ;
+	}
+	else if ( CGatePeer::eGatePeer_GameServer == pMeessagePeer->GetPeerType() )
+	{
+		CLogMgr::SharedLogMgr()->ErrorLog("A GameServer Disconnected : IP = %s",pData->systemAddress.ToString(true) ) ;
+	}
+	else if ( CGatePeer::eGatePeer_LoginServer == pMeessagePeer->GetPeerType() )
+	{
+		CLogMgr::SharedLogMgr()->ErrorLog("Login Server Disconnected : IP = %s",pData->systemAddress.ToString(true) ) ;
+	}
+	else
+	{
+		CLogMgr::SharedLogMgr()->ErrorLog("Unknown type peer Disconnected : IP = %s",pData->systemAddress.ToString(true) ) ;
+	}
 }
 
 unsigned int CGatePeerMgr::GenerateSessionID()
@@ -333,6 +348,7 @@ bool CGatePeerMgr::ProcessGateLogicMsg(RakNet::Packet* pData)
 			m_pLoginServer->SetGatePeerMgr(this);
 		}
 		CLogMgr::SharedLogMgr()->PrintLog("LoginServer Entered : %s", pData->systemAddress.ToString(true) );
+		return true ;
 	}
 	else if ( pMsg->cSysIdentifer == ID_MSG_VERIFY && MSG_VERIFY_GMS == pMsg->usMsgType )
 	{
@@ -393,6 +409,7 @@ bool CGatePeerMgr::ProcessGateLogicMsg(RakNet::Packet* pData)
 			msgBack.bSuccess = false ;
 		}
 		CServerNetwork::SharedNetwork()->SendMsg((char*)&msgBack,sizeof(msgBack),pData->guid,false) ;
+		return true;
 	}
 	else if (  MSG_UID_LOGIN == pMsg->usMsgType && ID_MSG_S2C == pMsg->cSysIdentifer  )
 	{
@@ -417,6 +434,7 @@ bool CGatePeerMgr::ProcessGateLogicMsg(RakNet::Packet* pData)
 			MsgBack.nRet = 2 ;
 		}
 		CServerNetwork::SharedNetwork()->SendMsg((char*)&MsgBack,sizeof(MsgBack),pData->guid,false) ;
+		return true;
 	}
 	return false ;
 }

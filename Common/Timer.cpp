@@ -50,6 +50,8 @@ CTimer::CTimer(CTimerDelegate* pDeleate,CTimerDelegate::lpTimerSelector pFunc , 
 	m_fDelayKeeper = 0 ;
 	m_fIntervalKeeper = 0 ;
 	m_nTimerID = ++s_TimerCount ;
+	m_pDelegate = pDeleate ;
+	m_pTimerFunc = pFunc ;
 }
 
 CTimer::~CTimer()
@@ -142,7 +144,7 @@ void CTimerManager::Update()
 		pTimer->Update(fSescond) ;
 	}
 	
-	for ( int i = 0 ; i < m_vTimerWillRemove.size(); ++i )
+	for ( unsigned int i = 0 ; i < m_vTimerWillRemove.size(); ++i )
 	{
 		MAP_TIMERS::iterator iter = m_vAllTimers.find(m_vTimerWillRemove[i]) ;
 		if ( iter != m_vAllTimers.end() )

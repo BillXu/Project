@@ -13,6 +13,7 @@ public:
 	// net delegate
 	virtual bool OnMessage( RakNet::Packet* pData );
 	virtual void OnNewPeerConnected(RakNet::RakNetGUID& nNewPeer, RakNet::Packet* pData );
+	virtual void OnPeerDisconnected(RakNet::RakNetGUID& nPeerDisconnected, RakNet::Packet* pData );
 	void SendMsg(const char* pBuffer, int nLen, RakNet::RakNetGUID& nTarget );
 	bool IsRunning(){ return m_bRunning ;}
 	void Stop(){ m_bRunning = false ;}
