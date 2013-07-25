@@ -134,7 +134,10 @@ bool CCDirector::init(void)
     // purge ?
     m_bPurgeDirecotorInNextLoop = false;
 
-    m_obWinSizeInPoints = CCSizeZero;    
+    m_obWinSizeInPoints = CCSizeZero;
+    
+    // add by bill
+    m_obLogicWinSize = CCSizeMake(480, 320) ;
 
     m_pobOpenGLView = NULL;
 

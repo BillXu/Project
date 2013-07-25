@@ -70,7 +70,8 @@ bool CCLayer::init()
     {        
         CCDirector * pDirector;
         CC_BREAK_IF(!(pDirector = CCDirector::sharedDirector()));
-        this->setContentSize(pDirector->getWinSize());
+        //this->setContentSize(pDirector->getWinSize());
+        this->setContentSize(pDirector->getLogicWinSize());  // add by bill
         m_bTouchEnabled = false;
         m_bAccelerometerEnabled = false;
         // success
@@ -693,7 +694,8 @@ CCLayerColor * CCLayerColor::create(const ccColor4B& color)
 
 bool CCLayerColor::init()
 {
-    CCSize s = CCDirector::sharedDirector()->getWinSize();
+    //CCSize s = CCDirector::sharedDirector()->getWinSize();
+    CCSize s = CCDirector::sharedDirector()->getLogicWinSize() ; // add by bill 
     return initWithColor(ccc4(0,0,0,0), s.width, s.height);
 }
 
@@ -727,7 +729,8 @@ bool CCLayerColor::initWithColor(const ccColor4B& color, GLfloat w, GLfloat h)
 
 bool CCLayerColor::initWithColor(const ccColor4B& color)
 {
-    CCSize s = CCDirector::sharedDirector()->getWinSize();
+    //CCSize s = CCDirector::sharedDirector()->getWinSize();
+    CCSize s = CCDirector::sharedDirector()->getLogicWinSize(); // add by bill ;
     this->initWithColor(color, s.width, s.height);
     return true;
 }

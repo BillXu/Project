@@ -8,10 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		9A3E6F8A174A302900DCC974 /* fileLookup.plist in Resources */ = {isa = PBXBuildFile; fileRef = 9A3E6F84174A302900DCC974 /* fileLookup.plist */; };
-		9A3E6F8B174A302900DCC974 /* iphonehd in Resources */ = {isa = PBXBuildFile; fileRef = 9A3E6F85174A302900DCC974 /* iphonehd */; };
-		9A3E6F8D174A302900DCC974 /* iphone in Resources */ = {isa = PBXBuildFile; fileRef = 9A3E6F87174A302900DCC974 /* iphone */; };
 		9A3E6F8E174A302900DCC974 /* UIScene in Resources */ = {isa = PBXBuildFile; fileRef = 9A3E6F88174A302900DCC974 /* UIScene */; };
-		9A3E6F8F174A302900DCC974 /* resources-iphone in Resources */ = {isa = PBXBuildFile; fileRef = 9A3E6F89174A302900DCC974 /* resources-iphone */; };
+		9A3E6F93174A324300DCC974 /* LoginScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A3E6F91174A324300DCC974 /* LoginScene.cpp */; };
 		9A41C0B5174A00E90000B945 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9A41C0B4174A00E90000B945 /* QuartzCore.framework */; };
 		9A41C0B7174A00E90000B945 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9A41C0B6174A00E90000B945 /* OpenGLES.framework */; };
 		9A41C0B9174A00E90000B945 /* OpenAL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9A41C0B8174A00E90000B945 /* OpenAL.framework */; };
@@ -384,14 +382,15 @@
 		9A41C754174A12820000B945 /* NetWorkManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A41C6D3174A12820000B945 /* NetWorkManager.cpp */; };
 		9A41C755174A12820000B945 /* PeerCard.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A41C6D5174A12820000B945 /* PeerCard.cpp */; };
 		9A41C75A174A12820000B945 /* Utility.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A41C6E4174A12820000B945 /* Utility.cpp */; };
+		9A891A3F17560A0900639CCD /* UIRes in Resources */ = {isa = PBXBuildFile; fileRef = 9A891A3D17560A0900639CCD /* UIRes */; };
+		9A891A4017560A0900639CCD /* MatRes in Resources */ = {isa = PBXBuildFile; fileRef = 9A891A3E17560A0900639CCD /* MatRes */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		9A3E6F84174A302900DCC974 /* fileLookup.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = fileLookup.plist; path = Resources/fileLookup.plist; sourceTree = "<group>"; };
-		9A3E6F85174A302900DCC974 /* iphonehd */ = {isa = PBXFileReference; lastKnownFileType = folder; name = iphonehd; path = Resources/iphonehd; sourceTree = "<group>"; };
-		9A3E6F87174A302900DCC974 /* iphone */ = {isa = PBXFileReference; lastKnownFileType = folder; name = iphone; path = Resources/iphone; sourceTree = "<group>"; };
 		9A3E6F88174A302900DCC974 /* UIScene */ = {isa = PBXFileReference; lastKnownFileType = folder; name = UIScene; path = Resources/UIScene; sourceTree = "<group>"; };
-		9A3E6F89174A302900DCC974 /* resources-iphone */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "resources-iphone"; path = "Resources/resources-iphone"; sourceTree = "<group>"; };
+		9A3E6F91174A324300DCC974 /* LoginScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = LoginScene.cpp; path = Classes/LoginScene.cpp; sourceTree = "<group>"; };
+		9A3E6F92174A324300DCC974 /* LoginScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LoginScene.h; path = Classes/LoginScene.h; sourceTree = "<group>"; };
 		9A41C0B1174A00E90000B945 /* GoldenPoker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GoldenPoker.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9A41C0B4174A00E90000B945 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		9A41C0B6174A00E90000B945 /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
@@ -1227,6 +1226,8 @@
 		9A41C6D6174A12820000B945 /* PeerCard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PeerCard.h; sourceTree = "<group>"; };
 		9A41C6E4174A12820000B945 /* Utility.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Utility.cpp; sourceTree = "<group>"; };
 		9A41C6E5174A12820000B945 /* Utility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Utility.h; sourceTree = "<group>"; };
+		9A891A3D17560A0900639CCD /* UIRes */ = {isa = PBXFileReference; lastKnownFileType = folder; name = UIRes; path = Resources/UIRes; sourceTree = "<group>"; };
+		9A891A3E17560A0900639CCD /* MatRes */ = {isa = PBXFileReference; lastKnownFileType = folder; name = MatRes; path = Resources/MatRes; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1250,6 +1251,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		9A3E6F90174A321900DCC974 /* LoginScene */ = {
+			isa = PBXGroup;
+			children = (
+				9A3E6F91174A324300DCC974 /* LoginScene.cpp */,
+				9A3E6F92174A324300DCC974 /* LoginScene.h */,
+			);
+			name = LoginScene;
+			sourceTree = "<group>";
+		};
 		9A41C0A8174A00E90000B945 = {
 			isa = PBXGroup;
 			children = (
@@ -1299,11 +1309,10 @@
 		9A41C0C5174A00EA0000B945 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				9A891A3D17560A0900639CCD /* UIRes */,
+				9A891A3E17560A0900639CCD /* MatRes */,
 				9A3E6F84174A302900DCC974 /* fileLookup.plist */,
-				9A3E6F85174A302900DCC974 /* iphonehd */,
-				9A3E6F87174A302900DCC974 /* iphone */,
 				9A3E6F88174A302900DCC974 /* UIScene */,
-				9A3E6F89174A302900DCC974 /* resources-iphone */,
 				9A41C0C6174A00EA0000B945 /* CloseNormal.png */,
 				9A41C0C8174A00EA0000B945 /* CloseSelected.png */,
 				9A41C0CA174A00EA0000B945 /* Default.png */,
@@ -2378,6 +2387,7 @@
 		9A41C426174A00F30000B945 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				9A3E6F90174A321900DCC974 /* LoginScene */,
 				9A41C427174A00F30000B945 /* AppDelegate.h */,
 				9A41C428174A00F30000B945 /* AppDelegate.cpp */,
 				9A41C42A174A00F30000B945 /* HelloWorldScene.h */,
@@ -2746,10 +2756,9 @@
 				9A41C727174A12820000B945 /* RakNet_vc9.vcproj in Resources */,
 				9A41C735174A12820000B945 /* rebuild.sh in Resources */,
 				9A3E6F8A174A302900DCC974 /* fileLookup.plist in Resources */,
-				9A3E6F8B174A302900DCC974 /* iphonehd in Resources */,
-				9A3E6F8D174A302900DCC974 /* iphone in Resources */,
 				9A3E6F8E174A302900DCC974 /* UIScene in Resources */,
-				9A3E6F8F174A302900DCC974 /* resources-iphone in Resources */,
+				9A891A3F17560A0900639CCD /* UIRes in Resources */,
+				9A891A4017560A0900639CCD /* MatRes in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3100,6 +3109,7 @@
 				9A41C754174A12820000B945 /* NetWorkManager.cpp in Sources */,
 				9A41C755174A12820000B945 /* PeerCard.cpp in Sources */,
 				9A41C75A174A12820000B945 /* Utility.cpp in Sources */,
+				9A3E6F93174A324300DCC974 /* LoginScene.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

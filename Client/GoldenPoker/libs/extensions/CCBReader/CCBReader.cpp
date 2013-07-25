@@ -227,7 +227,7 @@ CCNode* CCBReader::readNodeGraphFromFile(const char *pCCBFileName)
 
 CCNode* CCBReader::readNodeGraphFromFile(const char* pCCBFileName, CCObject* pOwner) 
 {
-    return this->readNodeGraphFromFile(pCCBFileName, pOwner, CCDirector::sharedDirector()->getWinSize());
+    return this->readNodeGraphFromFile(pCCBFileName, pOwner, CCDirector::sharedDirector()->getLogicWinSize());
 }
 
 CCNode* CCBReader::readNodeGraphFromFile(const char *pCCBFileName, CCObject *pOwner, const CCSize &parentSize)

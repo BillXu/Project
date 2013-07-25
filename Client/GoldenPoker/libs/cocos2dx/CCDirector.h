@@ -301,6 +301,8 @@ public:
     float getContentScaleFactor(void);
 
 public:
+    // add by bill  2013.5.20
+    CC_SYNTHESIZE(CCSize, m_obLogicWinSize,LogicWinSize );
     /** CCScheduler associated with this director
      @since v2.0
      */

@@ -128,7 +128,8 @@ bool CCMenu::initWithArray(CCArray* pArrayOfItems)
 
         m_bEnabled = true;
         // menu in the center of the screen
-        CCSize s = CCDirector::sharedDirector()->getWinSize();
+        //CCSize s = CCDirector::sharedDirector()->getWinSize();
+        CCSize s = CCDirector::sharedDirector()->getLogicWinSize(); // add by bill ;
 
         this->ignoreAnchorPointForPosition(true);
         setAnchorPoint(ccp(0.5f, 0.5f));
@@ -433,7 +434,8 @@ void CCMenu::alignItemsInColumnsWithArray(CCArray* rowsArray)
     // check if too many rows/columns for available menu items
     CCAssert(! columnsOccupied, "");
 
-    CCSize winSize = CCDirector::sharedDirector()->getWinSize();
+   // CCSize winSize = CCDirector::sharedDirector()->getWinSize();
+    CCSize winSize = CCDirector::sharedDirector()->getLogicWinSize(); // add by bill ;
 
     row = 0;
     rowHeight = 0;
@@ -555,7 +557,8 @@ void CCMenu::alignItemsInRowsWithArray(CCArray* columnArray)
     // check if too many rows/columns for available menu items.
     CCAssert(! rowsOccupied, "");
 
-    CCSize winSize = CCDirector::sharedDirector()->getWinSize();
+    //CCSize winSize = CCDirector::sharedDirector()->getWinSize();
+    CCSize winSize = CCDirector::sharedDirector()->getLogicWinSize(); // add by bill ;
 
     column = 0;
     columnWidth = 0;
