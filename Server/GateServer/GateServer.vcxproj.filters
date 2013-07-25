@@ -16,9 +16,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\main.h">
-      <Filter>head</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Common\CommonDefine.h">
       <Filter>Common</Filter>
     </ClInclude>
@@ -490,29 +487,23 @@
     <ClInclude Include="..\..\Common\Utility.h">
       <Filter>Common</Filter>
     </ClInclude>
-    <ClInclude Include="src\GatePeer.h">
-      <Filter>head</Filter>
-    </ClInclude>
-    <ClInclude Include="src\GatePeerManager.h">
-      <Filter>head</Filter>
-    </ClInclude>
-    <ClInclude Include="src\ClientPeer.h">
-      <Filter>head</Filter>
-    </ClInclude>
-    <ClInclude Include="src\GameServerPeer.h">
-      <Filter>head</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Common\Timer.h">
       <Filter>Common</Filter>
     </ClInclude>
-    <ClInclude Include="src\LoginServerPeer.h">
+    <ClInclude Include="src\GateClient.h">
+      <Filter>head</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ClientManager.h">
+      <Filter>head</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GateServer.h">
+      <Filter>head</Filter>
+    </ClInclude>
+    <ClInclude Include="src\main.h">
       <Filter>head</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\main.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\Common\NetLib\_FindFirst.cpp">
       <Filter>Common\NetLib</Filter>
     </ClCompile>
@@ -813,22 +804,19 @@
     <ClCompile Include="..\..\Common\Utility.cpp">
       <Filter>Common</Filter>
     </ClCompile>
-    <ClCompile Include="src\GatePeer.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="src\GatePeerManager.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="src\ClientPeer.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="src\GameServerPeer.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\Common\Timer.cpp">
       <Filter>Common</Filter>
     </ClCompile>
-    <ClCompile Include="src\LoginServerPeer.cpp">
+    <ClCompile Include="src\GateClient.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ClientManager.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GateServer.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\main.cpp">
       <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>

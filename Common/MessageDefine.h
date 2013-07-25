@@ -13,39 +13,58 @@ public:
 	stMsg():cSysIdentifer( ID_MSG_C2S  ),usMsgType(MSG_NONE){}
 };
 
-struct stMsgRegister
+// client reconnect ;
+struct stMsgReconnect
 	:public stMsg
 {
-	stMsgRegister(){cSysIdentifer = ID_MSG_C2LOGIN ; usMsgType = MSG_REGISTE ;}
-	char* pAccount;
-	char* pPassword;
-	char* pCharacterName;
-	unsigned char nAccountLen ;
-	unsigned char nPaswordLen ;
-	unsigned char nCharacterNameLen ;
-	unsigned char nAccountType ;  // 0 visitor login register , 1 ordinary register ,2 SINA WEIBO login register  3 QQ login register .   
-} ;
-
-struct stMsgRegisterRet
-	:public stMsg
-{
-	stMsgRegisterRet(){ cSysIdentifer = ID_MSG_LOGIN2C; usMsgType = MSG_REGISTE ; }
-	char nResultCode ; // 0 , success  1 , accound repeated ; 2 ,name repeate ;
-	unsigned int nUserUID ; // player Unique ID ;
+public:
+	stMsgReconnect(){cSysIdentifer = ID_MSG_C2GATE ; usMsgType = MSG_RECONNECT ; }
+public:
+	unsigned int nSessionID ;
 };
 
-struct stMsgQuickEnterRegister
+struct stMsgReconnectRet
 	:public stMsg
 {
-	stMsgQuickEnterRegister(){ cSysIdentifer = ID_MSG_C2LOGIN; usMsgType = MSG_QUICK_ENTER_REGISTER ; }
+public:
+	stMsgReconnectRet(){cSysIdentifer = ID_MSG_S2C ; usMsgType = MSG_RECONNECT ; }
+public:
+	char nRet; // 0 : success , 1 failed ;
 };
 
-struct stMsgQuickEnterRegisterRet
-	:public stMsg
-{
-	stMsgQuickEnterRegisterRet(){ cSysIdentifer = ID_MSG_LOGIN2C; usMsgType = MSG_QUICK_ENTER_REGISTER ; }
-	unsigned int nUserUID ; // player UniqueID ;
-};
+//struct stMsgRegister
+//	:public stMsg
+//{
+//	stMsgRegister(){cSysIdentifer = ID_MSG_C2LOGIN ; usMsgType = MSG_REGISTE ;}
+//	char* pAccount;
+//	char* pPassword;
+//	char* pCharacterName;
+//	unsigned char nAccountLen ;
+//	unsigned char nPaswordLen ;
+//	unsigned char nCharacterNameLen ;
+//	unsigned char nAccountType ;  // 0 visitor login register , 1 ordinary register ,2 SINA WEIBO login register  3 QQ login register .   
+//} ;
+//
+//struct stMsgRegisterRet
+//	:public stMsg
+//{
+//	stMsgRegisterRet(){ cSysIdentifer = ID_MSG_LOGIN2C; usMsgType = MSG_REGISTE ; }
+//	char nResultCode ; // 0 , success  1 , accound repeated ; 2 ,name repeate ;
+//	unsigned int nUserUID ; // player Unique ID ;
+//};
+
+//struct stMsgQuickEnterRegister
+//	:public stMsg
+//{
+//	stMsgQuickEnterRegister(){ cSysIdentifer = ID_MSG_C2LOGIN; usMsgType = MSG_QUICK_ENTER_REGISTER ; }
+//};
+//
+//struct stMsgQuickEnterRegisterRet
+//	:public stMsg
+//{
+//	stMsgQuickEnterRegisterRet(){ cSysIdentifer = ID_MSG_LOGIN2C; usMsgType = MSG_QUICK_ENTER_REGISTER ; }
+//	unsigned int nUserUID ; // player UniqueID ;
+//};
 //struct stMsgConnectRet
 //	:public stMsg
 //{
@@ -55,71 +74,71 @@ struct stMsgQuickEnterRegisterRet
 //	unsigned char nErr ; // 1 ; no proper server ;
 //};
 
-struct stMsgLogin
-	:public stMsg
-{
-	stMsgLogin(){ cSysIdentifer = ID_MSG_C2S ; usMsgType = MSG_LOGIN; }
-	char* pAccount;
-	char* pPassword;
-	unsigned char nAccountLen ;
-	unsigned char nPaswordLen ;
-};
-
-struct stMsgLoginRet
-	:public stMsg
-{
-public:
-	stMsgLoginRet()
-	{
-		cSysIdentifer = ID_MSG_S2C ; usMsgType = MSG_LOGIN;
-		nPlayerUID = 0 ;
-	}
-	bool bOk ; 
-	unsigned char nRetFlag ;  // 1 account don't exsit , 2 password error ;
-	unsigned int nPlayerUID ; 
-};
-
-struct stMsgUIDLogin
-	:public stMsg
-{
-	stMsgUIDLogin()
-	{
-		cSysIdentifer = ID_MSG_C2S; usMsgType = MSG_UID_LOGIN ;
-	}
-	unsigned int nPlayerUID ;
-};
-
-struct stMsgUIDLoginRet
-	:public stMsg
-{
-public:
-	stMsgUIDLoginRet()
-	{
-		cSysIdentifer = ID_MSG_S2C; usMsgType = MSG_UID_LOGIN ;
-	}
-	unsigned char nRet ;  // zero success ; 1 , don't have active peer , 2 don't have idle server ;
-};
-
-struct stMsgReconnect
-	:public stMsg
-{
-	stMsgReconnect()
-	{
-		cSysIdentifer = ID_MSG_C2S ; usMsgType = MSG_RECONNECT ;
-	}
-	unsigned int nPlayerUID ;
-};
-
-struct stMsgReconnectRet
-	:public stMsg
-{
-	stMsgReconnectRet()
-	{
-		cSysIdentifer = ID_MSG_S2C ; usMsgType = MSG_RECONNECT ;
-	}
-
-	bool bSuccess ;
-};
+//struct stMsgLogin
+//	:public stMsg
+//{
+//	stMsgLogin(){ cSysIdentifer = ID_MSG_C2S ; usMsgType = MSG_LOGIN; }
+//	char* pAccount;
+//	char* pPassword;
+//	unsigned char nAccountLen ;
+//	unsigned char nPaswordLen ;
+//};
+//
+//struct stMsgLoginRet
+//	:public stMsg
+//{
+//public:
+//	stMsgLoginRet()
+//	{
+//		cSysIdentifer = ID_MSG_S2C ; usMsgType = MSG_LOGIN;
+//		nPlayerUID = 0 ;
+//	}
+//	bool bOk ; 
+//	unsigned char nRetFlag ;  // 1 account don't exsit , 2 password error ;
+//	unsigned int nPlayerUID ; 
+//};
+//
+//struct stMsgUIDLogin
+//	:public stMsg
+//{
+//	stMsgUIDLogin()
+//	{
+//		cSysIdentifer = ID_MSG_C2S; usMsgType = MSG_UID_LOGIN ;
+//	}
+//	unsigned int nPlayerUID ;
+//};
+//
+//struct stMsgUIDLoginRet
+//	:public stMsg
+//{
+//public:
+//	stMsgUIDLoginRet()
+//	{
+//		cSysIdentifer = ID_MSG_S2C; usMsgType = MSG_UID_LOGIN ;
+//	}
+//	unsigned char nRet ;  // zero success ; 1 , don't have active peer , 2 don't have idle server ;
+//};
+//
+//struct stMsgReconnect
+//	:public stMsg
+//{
+//	stMsgReconnect()
+//	{
+//		cSysIdentifer = ID_MSG_C2S ; usMsgType = MSG_RECONNECT ;
+//	}
+//	unsigned int nPlayerUID ;
+//};
+//
+//struct stMsgReconnectRet
+//	:public stMsg
+//{
+//	stMsgReconnectRet()
+//	{
+//		cSysIdentifer = ID_MSG_S2C ; usMsgType = MSG_RECONNECT ;
+//	}
+//
+//	bool bSuccess ;
+//};
 // room message ;
 struct stMsgRoomEnter
 	:public stMsg 
