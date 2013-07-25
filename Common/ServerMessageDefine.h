@@ -9,41 +9,49 @@
 
 //--------------------------------------------
 // message between DB and Gamesever ;
-struct stMsgGM2DB
-:public stMsg
-{
-	stMsgGM2DB(){ cSysIdentifer = ID_MSG_GM2DB, usMsgType = MSG_NONE ; }
-public:
-	unsigned int nTargetUserUID;
-};
-
-struct stMsgDB2GM
-:public stMsg
-{
-	stMsgDB2GM(){ cSysIdentifer = ID_MSG_DB2GM, usMsgType = MSG_NONE ; }
-	unsigned int nTargetUserUID;
-};
-
-struct stMsgPushBaseDataToGameServer
-	:stMsgDB2GM
-{
-public:
-	stMsgPushBaseDataToGameServer(){usMsgType = MSG_PUSH_BASE_DATA ;}
-	stBaseData stData ;
-};
+//struct stMsgGM2DB
+//:public stMsg
+//{
+//	stMsgGM2DB(){ cSysIdentifer = ID_MSG_GM2DB, usMsgType = MSG_NONE ; }
+//public:
+//	unsigned int nTargetUserUID;
+//};
+//
+//struct stMsgDB2GM
+//:public stMsg
+//{
+//	stMsgDB2GM(){ cSysIdentifer = ID_MSG_DB2GM, usMsgType = MSG_NONE ; }
+//	unsigned int nTargetUserUID;
+//};
+//
+//struct stMsgPushBaseDataToGameServer
+//	:stMsgDB2GM
+//{
+//public:
+//	stMsgPushBaseDataToGameServer(){usMsgType = MSG_PUSH_BASE_DATA ;}
+//	stBaseData stData ;
+//};
 
 //-----------------------------------------------
 // message between GateServer and Gamesever ;
-struct stMsgPeerDisconnect
+//struct stMsgPeerDisconnect
+//	:public stMsg
+//{
+//	stMsgPeerDisconnect()
+//	{
+//		cSysIdentifer = ID_MSG_GA2GM ;
+//		usMsgType = MSG_DISCONNECT;
+//	}
+//	unsigned int nSessionID ;
+//	
+//};
+
+struct stMsgClientDisconnect
 	:public stMsg
 {
-	stMsgPeerDisconnect()
-	{
-		cSysIdentifer = ID_MSG_GA2GM ;
-		usMsgType = MSG_DISCONNECT;
-	}
-	unsigned int nSessionID ;
-	
+public:
+	stMsgClientDisconnect(){ usMsgType = MSG_DISCONNECT_CLIENT ; }
+	unsigned int nSeesionID ;
 };
 
 struct stMsgTransferData
