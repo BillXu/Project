@@ -14,21 +14,23 @@ USING_NS_CC ;
 USING_NS_CC_EXT ;
 //#include <iostream>
 class CRoomPlayerInfor
-:public CCSprite
-,public CCBSelectorResolver
-,public CCBMemberVariableAssigner
+:public CCBMemberVariableAssigner
 ,public CCNodeLoaderListener
+,public CCSprite
 {
 public:
    static CRoomPlayerInfor* create();
-    // selector
-    SEL_MenuHandler onResolveCCBCCMenuItemSelector(CCObject * pTarget, const char* pSelectorName) ;
-    virtual SEL_CCControlHandler onResolveCCBCCControlSelector(CCObject * pTarget, const char* pSelectorName);
-    
     // variable
     virtual bool onAssignCCBMemberVariable(CCObject* pTarget, const char* pMemberVariableName, CCNode* pNode);
-    
-    // listener
-    virtual void onNodeLoaded(CCNode * pNode, CCNodeLoader * pNodeLoader);
+    void onNodeLoaded(CCNode * pNode, CCNodeLoader * pNodeLoader);
+    void update(float fTime );
+    void StartTiming(){ m_bTiming = true ; m_fRunedTime = 0 ;m_pRadial->setVisible(true) ;}
+    void StopTiming(){ m_bTiming = false ; m_fRunedTime = 0 ; m_pRadial->setVisible(false) ;}
+protected:
+    CCLabelTTF* m_pTitle,*m_pName,*m_pCoin,*m_pBetCoin ;
+    CCSprite* m_pPhoto;
+    CCProgressTimer* m_pRadial;
+    float m_fRunedTime ;
+    bool m_bTiming ;
 };
 #endif /* defined(__Gold__RoomPlayerInfor__) */
