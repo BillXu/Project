@@ -1,4 +1,6 @@
 #include "GateClient.h"
+#include "GateServer.h"
+#define TIME_WAIT_FOR_RECONNECTE 20
 stGateClient::stGateClient()
 {
 	nSessionId = 0 ;
@@ -17,12 +19,23 @@ void stGateClient::Reset(unsigned int nSessionID , RakNet::RakNetGUID& nNetWorkI
 
 void stGateClient::TimeUpForReconnect(float fTimeElaps,unsigned int nTimerID)
 {
-
+	CGateServer::SharedGateServer()->GetClientMgr()->OnClientWaitReconnectTimeUp(this) ;
+	CGateServer::SharedGateServer()->GetClientMgr()->RemoveClientGate(this);
+	pTimerForReconnect->Stop() ;
 }
 
 void stGateClient::StartWaitForReconnect()
 {
+	if ( pTimerForReconnect )
+	{
+		pTimerForReconnect->Reset();
+		pTimerForReconnect->Start() ;
+		return ;
+	}
 
+	pTimerForReconnect = CGateServer::SharedGateServer()->GetTimerMgr()->AddTimer(this,cc_selector_timer(stGateClient::TimeUpForReconnect));
+	pTimerForReconnect->SetInterval(TIME_WAIT_FOR_RECONNECTE) ;
+	pTimerForReconnect->Start() ;
 }
 
 void stGateClient::SetNewWorkID( RakNet::RakNetGUID& nNetWorkID)

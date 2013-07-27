@@ -14,6 +14,7 @@ public:
 protected:
 	CTimer* m_pUpdateTimer ;
 };
+#define cc_selector_timer(func) (CTimerDelegate::lpTimerSelector)&func
 
 //warning : time merasuse by second ;
 class CTimer

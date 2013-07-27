@@ -5,8 +5,10 @@ enum
 	ID_MSG_C2S = ID_USER_PACKET_ENUM + 1 , // client to game server 
 	ID_MSG_C2LOGIN,
 	ID_MSG_C2GATE,
+	ID_MSG_GATE2C,
+	ID_MSG_C2GAME,
 	ID_MSG_LOGIN2C,
-	ID_MSG_S2C,
+	ID_MSG_GAME2C,
 	ID_MSG_GM2GA,  // GM = game server , GA = gate server ;
 	ID_MSG_GA2GM,
 	ID_MSG_DB2GM,
@@ -25,11 +27,10 @@ enum eMsgType
 	MSG_VERIFY_GATE, // verify that is gate server 
 	MSG_VERIFY_DB,  // verify that is DBserver ;
 	MSG_TRANSER_DATA, // tranfer data between servers ;
-	MSG_DISCONNECT_GAME, 
-	MSG_DISCONNECT_LOGIN,
+	MSG_DISCONNECT_SERVER, 
 	MSG_DISCONNECT_CLIENT,
 	// msg title used between server and client ;
-	MSG_RECONNECT,
+	MSG_RECONNECT,   // client with gate 
 	// all room msg here ;
 	MSG_ROOM_MSG_BEGIN,
 	MSG_ENTER,

@@ -12,8 +12,15 @@
 #define TIMER_WAIT_PK 5
 #define TIMER_WAIT_FINISH 6
 #define MAX_ROOM_LEVEL 3 
-#define TIME_WAIT_FOR_RECONNECTE 1000*60*4
 #define GATE_SERVER_PORT 5000
+
+enum eServerType
+{
+	eServer_None,
+	eServer_Game = eServer_None ,
+	eServer_Login,
+	eServer_Max,
+};
 enum eRoomPeerAction
 {
 	eRoomPeerAction_None,

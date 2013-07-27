@@ -27,9 +27,17 @@ struct stMsgReconnectRet
 	:public stMsg
 {
 public:
-	stMsgReconnectRet(){cSysIdentifer = ID_MSG_S2C ; usMsgType = MSG_RECONNECT ; }
+	stMsgReconnectRet(){cSysIdentifer = ID_MSG_GATE2C ; usMsgType = MSG_RECONNECT ; }
 public:
 	char nRet; // 0 : success , 1 failed ;
+};
+
+struct stMsgServerDisconnect
+	:public stMsg
+{
+public:
+	stMsgServerDisconnect(){ cSysIdentifer = ID_MSG_GATE2C; usMsgType = MSG_DISCONNECT_SERVER  ;}
+	unsigned char nServerType ; // eServerType ;
 };
 
 //struct stMsgRegister
@@ -144,7 +152,7 @@ struct stMsgRoomEnter
 	:public stMsg 
 {
 public:
-	stMsgRoomEnter(){cSysIdentifer = ID_MSG_C2S; usMsgType = MSG_ENTER ;}
+	stMsgRoomEnter(){cSysIdentifer = ID_MSG_C2GAME; usMsgType = MSG_ENTER ;}
 	bool bVip ;
 	unsigned char nBigRoomType ;  // eBigRoomType 
 	unsigned char nRoomLevel ;
@@ -154,7 +162,7 @@ public:
 struct stMsgRoomEnterRet
 	:public stMsg 
 {
-	stMsgRoomEnterRet(){cSysIdentifer = ID_MSG_S2C; usMsgType = MSG_ENTER ;}
+	stMsgRoomEnterRet(){cSysIdentifer = ID_MSG_GAME2C; usMsgType = MSG_ENTER ;}
 	unsigned char nRet ; // 0 ; success ; 1 condition do not meet ; 2 room don't exsit ; 3 room is full ;
 };
 
@@ -176,7 +184,7 @@ struct stMsgRoomInfo
 	:public stMsg 
 {
 public:
-	stMsgRoomInfo(){ cSysIdentifer = ID_MSG_S2C; usMsgType = MSG_ROOM_INFO ; }
+	stMsgRoomInfo(){ cSysIdentifer = ID_MSG_GAME2C; usMsgType = MSG_ROOM_INFO ; }
 	unsigned int nRoomID ;
 	unsigned int nAllBetMoney ;
 	unsigned int nSingleBetMoney ;
@@ -193,7 +201,7 @@ struct stMsgRoomPlayerEnter
 	:public stMsg
 {
 public:
-	stMsgRoomPlayerEnter(){cSysIdentifer = ID_MSG_S2C; usMsgType = MSG_ROOM_PLAYER_ENTER  ;}
+	stMsgRoomPlayerEnter(){cSysIdentifer = ID_MSG_GAME2C; usMsgType = MSG_ROOM_PLAYER_ENTER  ;}
 	unsigned int pPlayerUID ;
 	unsigned char nPeerIdx ;
 	unsigned int nAllMoney ;
@@ -204,7 +212,7 @@ struct stMsgRoomPlayerExit
 	:public stMsg
 {
 public:
-	stMsgRoomPlayerExit(){ cSysIdentifer = ID_MSG_S2C; usMsgType = MSG_ROOM_PLAYER_EXIT ;}
+	stMsgRoomPlayerExit(){ cSysIdentifer = ID_MSG_GAME2C; usMsgType = MSG_ROOM_PLAYER_EXIT ;}
 	unsigned nRoomIdx ;
 };
 
@@ -221,7 +229,7 @@ struct stMsgActionRet
 	:public stMsg
 {
 public:
-	stMsgActionRet(){cSysIdentifer = ID_MSG_S2C ; usMsgType = MSG_ACTION_RET ; }
+	stMsgActionRet(){cSysIdentifer = ID_MSG_GAME2C ; usMsgType = MSG_ACTION_RET ; }
 	unsigned char nErr ;  // 1 room state is not suiteable ; 2  it is not your turn , can not do this action ; 3 . argument error, 4 .cuurent room have no that flag ;
 };
 
@@ -250,7 +258,7 @@ struct stMsgRoomPlayerCmd
 	:public stMsg
 {
 public:
-	stMsgRoomPlayerCmd(){cSysIdentifer = ID_MSG_C2S; usMsgType = MSG_ROOM_PLAYER_ACTION ; }
+	stMsgRoomPlayerCmd(){cSysIdentifer = ID_MSG_C2GAME; usMsgType = MSG_ROOM_PLAYER_ACTION ; }
 	unsigned char nPeerIdx ;
 	unsigned char nActionType ;  // eRoomPeerAction 
 };
@@ -313,7 +321,7 @@ struct stMsgRoomResult
 	:public stMsg
 {
 public:
-	stMsgRoomResult(){cSysIdentifer = ID_MSG_S2C ; usMsgType = MSG_ROOM_RESULT ;}
+	stMsgRoomResult(){cSysIdentifer = ID_MSG_GAME2C ; usMsgType = MSG_ROOM_RESULT ;}
 	unsigned char nWinPlayerIdx ;
 	unsigned int nWinMoney ;
 };
@@ -322,7 +330,7 @@ struct stGetCardPeer
 	:public stMsg
 {
 public:
-	stGetCardPeer(){cSysIdentifer = ID_MSG_S2C ; usMsgType = MSG_ROOM_DISTRIBUTE_CARD ;}
+	stGetCardPeer(){cSysIdentifer = ID_MSG_GAME2C ; usMsgType = MSG_ROOM_DISTRIBUTE_CARD ;}
 	unsigned char nPeerIdx ;
 	unsigned char vCard[PEER_CARD_COUNT];
 };
@@ -331,7 +339,7 @@ struct stMsgRoomPlayerActionTurn
 	:public stMsg
 {
 public:
-	stMsgRoomPlayerActionTurn(){cSysIdentifer = ID_MSG_S2C; usMsgType = MSG_ROOM_PLAYER_ACTION_TURN ;}
+	stMsgRoomPlayerActionTurn(){cSysIdentifer = ID_MSG_GAME2C; usMsgType = MSG_ROOM_PLAYER_ACTION_TURN ;}
 	unsigned char nPlayerIdx ;
 };
 struct stMsgRoomDistributeCard
@@ -340,7 +348,7 @@ struct stMsgRoomDistributeCard
 public:
 	stMsgRoomDistributeCard()
 	{
-		cSysIdentifer = ID_MSG_S2C ;
+		cSysIdentifer = ID_MSG_GAME2C ;
 		usMsgType = MSG_ROOM_DISTRIBUTE_CARD ;
 	}
 	unsigned char nMainPlayerIndex ;
