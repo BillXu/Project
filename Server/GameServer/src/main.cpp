@@ -2,17 +2,14 @@
 #include <iostream>
 BOOL WINAPI ConsoleHandler(DWORD msgType)
 {    
-	CGameServerApp::SharedGameServerApp()->ShutDown();
+	CGameServerApp::SharedGameServerApp()->Stop();
 	return TRUE;
 } 
 int main()
 {
 	SetConsoleCtrlHandler(ConsoleHandler, TRUE); 
-	CGameServerApp::SharedGameServerApp()->Init();
-	while ( CGameServerApp::SharedGameServerApp()->Run())
-	{
-		Sleep(10) ;
-	}
-	CGameServerApp::SharedGameServerApp()->ShutDown();
+	CGameServerApp theApp ;
+	theApp.Init() ;
+	theApp.Run() ;
 	return 0 ;
 }

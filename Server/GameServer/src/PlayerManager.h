@@ -3,26 +3,24 @@
 #include <map>
 #include <list>
 class CPlayer ;
+struct stMsg ;
 class CPlayerManager
-	:public CNetMessageDelegate
 {
 public:
-	typedef std::map<unsigned int, CPlayer*> MAP_PLAYERS ;
+	typedef std::map<unsigned int, CPlayer*> MAP_PLAYERS ;  // nsessionID , player ;
 	typedef std::list<CPlayer*> LIST_PLAYERS ;
 public:
-	static CPlayerManager* SharedPlayerMgr();
 	CPlayerManager();
 	~CPlayerManager();
-	virtual bool OnMessage( RakNet::Packet* pMsg );
-	bool OnLostSever(bool bGateDown);
-	void SendMsgToGateServer( unsigned int nUserUID , const char* pBuffer , int nLen, bool bBroadcast = false );
-	void SendMsgToDBServer( const char* pBuffer , int nLen );
+	bool OnMessage( RakNet::Packet* pMsg );
 	CPlayer* GetPlayerByUserUID( unsigned int nUserUID );
+	CPlayer* GetPlayerBySessionID(unsigned int nSessionID );
 protected:
-	void ProcessMsgFromDBServer(stMsg* pMessage ,RakNet::Packet* pMsg );
-	void processMsgFromGateServer(stMsg* pMessage ,RakNet::Packet* pMsg );
+	bool PreProcessLogicMessage( CPlayer*pPlayer ,stMsg* pmsg );
 	void PushReserverPlayers( CPlayer* ) ;
 	CPlayer* GetReserverPlayer();
+	void RemovePlayer(CPlayer*);
+	void AddPlayer(CPlayer*);
 protected:
 	// logic data ;
 	MAP_PLAYERS m_vAllActivePlayers ;

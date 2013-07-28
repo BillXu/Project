@@ -40,6 +40,15 @@ public:
 	unsigned char nServerType ; // eServerType ;
 };
 
+struct stMsgRoomPlayerLeave
+	:public stMsg
+{
+public:
+	stMsgRoomPlayerLeave(){ cSysIdentifer = ID_MSG_GAME2C ; usMsgType = MSG_ROOM_PLAYER_LEAVE ;}
+	unsigned int nSessionID ; // the leaved player's seessionID ;
+};
+
+//----UPLOW IS NEW 
 //struct stMsgRegister
 //	:public stMsg
 //{
@@ -208,13 +217,6 @@ public:
 	unsigned int nTitle ;
 };
 
-struct stMsgRoomPlayerExit
-	:public stMsg
-{
-public:
-	stMsgRoomPlayerExit(){ cSysIdentifer = ID_MSG_GAME2C; usMsgType = MSG_ROOM_PLAYER_EXIT ;}
-	unsigned nRoomIdx ;
-};
 
 struct stMsgActionCmd
 	:public stMsg

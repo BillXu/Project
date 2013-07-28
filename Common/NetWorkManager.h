@@ -10,6 +10,7 @@
 #define God_NetWorkManager_h
 #include <list>
 #include "RakNetTypes.h"
+class CNetWorkMgr ;
 struct stMsg ;
 namespace RakNet
 {
@@ -28,15 +29,17 @@ public:
         eConnect_Max,
     };
 public:
-	CNetMessageDelegate(){};
+	CNetMessageDelegate(){ m_pNetWorkMgr = NULL ;};
 	virtual ~CNetMessageDelegate(){} ;
 	virtual bool OnMessage( RakNet::Packet* pMsg ) = 0 ;
 	virtual bool OnLostSever(RakNet::Packet* pMsg){ return  false; };
 	virtual bool OnConnectStateChanged( eConnectState eSate, RakNet::Packet* pMsg){ return false ;} 
 	void SetPriority( unsigned int nPriority  );
 	unsigned GetPriority(){ return m_nPriority ;}
+	void SetNetWorkMgr(CNetWorkMgr* pNetWork ) { m_pNetWorkMgr = pNetWork ;}
 protected:
 	unsigned short m_nPriority ;  // big first , small later ;
+	CNetWorkMgr* m_pNetWorkMgr ;
 };
 
 class CNetWorkMgr
@@ -56,7 +59,7 @@ public:
 public:
     CNetWorkMgr();
     ~CNetWorkMgr();
-    static CNetWorkMgr* SharedNetWorkMgr();
+   // static CNetWorkMgr* SharedNetWorkMgr();
     void SetupNetwork( int nIntendServerCount = 1 );
     bool ConnectToServer( const char* pSeverIP, unsigned short nPort );
     void ReciveMessage();

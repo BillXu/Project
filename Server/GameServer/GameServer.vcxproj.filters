@@ -14,6 +14,18 @@
     <Filter Include="Common\NetLib">
       <UniqueIdentifier>{ee038866-dc97-4d27-91e5-6e06ef0d6201}</UniqueIdentifier>
     </Filter>
+    <Filter Include="head\Player">
+      <UniqueIdentifier>{3060589e-2ad4-476a-bf27-1bc7408370cf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Player">
+      <UniqueIdentifier>{a7eafdf3-0a1b-4b0e-a368-fcc43f94abb5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="head\Room">
+      <UniqueIdentifier>{732f4644-6ac0-4dbb-9a93-32585dba13eb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Room">
+      <UniqueIdentifier>{9b9c4c66-6898-493a-aa09-2f2238c57ae6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\main.h">
@@ -493,9 +505,6 @@
     <ClInclude Include="..\..\Common\ServerMessageDefine.h">
       <Filter>Common</Filter>
     </ClInclude>
-    <ClInclude Include="src\Player.h">
-      <Filter>head</Filter>
-    </ClInclude>
     <ClInclude Include="src\PlayerManager.h">
       <Filter>head</Filter>
     </ClInclude>
@@ -511,17 +520,23 @@
     <ClInclude Include="..\..\Common\PeerCard.h">
       <Filter>Common</Filter>
     </ClInclude>
-    <ClInclude Include="src\IPlayerComponent.h">
-      <Filter>head</Filter>
-    </ClInclude>
-    <ClInclude Include="src\RoomPeer.h">
-      <Filter>head</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Room.h">
-      <Filter>head</Filter>
-    </ClInclude>
     <ClInclude Include="src\RoomManager.h">
       <Filter>head</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Player.h">
+      <Filter>head\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="src\IPlayerComponent.h">
+      <Filter>head\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="src\RoomPeer.h">
+      <Filter>head\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Room.h">
+      <Filter>head\Room</Filter>
+    </ClInclude>
+    <ClInclude Include="src\RoomBase.h">
+      <Filter>head\Room</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -831,9 +846,6 @@
     <ClCompile Include="..\..\Common\NetWorkManager.cpp">
       <Filter>Common</Filter>
     </ClCompile>
-    <ClCompile Include="src\Player.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
     <ClCompile Include="src\PlayerManager.cpp">
       <Filter>src</Filter>
     </ClCompile>
@@ -849,17 +861,23 @@
     <ClCompile Include="..\..\Common\PeerCard.cpp">
       <Filter>Common</Filter>
     </ClCompile>
-    <ClCompile Include="src\IPlayerComponent.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="src\RoomPeer.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Room.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
     <ClCompile Include="src\RoomManager.cpp">
       <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Player.cpp">
+      <Filter>src\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="src\IPlayerComponent.cpp">
+      <Filter>src\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RoomPeer.cpp">
+      <Filter>src\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Room.cpp">
+      <Filter>src\Room</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RoomBase.cpp">
+      <Filter>src\Room</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

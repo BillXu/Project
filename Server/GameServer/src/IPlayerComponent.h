@@ -5,6 +5,7 @@ class CPlayer ;
 enum ePlayerComponentType
 {
 	ePlayerComponent_None ,
+	ePlayerComponent_BaseData,
 	ePlayerComponent_RoomPeer,
 	ePlayerComponent_Max,
 };
@@ -19,9 +20,9 @@ public:
 	ePlayerComponentType GetComponentType(){ return m_eType ;}
 	CPlayer* GetPlayer(){ return m_pPlayer ;}
 	virtual bool OnMessage(stMsg* pMsg ) = 0 ;
-	virtual void OnLostServer( bool bGate ); // gate or db server ;
-	virtual void OnDisconnect(){}
+	virtual void OnPlayerDisconnect(){}
 	virtual void Reset(){}
+	virtual void Init(){}
 protected:
 	CPlayer* m_pPlayer ;
 	ePlayerComponentType m_eType ;	

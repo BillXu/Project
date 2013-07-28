@@ -2,6 +2,7 @@
 #include <map>
 #include <vector>
 class CTimer ;
+class CTimerManager ;
 class CTimerDelegate
 {
 public:
@@ -11,8 +12,10 @@ public:
 	virtual ~CTimerDelegate();
 	virtual void Update(float fTimeElpas, unsigned int nTimerID );
 	void SetEnableUpdate( bool bEnable );
+	void SetTimerManager( CTimerManager* pMgr ) { m_pTimerMgr = pMgr ;}
 protected:
 	CTimer* m_pUpdateTimer ;
+	CTimerManager* m_pTimerMgr ;
 };
 #define cc_selector_timer(func) (CTimerDelegate::lpTimerSelector)&func
 
@@ -43,6 +46,7 @@ public:
 	bool IsRuning(){ return eTimerState_Runing == m_eState ; }
 	unsigned int GetTimerID(){ return m_nTimerID ;}
 	void Start(){m_eState = eTimerState_Runing ;}
+	CTimerDelegate* GetDelegate(){ return m_pDelegate ;}
 protected:
 	CTimerDelegate* m_pDelegate ;
 	CTimerDelegate::lpTimerSelector m_pTimerFunc ;
@@ -65,7 +69,7 @@ public:
 	typedef std::map<unsigned int ,CTimer*> MAP_TIMERS ;
 	typedef std::vector<unsigned int> VEC_TIMER_WILL_REMOVE ;
 public:
-	static CTimerManager* SharedTimerManager();
+	//static CTimerManager* SharedTimerManager();
 	CTimerManager();
 	~CTimerManager();
 	CTimer* AddTimer(CTimer* pTimer );

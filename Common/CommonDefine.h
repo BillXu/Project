@@ -13,6 +13,7 @@
 #define TIMER_WAIT_FINISH 6
 #define MAX_ROOM_LEVEL 3 
 #define GATE_SERVER_PORT 5000
+#define DB_PORT 6000
 
 enum eServerType
 {

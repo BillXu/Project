@@ -4,13 +4,13 @@
 CTimerDelegate::CTimerDelegate()
 	:m_pUpdateTimer(NULL)
 {
-
+	m_pTimerMgr = NULL ;
 }
 
 CTimerDelegate::~CTimerDelegate()
 {
 	if ( m_pUpdateTimer)
-		CTimerManager::SharedTimerManager()->RemoveTimer(m_pUpdateTimer) ;
+		m_pTimerMgr->RemoveTimer(m_pUpdateTimer) ;
 }
 
 void CTimerDelegate::Update(float fTimeElpas , unsigned int nTimerID )
@@ -24,7 +24,7 @@ void CTimerDelegate::SetEnableUpdate( bool bEnable )
 	{
 		if ( m_pUpdateTimer == NULL )
 		{
-			m_pUpdateTimer = CTimerManager::SharedTimerManager()->AddTimer(this,&CTimerDelegate::Update);
+			m_pUpdateTimer = m_pTimerMgr->AddTimer(this,&CTimerDelegate::Update);
 		}
 		m_pUpdateTimer->Reset();
 		m_pUpdateTimer->Start();
@@ -34,7 +34,7 @@ void CTimerDelegate::SetEnableUpdate( bool bEnable )
 		if ( m_pUpdateTimer )
 		{
 			m_pUpdateTimer->Stop();
-			CTimerManager::SharedTimerManager()->RemoveTimer(m_pUpdateTimer) ;
+			m_pTimerMgr->RemoveTimer(m_pUpdateTimer) ;
 			m_pUpdateTimer = NULL ;
 		}
 	}
@@ -88,11 +88,11 @@ void CTimer::Update(float fTimeElaps)
 }
 
 // timer manager ;
-CTimerManager* CTimerManager::SharedTimerManager()
-{
-	static CTimerManager g_sTimer ;
-	return &g_sTimer ;
-}
+//CTimerManager* CTimerManager::SharedTimerManager()
+//{
+//	static CTimerManager g_sTimer ;
+//	return &g_sTimer ;
+//}
 
 CTimerManager::CTimerManager()
 {
@@ -118,6 +118,10 @@ CTimer* CTimerManager::AddTimer(CTimer* pTimer )
 	{
 		CLogMgr::SharedLogMgr()->ErrorLog("One timer can not be add twice !");
 		return NULL;
+	}
+	if ( pTimer->GetDelegate() )
+	{
+		pTimer->GetDelegate()->SetTimerManager(this) ;
 	}
 	m_vAllTimers[pTimer->GetTimerID()] = pTimer ;
 	return pTimer ;

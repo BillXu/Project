@@ -16,8 +16,9 @@ void CNetMessageDelegate::SetPriority( unsigned int nPriority )
 	if ( nPriority == GetPriority() )
 		return ;
 	m_nPriority = nPriority ;
-	CNetWorkMgr::SharedNetWorkMgr()->RemoveMessageDelegate(this);
-	CNetWorkMgr::SharedNetWorkMgr()->AddMessageDelegate(this);
+	assert( m_pNetWorkMgr && "can not be null" ) ;
+	m_pNetWorkMgr->RemoveMessageDelegate(this);
+	m_pNetWorkMgr->AddMessageDelegate(this);
 }
 
 CNetWorkMgr::CNetWorkMgr()
@@ -47,11 +48,11 @@ void CNetWorkMgr::ShutDown()
     }
 }
 
-CNetWorkMgr* CNetWorkMgr::SharedNetWorkMgr()
-{
-    static CNetWorkMgr s_gNetWork ;
-    return &s_gNetWork ;
-}
+//CNetWorkMgr* CNetWorkMgr::SharedNetWorkMgr()
+//{
+//    static CNetWorkMgr s_gNetWork ;
+//    return &s_gNetWork ;
+//}
 
 void CNetWorkMgr::SetupNetwork( int nIntendServerCount )
 {
@@ -197,11 +198,15 @@ void CNetWorkMgr::AddMessageDelegate(CNetMessageDelegate *pDelegate, unsigned sh
 {
 	if ( !pDelegate)
 		return ;
+	pDelegate->SetNetWorkMgr(this) ;
 	pDelegate->SetPriority(nPrio) ;
 }
 
 void CNetWorkMgr::AddMessageDelegate(CNetMessageDelegate *pDelegate )
 {
+	if ( !pDelegate)
+		return ;
+	pDelegate->SetNetWorkMgr(this) ;
 	RemoveMessageDelegate(pDelegate) ;
 	LIST_DELEGATE::iterator iter = m_vAllDelegate.begin();
 	CNetMessageDelegate* pDelegateIter = NULL ;

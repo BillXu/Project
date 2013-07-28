@@ -20,8 +20,3 @@ void IPlayerComponent::SendMsgToDB(const char* pbuffer , unsigned short nLen)
 {
 	m_pPlayer->SendMsgToDBServer(pbuffer,nLen) ;
 }
-
-void IPlayerComponent::OnLostServer( bool bGate )
-{
-
-}
