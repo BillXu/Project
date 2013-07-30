@@ -1460,7 +1460,7 @@
 						<key>displayName</key>
 						<string>RoomPlayer</string>
 						<key>memberVarAssignmentName</key>
-						<string>m_pPlayer[0]</string>
+						<string>m_pPlayer[1]</string>
 						<key>memberVarAssignmentType</key>
 						<integer>2</integer>
 						<key>properties</key>
@@ -1510,7 +1510,7 @@
 						<key>displayName</key>
 						<string>RoomPlayer</string>
 						<key>memberVarAssignmentName</key>
-						<string>m_pPlayer[3]</string>
+						<string>m_pPlayer[0]</string>
 						<key>memberVarAssignmentType</key>
 						<integer>2</integer>
 						<key>properties</key>
@@ -1560,7 +1560,7 @@
 						<key>displayName</key>
 						<string>RoomPlayer</string>
 						<key>memberVarAssignmentName</key>
-						<string>m_pPlayer[2]</string>
+						<string>m_pPlayer[3]</string>
 						<key>memberVarAssignmentType</key>
 						<integer>2</integer>
 						<key>properties</key>
@@ -1610,7 +1610,7 @@
 						<key>displayName</key>
 						<string>RoomPlayer</string>
 						<key>memberVarAssignmentName</key>
-						<string>m_pPlayer[1]</string>
+						<string>m_pPlayer[2]</string>
 						<key>memberVarAssignmentType</key>
 						<integer>2</integer>
 						<key>properties</key>
@@ -1660,7 +1660,7 @@
 						<key>displayName</key>
 						<string>gold_peerc1</string>
 						<key>memberVarAssignmentName</key>
-						<string>m_pDefault[0]</string>
+						<string>m_pDefault[1]</string>
 						<key>memberVarAssignmentType</key>
 						<integer>2</integer>
 						<key>properties</key>
@@ -1732,7 +1732,7 @@
 						<key>displayName</key>
 						<string>gold_peerc1</string>
 						<key>memberVarAssignmentName</key>
-						<string>m_pDefault[3]</string>
+						<string>m_pDefault[0]</string>
 						<key>memberVarAssignmentType</key>
 						<integer>2</integer>
 						<key>properties</key>
@@ -1804,7 +1804,7 @@
 						<key>displayName</key>
 						<string>gold_peerc1</string>
 						<key>memberVarAssignmentName</key>
-						<string>m_pDefault[2]</string>
+						<string>m_pDefault[3]</string>
 						<key>memberVarAssignmentType</key>
 						<integer>2</integer>
 						<key>properties</key>
@@ -1876,7 +1876,7 @@
 						<key>displayName</key>
 						<string>gold_peerc1</string>
 						<key>memberVarAssignmentName</key>
-						<string>m_pDefault[1]</string>
+						<string>m_pDefault[2]</string>
 						<key>memberVarAssignmentType</key>
 						<integer>2</integer>
 						<key>properties</key>
@@ -2020,6 +2020,80 @@
 						<key>displayName</key>
 						<string>gold_peerc2</string>
 						<key>memberVarAssignmentName</key>
+						<string>m_pLook[1]</string>
+						<key>memberVarAssignmentType</key>
+						<integer>2</integer>
+						<key>properties</key>
+						<array>
+							<dict>
+								<key>name</key>
+								<string>position</string>
+								<key>type</key>
+								<string>Position</string>
+								<key>value</key>
+								<array>
+									<real>113</real>
+									<real>137</real>
+									<integer>5</integer>
+								</array>
+							</dict>
+							<dict>
+								<key>name</key>
+								<string>anchorPoint</string>
+								<key>type</key>
+								<string>Point</string>
+								<key>value</key>
+								<array>
+									<real>0.5</real>
+									<real>0.5</real>
+								</array>
+							</dict>
+							<dict>
+								<key>name</key>
+								<string>scale</string>
+								<key>type</key>
+								<string>ScaleLock</string>
+								<key>value</key>
+								<array>
+									<real>1</real>
+									<real>1</real>
+									<false/>
+									<integer>0</integer>
+								</array>
+							</dict>
+							<dict>
+								<key>name</key>
+								<string>ignoreAnchorPointForPosition</string>
+								<key>type</key>
+								<string>Check</string>
+								<key>value</key>
+								<false/>
+							</dict>
+							<dict>
+								<key>name</key>
+								<string>displayFrame</string>
+								<key>type</key>
+								<string>SpriteFrame</string>
+								<key>value</key>
+								<array>
+									<string></string>
+									<string>ccbResources/gold_peerc2.png</string>
+								</array>
+							</dict>
+						</array>
+						<key>selected</key>
+						<true/>
+					</dict>
+					<dict>
+						<key>baseClass</key>
+						<string>CCSprite</string>
+						<key>children</key>
+						<array/>
+						<key>customClass</key>
+						<string></string>
+						<key>displayName</key>
+						<string>gold_peerc2</string>
+						<key>memberVarAssignmentName</key>
 						<string>m_pLook[0]</string>
 						<key>memberVarAssignmentType</key>
 						<integer>2</integer>
@@ -2033,7 +2107,7 @@
 								<key>value</key>
 								<array>
 									<real>77</real>
-									<real>165</real>
+									<real>67</real>
 									<integer>5</integer>
 								</array>
 							</dict>
@@ -2104,8 +2178,8 @@
 								<string>Position</string>
 								<key>value</key>
 								<array>
-									<real>71</real>
-									<real>67</real>
+									<real>358</real>
+									<real>63</real>
 									<integer>5</integer>
 								</array>
 							</dict>
@@ -2176,80 +2250,8 @@
 								<string>Position</string>
 								<key>value</key>
 								<array>
-									<real>353</real>
-									<real>64</real>
-									<integer>5</integer>
-								</array>
-							</dict>
-							<dict>
-								<key>name</key>
-								<string>anchorPoint</string>
-								<key>type</key>
-								<string>Point</string>
-								<key>value</key>
-								<array>
-									<real>0.5</real>
-									<real>0.5</real>
-								</array>
-							</dict>
-							<dict>
-								<key>name</key>
-								<string>scale</string>
-								<key>type</key>
-								<string>ScaleLock</string>
-								<key>value</key>
-								<array>
-									<real>1</real>
-									<real>1</real>
-									<false/>
-									<integer>0</integer>
-								</array>
-							</dict>
-							<dict>
-								<key>name</key>
-								<string>ignoreAnchorPointForPosition</string>
-								<key>type</key>
-								<string>Check</string>
-								<key>value</key>
-								<false/>
-							</dict>
-							<dict>
-								<key>name</key>
-								<string>displayFrame</string>
-								<key>type</key>
-								<string>SpriteFrame</string>
-								<key>value</key>
-								<array>
-									<string></string>
-									<string>ccbResources/gold_peerc2.png</string>
-								</array>
-							</dict>
-						</array>
-					</dict>
-					<dict>
-						<key>baseClass</key>
-						<string>CCSprite</string>
-						<key>children</key>
-						<array/>
-						<key>customClass</key>
-						<string></string>
-						<key>displayName</key>
-						<string>gold_peerc2</string>
-						<key>memberVarAssignmentName</key>
-						<string>m_pLook[1]</string>
-						<key>memberVarAssignmentType</key>
-						<integer>2</integer>
-						<key>properties</key>
-						<array>
-							<dict>
-								<key>name</key>
-								<string>position</string>
-								<key>type</key>
-								<string>Position</string>
-								<key>value</key>
-								<array>
-									<real>350</real>
-									<real>171</real>
+									<real>349</real>
+									<real>167</real>
 									<integer>5</integer>
 								</array>
 							</dict>
@@ -2308,6 +2310,78 @@
 						<key>displayName</key>
 						<string>gold_peerc3</string>
 						<key>memberVarAssignmentName</key>
+						<string>m_pGive[1]</string>
+						<key>memberVarAssignmentType</key>
+						<integer>2</integer>
+						<key>properties</key>
+						<array>
+							<dict>
+								<key>name</key>
+								<string>position</string>
+								<key>type</key>
+								<string>Position</string>
+								<key>value</key>
+								<array>
+									<real>173</real>
+									<real>160</real>
+									<integer>5</integer>
+								</array>
+							</dict>
+							<dict>
+								<key>name</key>
+								<string>anchorPoint</string>
+								<key>type</key>
+								<string>Point</string>
+								<key>value</key>
+								<array>
+									<real>0.5</real>
+									<real>0.5</real>
+								</array>
+							</dict>
+							<dict>
+								<key>name</key>
+								<string>scale</string>
+								<key>type</key>
+								<string>ScaleLock</string>
+								<key>value</key>
+								<array>
+									<real>1</real>
+									<real>1</real>
+									<false/>
+									<integer>0</integer>
+								</array>
+							</dict>
+							<dict>
+								<key>name</key>
+								<string>ignoreAnchorPointForPosition</string>
+								<key>type</key>
+								<string>Check</string>
+								<key>value</key>
+								<false/>
+							</dict>
+							<dict>
+								<key>name</key>
+								<string>displayFrame</string>
+								<key>type</key>
+								<string>SpriteFrame</string>
+								<key>value</key>
+								<array>
+									<string></string>
+									<string>ccbResources/gold_peerc3.png</string>
+								</array>
+							</dict>
+						</array>
+					</dict>
+					<dict>
+						<key>baseClass</key>
+						<string>CCSprite</string>
+						<key>children</key>
+						<array/>
+						<key>customClass</key>
+						<string></string>
+						<key>displayName</key>
+						<string>gold_peerc3</string>
+						<key>memberVarAssignmentName</key>
 						<string>m_pGive[0]</string>
 						<key>memberVarAssignmentType</key>
 						<integer>2</integer>
@@ -2320,8 +2394,8 @@
 								<string>Position</string>
 								<key>value</key>
 								<array>
-									<real>79</real>
-									<real>163</real>
+									<real>78</real>
+									<real>68</real>
 									<integer>5</integer>
 								</array>
 							</dict>
@@ -2392,8 +2466,8 @@
 								<string>Position</string>
 								<key>value</key>
 								<array>
-									<real>72</real>
-									<real>67</real>
+									<real>358</real>
+									<real>63</real>
 									<integer>5</integer>
 								</array>
 							</dict>
@@ -2464,80 +2538,8 @@
 								<string>Position</string>
 								<key>value</key>
 								<array>
-									<real>355</real>
-									<real>64</real>
-									<integer>5</integer>
-								</array>
-							</dict>
-							<dict>
-								<key>name</key>
-								<string>anchorPoint</string>
-								<key>type</key>
-								<string>Point</string>
-								<key>value</key>
-								<array>
-									<real>0.5</real>
-									<real>0.5</real>
-								</array>
-							</dict>
-							<dict>
-								<key>name</key>
-								<string>scale</string>
-								<key>type</key>
-								<string>ScaleLock</string>
-								<key>value</key>
-								<array>
-									<real>1</real>
-									<real>1</real>
-									<false/>
-									<integer>0</integer>
-								</array>
-							</dict>
-							<dict>
-								<key>name</key>
-								<string>ignoreAnchorPointForPosition</string>
-								<key>type</key>
-								<string>Check</string>
-								<key>value</key>
-								<false/>
-							</dict>
-							<dict>
-								<key>name</key>
-								<string>displayFrame</string>
-								<key>type</key>
-								<string>SpriteFrame</string>
-								<key>value</key>
-								<array>
-									<string></string>
-									<string>ccbResources/gold_peerc3.png</string>
-								</array>
-							</dict>
-						</array>
-					</dict>
-					<dict>
-						<key>baseClass</key>
-						<string>CCSprite</string>
-						<key>children</key>
-						<array/>
-						<key>customClass</key>
-						<string></string>
-						<key>displayName</key>
-						<string>gold_peerc3</string>
-						<key>memberVarAssignmentName</key>
-						<string>m_pGive[1]</string>
-						<key>memberVarAssignmentType</key>
-						<integer>2</integer>
-						<key>properties</key>
-						<array>
-							<dict>
-								<key>name</key>
-								<string>position</string>
-								<key>type</key>
-								<string>Position</string>
-								<key>value</key>
-								<array>
 									<real>350</real>
-									<real>169</real>
+									<real>168</real>
 									<integer>5</integer>
 								</array>
 							</dict>
@@ -2596,6 +2598,78 @@
 						<key>displayName</key>
 						<string>gold_peerc4</string>
 						<key>memberVarAssignmentName</key>
+						<string>m_pFail[1]</string>
+						<key>memberVarAssignmentType</key>
+						<integer>2</integer>
+						<key>properties</key>
+						<array>
+							<dict>
+								<key>name</key>
+								<string>position</string>
+								<key>type</key>
+								<string>Position</string>
+								<key>value</key>
+								<array>
+									<real>167</real>
+									<real>120</real>
+									<integer>5</integer>
+								</array>
+							</dict>
+							<dict>
+								<key>name</key>
+								<string>anchorPoint</string>
+								<key>type</key>
+								<string>Point</string>
+								<key>value</key>
+								<array>
+									<real>0.5</real>
+									<real>0.5</real>
+								</array>
+							</dict>
+							<dict>
+								<key>name</key>
+								<string>scale</string>
+								<key>type</key>
+								<string>ScaleLock</string>
+								<key>value</key>
+								<array>
+									<real>1</real>
+									<real>1</real>
+									<false/>
+									<integer>0</integer>
+								</array>
+							</dict>
+							<dict>
+								<key>name</key>
+								<string>ignoreAnchorPointForPosition</string>
+								<key>type</key>
+								<string>Check</string>
+								<key>value</key>
+								<false/>
+							</dict>
+							<dict>
+								<key>name</key>
+								<string>displayFrame</string>
+								<key>type</key>
+								<string>SpriteFrame</string>
+								<key>value</key>
+								<array>
+									<string></string>
+									<string>ccbResources/gold_peerc4.png</string>
+								</array>
+							</dict>
+						</array>
+					</dict>
+					<dict>
+						<key>baseClass</key>
+						<string>CCSprite</string>
+						<key>children</key>
+						<array/>
+						<key>customClass</key>
+						<string></string>
+						<key>displayName</key>
+						<string>gold_peerc4</string>
+						<key>memberVarAssignmentName</key>
 						<string>m_pFail[0]</string>
 						<key>memberVarAssignmentType</key>
 						<integer>2</integer>
@@ -2608,8 +2682,8 @@
 								<string>Position</string>
 								<key>value</key>
 								<array>
-									<real>79</real>
-									<real>164</real>
+									<real>76</real>
+									<real>68</real>
 									<integer>5</integer>
 								</array>
 							</dict>
@@ -2680,8 +2754,8 @@
 								<string>Position</string>
 								<key>value</key>
 								<array>
-									<real>71</real>
-									<real>66</real>
+									<real>358</real>
+									<real>64</real>
 									<integer>5</integer>
 								</array>
 							</dict>
@@ -2752,80 +2826,8 @@
 								<string>Position</string>
 								<key>value</key>
 								<array>
-									<real>356</real>
-									<real>64</real>
-									<integer>5</integer>
-								</array>
-							</dict>
-							<dict>
-								<key>name</key>
-								<string>anchorPoint</string>
-								<key>type</key>
-								<string>Point</string>
-								<key>value</key>
-								<array>
-									<real>0.5</real>
-									<real>0.5</real>
-								</array>
-							</dict>
-							<dict>
-								<key>name</key>
-								<string>scale</string>
-								<key>type</key>
-								<string>ScaleLock</string>
-								<key>value</key>
-								<array>
-									<real>1</real>
-									<real>1</real>
-									<false/>
-									<integer>0</integer>
-								</array>
-							</dict>
-							<dict>
-								<key>name</key>
-								<string>ignoreAnchorPointForPosition</string>
-								<key>type</key>
-								<string>Check</string>
-								<key>value</key>
-								<false/>
-							</dict>
-							<dict>
-								<key>name</key>
-								<string>displayFrame</string>
-								<key>type</key>
-								<string>SpriteFrame</string>
-								<key>value</key>
-								<array>
-									<string></string>
-									<string>ccbResources/gold_peerc4.png</string>
-								</array>
-							</dict>
-						</array>
-					</dict>
-					<dict>
-						<key>baseClass</key>
-						<string>CCSprite</string>
-						<key>children</key>
-						<array/>
-						<key>customClass</key>
-						<string></string>
-						<key>displayName</key>
-						<string>gold_peerc4</string>
-						<key>memberVarAssignmentName</key>
-						<string>m_pFail[1]</string>
-						<key>memberVarAssignmentType</key>
-						<integer>2</integer>
-						<key>properties</key>
-						<array>
-							<dict>
-								<key>name</key>
-								<string>position</string>
-								<key>type</key>
-								<string>Position</string>
-								<key>value</key>
-								<array>
-									<real>348</real>
-									<real>169</real>
+									<real>349</real>
+									<real>168</real>
 									<integer>5</integer>
 								</array>
 							</dict>
@@ -3171,8 +3173,6 @@
 						</array>
 					</dict>
 				</array>
-				<key>selected</key>
-				<true/>
 				<key>seqExpanded</key>
 				<true/>
 			</dict>
