@@ -31,16 +31,24 @@ public:
     void completedAnimationSequenceNamed(const char *name);
 
     // btn event
-   void OnFollow(CCObject*, CCControlEvent);
-   void OnAdd(CCObject*, CCControlEvent);
-   void OnLook(CCObject*, CCControlEvent);
-   void OnPK(CCObject*, CCControlEvent);
-   void OnGiveUp(CCObject*, CCControlEvent);
-   void OnBuy(CCObject*, CCControlEvent);
-   void OnBack(CCObject*, CCControlEvent);
-   void OnSay(CCObject*, CCControlEvent);
+    void OnFollow(CCObject*, CCControlEvent);
+    void OnAdd(CCObject*, CCControlEvent);
+    void OnLook(CCObject*, CCControlEvent);
+    void OnPK(CCObject*, CCControlEvent);
+    void OnGiveUp(CCObject*, CCControlEvent);
+    void OnBuy(CCObject*, CCControlEvent);
+    void OnBack(CCObject*, CCControlEvent);
+    void OnSay(CCObject*, CCControlEvent);
+    void OnDistributeCardOver(float fTime );
+    
+    void StartGame(unsigned int nMainPlayer );
+    
+    void StartMyClock();
+    void OnClocked(float fTime );
+    void StopMyClock();
 protected:
     void StartDistributeCard();
+    void ResetRoomState();
 protected:
     CCLabelTTF* m_pMyCoin ,*m_pMyDiamen,*m_pMyName, *m_pMyTitle,*m_pMyBetCoin, *m_pRound, *m_pTotalBet,*m_pSingleBet, *m_pTime;
     CCSprite* m_pTable,*m_pClock ;
@@ -53,6 +61,7 @@ protected:
     CCSprite* m_pCardSender ;
     CCSprite* m_pDistributeCard[15] ;
     CCPoint m_ptDistributePoint[5];
+    float m_fMyTimerCount ;
 };
 
 #endif /* defined(__Gold__RoomLayer__) */

@@ -36,11 +36,36 @@ bool CRoomLayer::init()
     animationManager->setDelegate(this) ;
     addChild(pRoot) ;
     
+    // set up showcards
+    for ( int i = 0 ; i < 4 ; ++i )
+    {
+        CCPoint pt = m_pDefault[i]->getPosition() ;
+        m_pDefault[i]->setVisible(false) ;
+        CCNode* parent = m_pDefault[i]->getParent() ;
+        m_pLook[i] = CCSprite::create("ccbResources/gold_peerc2.png") ;
+        m_pLook[i]->setPosition(pt) ;
+        parent->addChild(m_pLook[i]) ;
+        m_pLook[i]->setVisible(false) ;
+        
+        m_pGive[i] = CCSprite::create("ccbResources/gold_peerc3.png") ;
+        m_pGive[i]->setPosition(pt) ;
+        parent->addChild(m_pGive[i]) ;
+        m_pGive[i]->setVisible(false) ;
+        
+        m_pFail[i] = CCSprite::create("ccbResources/gold_peerc4.png") ;
+        m_pFail[i]->setPosition(pt) ;
+        parent->addChild(m_pFail[i]) ;
+        m_pFail[i]->setVisible(false) ;
+    }
+    m_pDefault[4]->setVisible(false) ;
+    
+    // set up distribute cards ;
     for ( int i = 0 ; i < 15 ; ++i )
     {
-        CCSprite* pCard = CCSprite::create("ccbResources/gold_poker.png", CCRectMake(201, 646, 100, 131));
+        CCSprite* pCard = CCSprite::create("ccbResources/gold_poker.png", CC_RECT_PIXELS_TO_POINTS(CCRectMake(201, 646, 100, 131)));
         m_pCardSender->addChild(pCard) ;
         m_pDistributeCard[i] = pCard ;
+        pCard->setScale(0.67) ;
         pCard->setPosition(ccp(m_pCardSender->getContentSize().width * 0.5,m_pCardSender->getContentSize().height * 0.6)) ;
     }
     CCSprite* pSendFront = CCSprite::create("ccbResources/gold_sendcardFront.png") ;
@@ -48,7 +73,31 @@ bool CRoomLayer::init()
     pSendFront->setPosition(ccpMult(m_pCardSender->getContentSize(), 0.5)) ;
     m_pCardSender->setVisible(false) ;
     memset(m_ptDistributePoint, 0, sizeof(m_ptDistributePoint)) ;
+    // init member var state
+    m_pClock->setVisible(false) ;
     return true ;
+}
+
+void CRoomLayer::OnDistributeCardOver(float fTime )
+{
+    unschedule(schedule_selector(CRoomLayer::OnDistributeCardOver));
+    animationManager->runAnimationsForSequenceNamed("GoBack");
+    
+    // clearn distribute elements ;
+    for ( int i = 0 ; i < 4 ; ++i )
+    {
+        m_pDefault[i]->setVisible(true) ;
+        m_pLook[i]->setVisible(false) ;
+        m_pGive[i]->setVisible(false) ;
+        m_pFail[i]->setVisible(false) ;
+    }
+    m_pDefault[4]->setVisible(true) ;
+    
+    for ( int i = 0 ; i < 15 ; ++i )
+    {
+        m_pDistributeCard[i]->setPosition(ccp(m_pCardSender->getContentSize().width * 0.5,m_pCardSender->getContentSize().height * 0.6)) ;
+        m_pDistributeCard[i]->stopAllActions();
+    }
 }
 
 SEL_CCControlHandler CRoomLayer::onResolveCCBCCControlSelector(CCObject * pTarget, const char* pSelectorName)
@@ -91,20 +140,20 @@ bool CRoomLayer::onAssignCCBMemberVariable(CCObject* pTarget, const char* pMembe
         sprintf(pBuffer, "m_pDefault[%d]",i) ;
         CCB_MEMBERVARIABLEASSIGNER_GLUE_WEAK(this,pBuffer,CCSprite*,m_pDefault[i]);
         
-        //look card
-        memset(pBuffer, 0, sizeof(pBuffer)) ;
-        sprintf(pBuffer, "m_pLook[%d]",i) ;
-        CCB_MEMBERVARIABLEASSIGNER_GLUE_WEAK(this,pBuffer,CCSprite*,m_pLook[i]);
-        
-        // giveup card
-        memset(pBuffer, 0, sizeof(pBuffer)) ;
-        sprintf(pBuffer, "m_pGive[%d]",i) ;
-        CCB_MEMBERVARIABLEASSIGNER_GLUE_WEAK(this,pBuffer,CCSprite*,m_pGive[i]);
-        
-        // failed card
-        memset(pBuffer, 0, sizeof(pBuffer)) ;
-        sprintf(pBuffer, "m_pFail[%d]",i) ;
-        CCB_MEMBERVARIABLEASSIGNER_GLUE_WEAK(this,pBuffer,CCSprite*,m_pFail[i]);
+//        //look card
+//        memset(pBuffer, 0, sizeof(pBuffer)) ;
+//        sprintf(pBuffer, "m_pLook[%d]",i) ;
+//        CCB_MEMBERVARIABLEASSIGNER_GLUE_WEAK(this,pBuffer,CCSprite*,m_pLook[i]);
+//        
+//        // giveup card
+//        memset(pBuffer, 0, sizeof(pBuffer)) ;
+//        sprintf(pBuffer, "m_pGive[%d]",i) ;
+//        CCB_MEMBERVARIABLEASSIGNER_GLUE_WEAK(this,pBuffer,CCSprite*,m_pGive[i]);
+//        
+//        // failed card
+//        memset(pBuffer, 0, sizeof(pBuffer)) ;
+//        sprintf(pBuffer, "m_pFail[%d]",i) ;
+//        CCB_MEMBERVARIABLEASSIGNER_GLUE_WEAK(this,pBuffer,CCSprite*,m_pFail[i]);
     }
     CCB_MEMBERVARIABLEASSIGNER_GLUE_WEAK(this,"m_pDefault[4]",CCSprite*,m_pDefault[4]);
     CCB_MEMBERVARIABLEASSIGNER_GLUE_WEAK(this,"m_pCardSender",CCSprite*,m_pCardSender);
@@ -120,19 +169,7 @@ void CRoomLayer::completedAnimationSequenceNamed(const char *name)
      }
      else if ( strcmp(name, "GoBack") == 0 )
      {
-        for ( int i = 0 ; i < 4 ; ++i )
-        {
-            m_pDefault[i]->setVisible(true) ;
-            m_pLook[i]->setVisible(false) ;
-            m_pGive[i]->setVisible(false) ;
-            m_pFail[i]->setVisible(false) ;
-        }
-        m_pDefault[4]->setVisible(true) ;
-         
-        for ( int i = 0 ; i < 15 ; ++i )
-        {
-            m_pDistributeCard[i]->setPosition(ccp(m_pCardSender->getContentSize().width * 0.5,m_pCardSender->getContentSize().height * 0.6)) ;
-        }
+
      }
 }
 
@@ -149,6 +186,7 @@ void CRoomLayer::OnAdd(CCObject*, CCControlEvent)
 void CRoomLayer::OnLook(CCObject*, CCControlEvent)
 {
     m_pPlayer[0]->StartTiming();
+    StartMyClock();
 }
 
 void CRoomLayer::OnPK(CCObject*, CCControlEvent)
@@ -180,6 +218,7 @@ void CRoomLayer::OnBack(CCObject*, CCControlEvent)
     {
         m_pLook[i]->setVisible(!m_pLook[i]->isVisible()) ;
     }
+    ResetRoomState();
 }
 
 void CRoomLayer::OnSay(CCObject*, CCControlEvent)
@@ -221,15 +260,24 @@ void CRoomLayer::StartDistributeCard()
     }
     
     // set up card animation ;
-    float fDelay = 0 ;
-    float fMoveTime = 0.3 ;
+    float fDelay = 0.2 ;
+    float fMoveTime = 0.4 ;
     int iCount = 3 ;
     int nCardIdx = 0 ;
     CCPoint ptOffset = CCPointZero ;
     while (iCount--)
     {
         // set offset ;
-        ptOffset.x = m_pDistributeCard[0]->getContentSize().width * 0.2 * iCount ;
+        ptOffset.x = m_pDistributeCard[0]->getContentSize().width * 0.2 ;
+        if ( iCount == 2 )
+        {
+            ptOffset.x *= -1 ;
+        }
+        else if ( iCount == 1 )
+        {
+            ptOffset.x = 0 ;
+        }
+        
         for ( int i = 0 ; i < vDistPoint.size(); ++i )
         {
             CCDelayTime* pDlay = CCDelayTime::create(fDelay) ;
@@ -239,4 +287,57 @@ void CRoomLayer::StartDistributeCard()
             fDelay += fMoveTime ;
         }
     }
+    fDelay += 0.3 ;
+    // register over function ;
+    schedule(schedule_selector(CRoomLayer::OnDistributeCardOver), fDelay , 1, 0) ;
+}
+
+void CRoomLayer::ResetRoomState()
+{
+    unscheduleAllSelectors() ;
+    m_pClock->setVisible(false) ;
+    for ( int i = 0 ; i < 4 ; ++i )
+    {
+        m_pDefault[i]->setVisible(false) ;
+        m_pLook[i]->setVisible(false) ;
+        m_pGive[i]->setVisible(false) ;
+        m_pFail[i]->setVisible(false) ;
+    }
+    m_pDefault[4]->setVisible(false) ;
+    // disable buttons ;
+}
+
+void CRoomLayer::StartGame(unsigned int nMainPlayer )
+{
+    animationManager->runAnimationsForSequenceNamed("ComeIn");
+}
+
+void CRoomLayer::StartMyClock()
+{
+    schedule(schedule_selector(CRoomLayer::OnClocked), 1 , 30, 0) ;
+    m_pClock->setVisible(true) ;
+    m_fMyTimerCount = 30 ;
+}
+
+void CRoomLayer::OnClocked(float fTime )
+{
+    m_fMyTimerCount -= fTime ;
+    int nTimer = m_fMyTimerCount ;
+    if ( nTimer < 0 )
+    {
+        nTimer = 0 ;
+    }
+    char pBuffer[10] = { 0 } ;
+    sprintf(pBuffer, "%d",nTimer) ;
+    m_pTime->setString(pBuffer) ;
+    if ( nTimer <= 0 )
+    {
+        unschedule(schedule_selector(CRoomLayer::OnClocked)) ;
+    }
+}
+
+void CRoomLayer::StopMyClock()
+{
+    unschedule(schedule_selector(CRoomLayer::OnClocked)) ;
+    m_pClock->setVisible(false) ;
 }
