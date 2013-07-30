@@ -36,12 +36,23 @@ bool CRoomLayer::init()
     animationManager->setDelegate(this) ;
     addChild(pRoot) ;
     
-    // set up showcards
-    for ( int i = 0 ; i < 4 ; ++i )
+    // set up showcards and ready icon 
+    for ( int i = 0 ; i < 5 ; ++i )
     {
+        
         CCPoint pt = m_pDefault[i]->getPosition() ;
         m_pDefault[i]->setVisible(false) ;
         CCNode* parent = m_pDefault[i]->getParent() ;
+        
+        m_pReadyIcon[i] = CCSprite::create("ccbResources/gold_readystatus.png") ;
+        m_pReadyIcon[i]->setPosition(pt) ;
+        parent->addChild(m_pReadyIcon[i]) ;
+        m_pReadyIcon[i]->setVisible(false) ;
+        if ( i >= 4 )
+        {
+            break ;
+        }
+        
         m_pLook[i] = CCSprite::create("ccbResources/gold_peerc2.png") ;
         m_pLook[i]->setPosition(pt) ;
         parent->addChild(m_pLook[i]) ;
@@ -57,7 +68,6 @@ bool CRoomLayer::init()
         parent->addChild(m_pFail[i]) ;
         m_pFail[i]->setVisible(false) ;
     }
-    m_pDefault[4]->setVisible(false) ;
     
     // set up distribute cards ;
     for ( int i = 0 ; i < 15 ; ++i )
@@ -75,6 +85,11 @@ bool CRoomLayer::init()
     memset(m_ptDistributePoint, 0, sizeof(m_ptDistributePoint)) ;
     // init member var state
     m_pClock->setVisible(false) ;
+    // set player info delegete
+    for ( int i = 0 ; i < 4 ; ++i )
+    {
+        m_pPlayer[i]->setDelegate(this) ;
+    }
     return true ;
 }
 
@@ -110,6 +125,8 @@ SEL_CCControlHandler CRoomLayer::onResolveCCBCCControlSelector(CCObject * pTarge
     CCB_SELECTORRESOLVER_CCCONTROL_GLUE(this,"OnBuy",CRoomLayer::OnBuy);
     CCB_SELECTORRESOLVER_CCCONTROL_GLUE(this,"OnBack",CRoomLayer::OnBack);
     CCB_SELECTORRESOLVER_CCCONTROL_GLUE(this,"OnSay",CRoomLayer::OnSay);
+    
+    CCB_SELECTORRESOLVER_CCCONTROL_GLUE(this,"OnReady",CRoomLayer::OnReady);
     return NULL ;
 }
 
@@ -126,6 +143,13 @@ bool CRoomLayer::onAssignCCBMemberVariable(CCObject* pTarget, const char* pMembe
     CCB_MEMBERVARIABLEASSIGNER_GLUE_WEAK(this,"m_pTime",CCLabelTTF*,m_pTime);
     CCB_MEMBERVARIABLEASSIGNER_GLUE_WEAK(this,"m_pTable",CCSprite*,m_pTable);
     CCB_MEMBERVARIABLEASSIGNER_GLUE_WEAK(this,"m_pClock",CCSprite*,m_pClock);
+
+    CCB_MEMBERVARIABLEASSIGNER_GLUE_WEAK(this,"m_pbtnFollow",CCControlButton*,m_pbtnFollow);
+    CCB_MEMBERVARIABLEASSIGNER_GLUE_WEAK(this,"m_pbtnAdd",CCControlButton*,m_pbtnAdd);
+    CCB_MEMBERVARIABLEASSIGNER_GLUE_WEAK(this,"m_pbtnLook",CCControlButton*,m_pbtnLook);
+    CCB_MEMBERVARIABLEASSIGNER_GLUE_WEAK(this,"m_pbtnPK",CCControlButton*,m_pbtnPK);
+    CCB_MEMBERVARIABLEASSIGNER_GLUE_WEAK(this,"m_pbtnGiveUp",CCControlButton*,m_pbtnGiveUp);
+    CCB_MEMBERVARIABLEASSIGNER_GLUE_WEAK(this,"m_pbtnReady",CCControlButton*,m_pbtnReady);
     
     char pBuffer[50] = { 0 } ;
     for ( int i = 0 ; i < 4 ; ++i )
@@ -139,21 +163,6 @@ bool CRoomLayer::onAssignCCBMemberVariable(CCObject* pTarget, const char* pMembe
         memset(pBuffer, 0, sizeof(pBuffer)) ;
         sprintf(pBuffer, "m_pDefault[%d]",i) ;
         CCB_MEMBERVARIABLEASSIGNER_GLUE_WEAK(this,pBuffer,CCSprite*,m_pDefault[i]);
-        
-//        //look card
-//        memset(pBuffer, 0, sizeof(pBuffer)) ;
-//        sprintf(pBuffer, "m_pLook[%d]",i) ;
-//        CCB_MEMBERVARIABLEASSIGNER_GLUE_WEAK(this,pBuffer,CCSprite*,m_pLook[i]);
-//        
-//        // giveup card
-//        memset(pBuffer, 0, sizeof(pBuffer)) ;
-//        sprintf(pBuffer, "m_pGive[%d]",i) ;
-//        CCB_MEMBERVARIABLEASSIGNER_GLUE_WEAK(this,pBuffer,CCSprite*,m_pGive[i]);
-//        
-//        // failed card
-//        memset(pBuffer, 0, sizeof(pBuffer)) ;
-//        sprintf(pBuffer, "m_pFail[%d]",i) ;
-//        CCB_MEMBERVARIABLEASSIGNER_GLUE_WEAK(this,pBuffer,CCSprite*,m_pFail[i]);
     }
     CCB_MEMBERVARIABLEASSIGNER_GLUE_WEAK(this,"m_pDefault[4]",CCSprite*,m_pDefault[4]);
     CCB_MEMBERVARIABLEASSIGNER_GLUE_WEAK(this,"m_pCardSender",CCSprite*,m_pCardSender);
@@ -229,6 +238,14 @@ void CRoomLayer::OnSay(CCObject*, CCControlEvent)
     }
 }
 
+void CRoomLayer::OnReady(CCObject*, CCControlEvent)
+{
+    m_pbtnReady->setEnabled(false) ;
+    CCFadeOut* pfade = CCFadeOut::create(0.26);
+    CCEaseOut* ccer = CCEaseOut::create(pfade, 0.7);
+    m_pbtnReady->runAction(ccer) ;
+}
+
 void CRoomLayer::StartDistributeCard()
 {
     if ( m_ptDistributePoint[0].x == 0 ) // prepare dist pos
@@ -268,7 +285,7 @@ void CRoomLayer::StartDistributeCard()
     while (iCount--)
     {
         // set offset ;
-        ptOffset.x = m_pDistributeCard[0]->getContentSize().width * 0.2 ;
+        ptOffset.x = m_pDistributeCard[0]->getContentSize().width * 0.08 ;
         if ( iCount == 2 )
         {
             ptOffset.x *= -1 ;
@@ -296,15 +313,27 @@ void CRoomLayer::ResetRoomState()
 {
     unscheduleAllSelectors() ;
     m_pClock->setVisible(false) ;
-    for ( int i = 0 ; i < 4 ; ++i )
+    for ( int i = 0 ; i < 5 ; ++i )
     {
         m_pDefault[i]->setVisible(false) ;
+        m_pReadyIcon[i]->setVisible(false) ;
+        if ( i >= 4 )
+        {
+            break ;
+        }
         m_pLook[i]->setVisible(false) ;
         m_pGive[i]->setVisible(false) ;
         m_pFail[i]->setVisible(false) ;
     }
-    m_pDefault[4]->setVisible(false) ;
     // disable buttons ;
+    m_pbtnAdd->setEnabled(false) ;
+    m_pbtnFollow->setEnabled(false) ;
+    m_pbtnLook->setEnabled(false) ;
+    m_pbtnPK->setEnabled(false) ;
+    m_pbtnGiveUp->setEnabled(false) ;
+    m_pbtnReady->setVisible(true) ;
+    m_pbtnReady->setEnabled(true) ;
+    m_pbtnReady->setOpacity(255) ;
 }
 
 void CRoomLayer::StartGame(unsigned int nMainPlayer )
@@ -322,7 +351,7 @@ void CRoomLayer::StartMyClock()
 void CRoomLayer::OnClocked(float fTime )
 {
     m_fMyTimerCount -= fTime ;
-    int nTimer = m_fMyTimerCount ;
+    int nTimer = m_fMyTimerCount + 0.5;
     if ( nTimer < 0 )
     {
         nTimer = 0 ;
@@ -340,4 +369,9 @@ void CRoomLayer::StopMyClock()
 {
     unschedule(schedule_selector(CRoomLayer::OnClocked)) ;
     m_pClock->setVisible(false) ;
+}
+
+void CRoomLayer::OnClickRoomPlayerInfo(CRoomPlayerInfor* pPlayerInfo )
+{
+    CCMessageBox("clicked player", "Tip") ;
 }

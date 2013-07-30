@@ -23,8 +23,14 @@ bool CRoomPlayerInfor::onAssignCCBMemberVariable(CCObject* pTarget, const char* 
     CCB_MEMBERVARIABLEASSIGNER_GLUE_WEAK(this, "m_pName", CCLabelTTF*, m_pName);
     CCB_MEMBERVARIABLEASSIGNER_GLUE_WEAK(this, "m_pCoin", CCLabelTTF*, m_pCoin);
     CCB_MEMBERVARIABLEASSIGNER_GLUE_WEAK(this, "m_pBetCoin", CCLabelTTF*, m_pBetCoin);
-    CCB_MEMBERVARIABLEASSIGNER_GLUE_WEAK(this, "m_pPhoto", CCSprite*, m_pPhoto);
+    CCB_MEMBERVARIABLEASSIGNER_GLUE_WEAK(this, "m_pbtnPhoto", CCControlButton*, m_pbtnPhoto);
     return false ;
+}
+
+SEL_CCControlHandler CRoomPlayerInfor::onResolveCCBCCControlSelector(CCObject * pTarget, const char* pSelectorName)
+{
+    CCB_SELECTORRESOLVER_CCCONTROL_GLUE(this,"OnClickPhoto",CRoomPlayerInfor::OnClickPhoto);
+    return NULL ;
 }
 
 void CRoomPlayerInfor::onNodeLoaded(CCNode * pNode, CCNodeLoader * pNodeLoader)
@@ -35,6 +41,7 @@ void CRoomPlayerInfor::onNodeLoaded(CCNode * pNode, CCNodeLoader * pNodeLoader)
     addChild(m_pRadial) ;
     m_pRadial->setPosition(ccpMult(ccpFromSize(getContentSize()), 0.5)) ;
     m_pRadial->setReverseDirection(true) ;
+    setDelegate(NULL) ;
     StopTiming();
     scheduleUpdate();
 }
@@ -54,3 +61,31 @@ void CRoomPlayerInfor::update(float fTime )
         StopTiming() ;
     }
 }
+
+void CRoomPlayerInfor::OnClickPhoto(CCObject*, CCControlEvent)
+{
+    if ( getDelegate() )
+    {
+        getDelegate()->OnClickRoomPlayerInfo(this) ;
+    }
+}
+
+void CRoomPlayerInfor::SetPlayerInfo( unsigned int nSessionID ,const char* pname , const char* ptitle, int nCoin )
+{
+    setSessionID(nSessionID) ;
+    m_pName->setString(pname) ;
+    m_pTitle->setString(ptitle) ;
+    UpdateCoinInfo(0, nCoin);
+}
+
+void CRoomPlayerInfor::UpdateCoinInfo(int nBetedCoin , int nOwnCoin)
+{
+    char pBuffer[50] = { 0 };
+    sprintf(pBuffer, "%d",nBetedCoin) ;
+    m_pBetCoin->setString(pBuffer) ;
+    
+    memset(pBuffer, 0, sizeof(pBuffer)) ;
+    sprintf(pBuffer, "%d",nOwnCoin) ;
+    m_pCoin->setString(pBuffer) ;
+}
+

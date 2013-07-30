@@ -126,9 +126,9 @@
 										<string>Position</string>
 										<key>value</key>
 										<array>
-											<real>47</real>
-											<real>49</real>
-											<integer>5</integer>
+											<real>50</real>
+											<real>52.127658843994141</real>
+											<integer>4</integer>
 										</array>
 									</dict>
 									<dict>
@@ -201,9 +201,9 @@
 										<string>Size</string>
 										<key>value</key>
 										<array>
-											<real>0.0</real>
-											<real>0.0</real>
-											<integer>0</integer>
+											<real>43</real>
+											<real>48</real>
+											<integer>5</integer>
 										</array>
 									</dict>
 									<dict>
@@ -212,7 +212,7 @@
 										<key>type</key>
 										<string>IntegerLabeled</string>
 										<key>value</key>
-										<integer>0</integer>
+										<integer>1</integer>
 									</dict>
 									<dict>
 										<key>name</key>
@@ -220,7 +220,7 @@
 										<key>type</key>
 										<string>IntegerLabeled</string>
 										<key>value</key>
-										<integer>0</integer>
+										<integer>1</integer>
 									</dict>
 									<dict>
 										<key>name</key>
@@ -2010,6 +2010,218 @@
 							</dict>
 						</array>
 					</dict>
+					<dict>
+						<key>baseClass</key>
+						<string>CCControlButton</string>
+						<key>children</key>
+						<array/>
+						<key>customClass</key>
+						<string></string>
+						<key>displayName</key>
+						<string>CCControlButton</string>
+						<key>memberVarAssignmentName</key>
+						<string>m_pbtnReady</string>
+						<key>memberVarAssignmentType</key>
+						<integer>2</integer>
+						<key>properties</key>
+						<array>
+							<dict>
+								<key>name</key>
+								<string>position</string>
+								<key>type</key>
+								<string>Position</string>
+								<key>value</key>
+								<array>
+									<real>50</real>
+									<real>50</real>
+									<integer>4</integer>
+								</array>
+							</dict>
+							<dict>
+								<key>name</key>
+								<string>anchorPoint</string>
+								<key>type</key>
+								<string>Point</string>
+								<key>value</key>
+								<array>
+									<real>0.5</real>
+									<real>0.5</real>
+								</array>
+							</dict>
+							<dict>
+								<key>name</key>
+								<string>scale</string>
+								<key>type</key>
+								<string>ScaleLock</string>
+								<key>value</key>
+								<array>
+									<real>1</real>
+									<real>1</real>
+									<false/>
+									<integer>0</integer>
+								</array>
+							</dict>
+							<dict>
+								<key>name</key>
+								<string>ignoreAnchorPointForPosition</string>
+								<key>type</key>
+								<string>Check</string>
+								<key>value</key>
+								<false/>
+							</dict>
+							<dict>
+								<key>name</key>
+								<string>ccControl</string>
+								<key>type</key>
+								<string>BlockCCControl</string>
+								<key>value</key>
+								<array>
+									<string>OnReady</string>
+									<integer>2</integer>
+									<integer>32</integer>
+								</array>
+							</dict>
+							<dict>
+								<key>name</key>
+								<string>enabled</string>
+								<key>type</key>
+								<string>Check</string>
+								<key>value</key>
+								<true/>
+							</dict>
+							<dict>
+								<key>name</key>
+								<string>title|1</string>
+								<key>type</key>
+								<string>String</string>
+								<key>value</key>
+								<string></string>
+							</dict>
+							<dict>
+								<key>name</key>
+								<string>titleTTF|1</string>
+								<key>type</key>
+								<string>FontTTF</string>
+								<key>value</key>
+								<string>Helvetica</string>
+							</dict>
+							<dict>
+								<key>name</key>
+								<string>titleTTFSize|1</string>
+								<key>type</key>
+								<string>FloatScale</string>
+								<key>value</key>
+								<array>
+									<real>12</real>
+									<integer>0</integer>
+								</array>
+							</dict>
+							<dict>
+								<key>name</key>
+								<string>labelAnchorPoint</string>
+								<key>type</key>
+								<string>Point</string>
+								<key>value</key>
+								<array>
+									<real>0.5</real>
+									<real>0.5</real>
+								</array>
+							</dict>
+							<dict>
+								<key>name</key>
+								<string>preferedSize</string>
+								<key>type</key>
+								<string>Size</string>
+								<key>value</key>
+								<array>
+									<real>104</real>
+									<real>55</real>
+									<integer>5</integer>
+								</array>
+							</dict>
+							<dict>
+								<key>name</key>
+								<string>zoomOnTouchDown</string>
+								<key>type</key>
+								<string>Check</string>
+								<key>value</key>
+								<true/>
+							</dict>
+							<dict>
+								<key>name</key>
+								<string>backgroundSpriteFrame|1</string>
+								<key>type</key>
+								<string>SpriteFrame</string>
+								<key>value</key>
+								<array>
+									<string></string>
+									<string>ccbResources/gold_ready0.png</string>
+								</array>
+							</dict>
+							<dict>
+								<key>name</key>
+								<string>titleColor|1</string>
+								<key>type</key>
+								<string>Color3</string>
+								<key>value</key>
+								<array>
+									<integer>255</integer>
+									<integer>255</integer>
+									<integer>255</integer>
+								</array>
+							</dict>
+							<dict>
+								<key>name</key>
+								<string>backgroundSpriteFrame|2</string>
+								<key>type</key>
+								<string>SpriteFrame</string>
+								<key>value</key>
+								<array>
+									<string></string>
+									<string>ccbResources/gold_ready0.png</string>
+								</array>
+							</dict>
+							<dict>
+								<key>name</key>
+								<string>titleColor|2</string>
+								<key>type</key>
+								<string>Color3</string>
+								<key>value</key>
+								<array>
+									<integer>255</integer>
+									<integer>255</integer>
+									<integer>255</integer>
+								</array>
+							</dict>
+							<dict>
+								<key>name</key>
+								<string>backgroundSpriteFrame|3</string>
+								<key>type</key>
+								<string>SpriteFrame</string>
+								<key>value</key>
+								<array>
+									<string></string>
+									<string>ccbResources/gold_ready0.png</string>
+								</array>
+							</dict>
+							<dict>
+								<key>name</key>
+								<string>titleColor|3</string>
+								<key>type</key>
+								<string>Color3</string>
+								<key>value</key>
+								<array>
+									<integer>255</integer>
+									<integer>255</integer>
+									<integer>255</integer>
+								</array>
+							</dict>
+						</array>
+						<key>selected</key>
+						<true/>
+						<key>seqExpanded</key>
+						<true/>
+					</dict>
 				</array>
 				<key>customClass</key>
 				<string></string>
@@ -2464,9 +2676,9 @@
 				<key>displayName</key>
 				<string>CCControlButton</string>
 				<key>memberVarAssignmentName</key>
-				<string></string>
+				<string>m_pbtnFollow</string>
 				<key>memberVarAssignmentType</key>
-				<integer>0</integer>
+				<integer>2</integer>
 				<key>properties</key>
 				<array>
 					<dict>
@@ -2672,9 +2884,9 @@
 				<key>displayName</key>
 				<string>CCControlButton</string>
 				<key>memberVarAssignmentName</key>
-				<string></string>
+				<string>m_pbtnPK</string>
 				<key>memberVarAssignmentType</key>
-				<integer>0</integer>
+				<integer>2</integer>
 				<key>properties</key>
 				<array>
 					<dict>
@@ -2880,9 +3092,9 @@
 				<key>displayName</key>
 				<string>CCControlButton</string>
 				<key>memberVarAssignmentName</key>
-				<string></string>
+				<string>m_pbtnGiveUp</string>
 				<key>memberVarAssignmentType</key>
-				<integer>0</integer>
+				<integer>2</integer>
 				<key>properties</key>
 				<array>
 					<dict>
@@ -3088,9 +3300,9 @@
 				<key>displayName</key>
 				<string>CCControlButton</string>
 				<key>memberVarAssignmentName</key>
-				<string></string>
+				<string>m_pbtnAdd</string>
 				<key>memberVarAssignmentType</key>
-				<integer>0</integer>
+				<integer>2</integer>
 				<key>properties</key>
 				<array>
 					<dict>
@@ -3296,9 +3508,9 @@
 				<key>displayName</key>
 				<string>CCControlButton</string>
 				<key>memberVarAssignmentName</key>
-				<string></string>
+				<string>m_pbtnLook</string>
 				<key>memberVarAssignmentType</key>
-				<integer>0</integer>
+				<integer>2</integer>
 				<key>properties</key>
 				<array>
 					<dict>
@@ -4132,9 +4344,9 @@
 						<string>Position</string>
 						<key>value</key>
 						<array>
-							<real>5.2083334922790527</real>
-							<real>96.5625</real>
-							<integer>4</integer>
+							<real>38</real>
+							<real>14</real>
+							<integer>1</integer>
 						</array>
 					</dict>
 					<dict>
@@ -4340,9 +4552,9 @@
 						<string>Position</string>
 						<key>value</key>
 						<array>
-							<real>92.083335876464844</real>
-							<real>95.625</real>
-							<integer>4</integer>
+							<real>38</real>
+							<real>14</real>
+							<integer>2</integer>
 						</array>
 					</dict>
 					<dict>
@@ -4643,7 +4855,7 @@
 			<key>offset</key>
 			<real>0.0</real>
 			<key>position</key>
-			<real>0.033333335071802139</real>
+			<real>0.0</real>
 			<key>resolution</key>
 			<real>30</real>
 			<key>scale</key>

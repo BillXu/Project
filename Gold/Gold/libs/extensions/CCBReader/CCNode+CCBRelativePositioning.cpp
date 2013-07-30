@@ -5,9 +5,18 @@ using namespace cocos2d;
 
 NS_CC_EXT_BEGIN
 
-CCPoint getAbsolutePosition(const CCPoint &pt, int nType, const CCSize &containerSize, const char *pPropName)
+CCPoint getAbsolutePosition(const CCPoint &ptArg, int nType, const CCSize &containerSize, const char *pPropName)
 {
     CCPoint absPt = ccp(0,0);
+    // add by bill , by default we always consider kCCBPositionTypeMultiplyResolution except kCCBPositionTypePercent
+    CCPoint pt = ptArg ;
+    if ( nType != kCCBPositionTypePercent )
+    {
+        float resolutionScale = CCBReader::getResolutionScale();
+        pt.x = pt.x * resolutionScale;
+        pt.y = pt.y * resolutionScale;
+    }
+    // bill add end ;
     if (nType == kCCBPositionTypeRelativeBottomLeft)
     {
         absPt = pt;
@@ -34,10 +43,11 @@ CCPoint getAbsolutePosition(const CCPoint &pt, int nType, const CCSize &containe
     }
     else if (nType == kCCBPositionTypeMultiplyResolution)
     {
-        float resolutionScale = CCBReader::getResolutionScale();
-        
-        absPt.x = pt.x * resolutionScale;
-        absPt.y = pt.y * resolutionScale;
+//        float resolutionScale = CCBReader::getResolutionScale();
+//        
+//        absPt.x = pt.x * resolutionScale;
+//        absPt.y = pt.y * resolutionScale;
+        absPt = pt ;
     }
     
     return absPt;
