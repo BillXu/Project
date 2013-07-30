@@ -32,9 +32,22 @@ bool CRoomLayer::init()
     float fCCBResoulution = 1.0 / (fHfactor > fWfactor ? fHfactor :fWfactor) ;
     pReader->setResolutionScale(fCCBResoulution ) ;
     CCNode* pRoot = pReader->readNodeGraphFromFile("ccbi/Room.ccbi", this) ;
-
     animationManager = pReader->getAnimationManager();
+    animationManager->setDelegate(this) ;
     addChild(pRoot) ;
+    
+    for ( int i = 0 ; i < 15 ; ++i )
+    {
+        CCSprite* pCard = CCSprite::create("ccbResources/gold_poker.png", CCRectMake(201, 646, 100, 131));
+        m_pCardSender->addChild(pCard) ;
+        m_pDistributeCard[i] = pCard ;
+        pCard->setPosition(ccp(m_pCardSender->getContentSize().width * 0.5,m_pCardSender->getContentSize().height * 0.6)) ;
+    }
+    CCSprite* pSendFront = CCSprite::create("ccbResources/gold_sendcardFront.png") ;
+    m_pCardSender->addChild(pSendFront) ;
+    pSendFront->setPosition(ccpMult(m_pCardSender->getContentSize(), 0.5)) ;
+    m_pCardSender->setVisible(false) ;
+    memset(m_ptDistributePoint, 0, sizeof(m_ptDistributePoint)) ;
     return true ;
 }
 
@@ -65,11 +78,62 @@ bool CRoomLayer::onAssignCCBMemberVariable(CCObject* pTarget, const char* pMembe
     CCB_MEMBERVARIABLEASSIGNER_GLUE_WEAK(this,"m_pTable",CCSprite*,m_pTable);
     CCB_MEMBERVARIABLEASSIGNER_GLUE_WEAK(this,"m_pClock",CCSprite*,m_pClock);
     
-    CCB_MEMBERVARIABLEASSIGNER_GLUE_WEAK(this,"m_pPlayer[0]",CRoomPlayerInfor*,m_pPlayer[0]);
-    CCB_MEMBERVARIABLEASSIGNER_GLUE_WEAK(this,"m_pPlayer[1]",CRoomPlayerInfor*,m_pPlayer[1]);
-    CCB_MEMBERVARIABLEASSIGNER_GLUE_WEAK(this,"m_pPlayer[2]",CRoomPlayerInfor*,m_pPlayer[2]);
-    CCB_MEMBERVARIABLEASSIGNER_GLUE_WEAK(this,"m_pPlayer[3]",CRoomPlayerInfor*,m_pPlayer[3]);
+    char pBuffer[50] = { 0 } ;
+    for ( int i = 0 ; i < 4 ; ++i )
+    {
+        // player info 
+        memset(pBuffer, 0, sizeof(pBuffer)) ;
+        sprintf(pBuffer, "m_pPlayer[%d]",i) ;
+        CCB_MEMBERVARIABLEASSIGNER_GLUE_WEAK(this,pBuffer,CRoomPlayerInfor*,m_pPlayer[i]);
+    
+        // default card
+        memset(pBuffer, 0, sizeof(pBuffer)) ;
+        sprintf(pBuffer, "m_pDefault[%d]",i) ;
+        CCB_MEMBERVARIABLEASSIGNER_GLUE_WEAK(this,pBuffer,CCSprite*,m_pDefault[i]);
+        
+        //look card
+        memset(pBuffer, 0, sizeof(pBuffer)) ;
+        sprintf(pBuffer, "m_pLook[%d]",i) ;
+        CCB_MEMBERVARIABLEASSIGNER_GLUE_WEAK(this,pBuffer,CCSprite*,m_pLook[i]);
+        
+        // giveup card
+        memset(pBuffer, 0, sizeof(pBuffer)) ;
+        sprintf(pBuffer, "m_pGive[%d]",i) ;
+        CCB_MEMBERVARIABLEASSIGNER_GLUE_WEAK(this,pBuffer,CCSprite*,m_pGive[i]);
+        
+        // failed card
+        memset(pBuffer, 0, sizeof(pBuffer)) ;
+        sprintf(pBuffer, "m_pFail[%d]",i) ;
+        CCB_MEMBERVARIABLEASSIGNER_GLUE_WEAK(this,pBuffer,CCSprite*,m_pFail[i]);
+    }
+    CCB_MEMBERVARIABLEASSIGNER_GLUE_WEAK(this,"m_pDefault[4]",CCSprite*,m_pDefault[4]);
+    CCB_MEMBERVARIABLEASSIGNER_GLUE_WEAK(this,"m_pCardSender",CCSprite*,m_pCardSender);
+    
     return NULL ;
+}
+
+void CRoomLayer::completedAnimationSequenceNamed(const char *name)
+{
+     if ( strcmp(name, "ComeIn") == 0 )
+     {
+         StartDistributeCard();
+     }
+     else if ( strcmp(name, "GoBack") == 0 )
+     {
+        for ( int i = 0 ; i < 4 ; ++i )
+        {
+            m_pDefault[i]->setVisible(true) ;
+            m_pLook[i]->setVisible(false) ;
+            m_pGive[i]->setVisible(false) ;
+            m_pFail[i]->setVisible(false) ;
+        }
+        m_pDefault[4]->setVisible(true) ;
+         
+        for ( int i = 0 ; i < 15 ; ++i )
+        {
+            m_pDistributeCard[i]->setPosition(ccp(m_pCardSender->getContentSize().width * 0.5,m_pCardSender->getContentSize().height * 0.6)) ;
+        }
+     }
 }
 
 void CRoomLayer::OnFollow(CCObject*, CCControlEvent)
@@ -95,19 +159,84 @@ void CRoomLayer::OnPK(CCObject*, CCControlEvent)
 void CRoomLayer::OnGiveUp(CCObject*, CCControlEvent)
 {
     m_pPlayer[2]->StartTiming();
+    for ( int i = 0 ; i < 4 ; ++i )
+    {
+        m_pFail[i]->setVisible(!m_pFail[i]->isVisible()) ;
+    }
 }
 
 void CRoomLayer::OnBuy(CCObject*, CCControlEvent)
 {
     m_pPlayer[3]->StartTiming();
+    for ( int i = 0 ; i < 4 ; ++i )
+    {
+        m_pGive[i]->setVisible(!m_pGive[i]->isVisible()) ;
+    }
 }
 
 void CRoomLayer::OnBack(CCObject*, CCControlEvent)
 {
-
+    for ( int i = 0 ; i < 4 ; ++i )
+    {
+        m_pLook[i]->setVisible(!m_pLook[i]->isVisible()) ;
+    }
 }
 
 void CRoomLayer::OnSay(CCObject*, CCControlEvent)
 {
+    for ( int i = 0 ; i < 5 ; ++i )
+    {
+        m_pDefault[i]->setVisible(!m_pDefault[i]->isVisible()) ;
+    }
+}
 
+void CRoomLayer::StartDistributeCard()
+{
+    if ( m_ptDistributePoint[0].x == 0 ) // prepare dist pos
+    {
+        for ( int i = 0 ; i < 5 ; ++i )
+        {
+            m_ptDistributePoint[i] = m_pTable->convertToWorldSpace(m_pDefault[i]->getPosition()) ;
+            m_ptDistributePoint[i] = m_pCardSender->convertToNodeSpace(m_ptDistributePoint[i]) ;
+        }
+    }
+    
+    // propare destPoint ; ;
+    std::vector<CCPoint> vDistPoint ;
+    int iFistIdex  = 0 ;
+    int idx = 0 ;
+    for ( int i = iFistIdex ; i < iFistIdex + 5 ; ++i )
+    {
+        idx = i ;
+        if ( idx >= 5 )
+        {
+            idx -= 5 ;
+        }
+        
+        if ( m_pPlayer[idx]->IsReady() == false )
+        {
+            continue ;
+        }
+        vDistPoint.push_back(m_ptDistributePoint[idx]) ;
+    }
+    
+    // set up card animation ;
+    float fDelay = 0 ;
+    float fMoveTime = 0.3 ;
+    int iCount = 3 ;
+    int nCardIdx = 0 ;
+    CCPoint ptOffset = CCPointZero ;
+    while (iCount--)
+    {
+        // set offset ;
+        ptOffset.x = m_pDistributeCard[0]->getContentSize().width * 0.2 * iCount ;
+        for ( int i = 0 ; i < vDistPoint.size(); ++i )
+        {
+            CCDelayTime* pDlay = CCDelayTime::create(fDelay) ;
+            CCMoveTo* pMoveTo = CCMoveTo::create(fMoveTime, ccpAdd(vDistPoint[i],ptOffset)) ;
+            CCSequence* pSeq = CCSequence::createWithTwoActions(pDlay, pMoveTo) ;
+            m_pDistributeCard[nCardIdx++]->runAction(pSeq);
+            fDelay += fMoveTime ;
+        }
+    }
 }

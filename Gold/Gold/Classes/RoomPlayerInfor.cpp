@@ -19,11 +19,11 @@ CRoomPlayerInfor* CRoomPlayerInfor::create()
 // variable
 bool CRoomPlayerInfor::onAssignCCBMemberVariable(CCObject* pTarget, const char* pMemberVariableName, CCNode* pNode)
 {
-    CCB_MEMBERVARIABLEASSIGNER_GLUE(this, "m_pTitle", CCLabelTTF*, m_pTitle);
-    CCB_MEMBERVARIABLEASSIGNER_GLUE(this, "m_pName", CCLabelTTF*, m_pName);
-    CCB_MEMBERVARIABLEASSIGNER_GLUE(this, "m_pCoin", CCLabelTTF*, m_pCoin);
-    CCB_MEMBERVARIABLEASSIGNER_GLUE(this, "m_pBetCoin", CCLabelTTF*, m_pBetCoin);
-    CCB_MEMBERVARIABLEASSIGNER_GLUE(this, "m_pPhoto", CCSprite*, m_pPhoto);
+    CCB_MEMBERVARIABLEASSIGNER_GLUE_WEAK(this, "m_pTitle", CCLabelTTF*, m_pTitle);
+    CCB_MEMBERVARIABLEASSIGNER_GLUE_WEAK(this, "m_pName", CCLabelTTF*, m_pName);
+    CCB_MEMBERVARIABLEASSIGNER_GLUE_WEAK(this, "m_pCoin", CCLabelTTF*, m_pCoin);
+    CCB_MEMBERVARIABLEASSIGNER_GLUE_WEAK(this, "m_pBetCoin", CCLabelTTF*, m_pBetCoin);
+    CCB_MEMBERVARIABLEASSIGNER_GLUE_WEAK(this, "m_pPhoto", CCSprite*, m_pPhoto);
     return false ;
 }
 

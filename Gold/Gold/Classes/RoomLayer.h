@@ -19,6 +19,7 @@ class CRoomLayer
 :public CCLayer
 ,public CCBSelectorResolver
 ,public CCBMemberVariableAssigner
+,public CCBAnimationManagerDelegate
 {
 public:
     static CCScene* RoomScene();
@@ -27,6 +28,7 @@ public:
     SEL_MenuHandler onResolveCCBCCMenuItemSelector(CCObject * pTarget, const char* pSelectorName){ return NULL ;}
     virtual SEL_CCControlHandler onResolveCCBCCControlSelector(CCObject * pTarget, const char* pSelectorName);
     virtual bool onAssignCCBMemberVariable(CCObject* pTarget, const char* pMemberVariableName, CCNode* pNode);
+    void completedAnimationSequenceNamed(const char *name);
 
     // btn event
    void OnFollow(CCObject*, CCControlEvent);
@@ -38,10 +40,19 @@ public:
    void OnBack(CCObject*, CCControlEvent);
    void OnSay(CCObject*, CCControlEvent);
 protected:
-   CCLabelTTF* m_pMyCoin ,*m_pMyDiamen,*m_pMyName, *m_pMyTitle,*m_pMyBetCoin, *m_pRound, *m_pTotalBet,*m_pSingleBet, *m_pTime;
-   CCSprite* m_pTable,*m_pClock ;
-   CCBAnimationManager* animationManager  ;
-   CRoomPlayerInfor* m_pPlayer[4];
+    void StartDistributeCard();
+protected:
+    CCLabelTTF* m_pMyCoin ,*m_pMyDiamen,*m_pMyName, *m_pMyTitle,*m_pMyBetCoin, *m_pRound, *m_pTotalBet,*m_pSingleBet, *m_pTime;
+    CCSprite* m_pTable,*m_pClock ;
+    CCBAnimationManager* animationManager  ;
+    CRoomPlayerInfor* m_pPlayer[4];
+    CCSprite* m_pDefault[5];
+    CCSprite* m_pLook[4] ;
+    CCSprite* m_pGive[4];
+    CCSprite* m_pFail[4] ;
+    CCSprite* m_pCardSender ;
+    CCSprite* m_pDistributeCard[15] ;
+    CCPoint m_ptDistributePoint[5];
 };
 
 #endif /* defined(__Gold__RoomLayer__) */

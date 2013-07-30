@@ -26,6 +26,7 @@ public:
     void update(float fTime );
     void StartTiming(){ m_bTiming = true ; m_fRunedTime = 0 ;m_pRadial->setVisible(true) ;}
     void StopTiming(){ m_bTiming = false ; m_fRunedTime = 0 ; m_pRadial->setVisible(false) ;}
+    bool IsReady(){ return true ;}
 protected:
     CCLabelTTF* m_pTitle,*m_pName,*m_pCoin,*m_pBetCoin ;
     CCSprite* m_pPhoto;
