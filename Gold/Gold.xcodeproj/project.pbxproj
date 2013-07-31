@@ -291,7 +291,7 @@
 
 /* Begin PBXFileReference section */
 		9A0E2C2A17A217790052B3D0 /* RoomLayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = RoomLayer.cpp; path = Classes/RoomLayer.cpp; sourceTree = "<group>"; };
-		9A0E2C2B17A217790052B3D0 /* RoomLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RoomLayer.h; path = Classes/RoomLayer.h; sourceTree = "<group>"; };
+		9A0E2C2B17A217790052B3D0 /* RoomLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RoomLayer.h; path = Classes/RoomLayer.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.cpp; };
 		9A1A2AF317A0CC5500B99BE0 /* Gold.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Gold.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9A1A2AF617A0CC5500B99BE0 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		9A1A2AF817A0CC5500B99BE0 /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
