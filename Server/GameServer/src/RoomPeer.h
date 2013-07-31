@@ -2,22 +2,11 @@
 #include "IPlayerComponent.h"
 #include "PeerCard.h"
 #include "BaseData.h"
+#include "CommonDefine.h"
 class CRoom ;
 class CRoomPeer
 	:public IPlayerComponent
 {
-public:
-	enum eRoomPeerState
-	{
-		eState_None,
-		eState_Wait,
-		eState_Ready,
-		eState_Playing,
-		eState_GiveUp,
-		eState_Failed,
-		eState_Win,
-		eState_Max,
-	};
 public:
 	CRoomPeer(CPlayer* pPlayer );
 	~CRoomPeer();

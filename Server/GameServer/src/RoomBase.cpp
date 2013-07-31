@@ -7,8 +7,13 @@ CRoomBase::CRoomBase()
 {
 	m_eRoomType = eRoom_Max ;
 	m_nRoomID = 0 ;
-	m_vRoomPeer.clear() ;
+	m_vRoomPeer = NULL ;
 	m_nMaxSeat = 0 ;
+}
+
+CRoomBase::~CRoomBase()
+{
+	delete[] m_vRoomPeer ;
 }
 
 void CRoomBase::Init( unsigned int nRoomID , unsigned char nMaxSeat )
@@ -16,15 +21,20 @@ void CRoomBase::Init( unsigned int nRoomID , unsigned char nMaxSeat )
 	assert(m_eRoomType !=eRoom_Max && "Please assign m_eRoomtype" ) ;
 	m_nRoomID = nRoomID ;
 	m_nMaxSeat = nMaxSeat ;
+	m_eRoomState = eRoomState_PeerToJoin ;
+	m_vRoomPeer = new CRoomPeer*[nMaxSeat];
+	for ( int i = 0 ; i < nMaxSeat ; ++i )
+	{
+		m_vRoomPeer[i] = NULL ;
+	}
 }
 
 void CRoomBase::SendMsgRoomPeers(stMsg*pMsg ,unsigned short nLen )
 {
-	LIST_ROOM_PEER::iterator iter = m_vRoomPeer.begin() ;
 	CRoomPeer* pPeer = NULL ;
-	for ( ; iter != m_vRoomPeer.end(); ++iter )
+	for ( int i = 0; i < GetMaxSeat(); ++i )
 	{
-		pPeer = *iter ;
+		pPeer = m_vRoomPeer[i];
 		if ( !pPeer )
 		{
 			continue; 
@@ -35,36 +45,32 @@ void CRoomBase::SendMsgRoomPeers(stMsg*pMsg ,unsigned short nLen )
 
 CRoomPeer* CRoomBase::GetRoomPeerBySessionID( unsigned int nSessionID )
 {
-	LIST_ROOM_PEER::iterator iter = m_vRoomPeer.begin() ;
-	CRoomPeer* pPeer = NULL ;
-	for ( ; iter != m_vRoomPeer.end(); ++iter )
+	for ( int i = 0 ; i < GetMaxSeat(); ++i )
 	{
-		pPeer = *iter ;
-		if ( !pPeer )
+		if ( m_vRoomPeer[i] && m_vRoomPeer[i]->GetPlayer()->GetSessionID() == nSessionID )
 		{
-			continue; 
-		}
-		if ( pPeer->GetPlayer()->GetSessionID() == nSessionID )
-		{
-			return pPeer ;
+			return m_vRoomPeer[i] ;
 		}
 	}
 	return NULL ;
 }
 
+int CRoomBase::GetRoomPeerCount()
+{
+	int ncount = 0 ;
+	for ( int i = 0  ; i < GetMaxSeat() ; ++i )
+	{
+		if ( m_vRoomPeer[i] == NULL )
+		{
+			continue; 
+		}
+		++ncount ;
+	}
+	return ncount ;
+}
+
 void CRoomBase::OnPeerLeave( CRoomPeer* peer ) 
 {
-	LIST_ROOM_PEER::iterator iter = m_vRoomPeer.begin() ;
-	CRoomPeer* pPeer = NULL ;
-	for ( ; iter != m_vRoomPeer.end(); ++iter )
-	{
-		pPeer = *iter ;
-		if ( pPeer == peer )
-		{
-			m_vRoomPeer.erase(iter) ;
-			break; 
-		}
-	}
 	// send Leave msg ;
 	stMsgRoomPlayerLeave msg ;
 	msg.nSessionID = peer->GetPlayer()->GetSessionID() ;
@@ -89,4 +95,16 @@ bool CRoomBase::OnPeerMsg(CRoomPeer* pPeer, stMsg* pmsg )
 	// for example : speak work , look other player info ,and make firend , and so on ;
 	// when processed , return true , other case return false ;
 	return false ;
+}
+
+char CRoomBase::GetRoomPeerIdx(CRoomPeer* pPeer )
+{
+	for ( int i = 0  ; i < GetMaxSeat() ; ++i )
+	{
+		if ( m_vRoomPeer[i] == pPeer )
+		{
+			return  i ;
+		}
+	}
+	return -1 ;
 }
