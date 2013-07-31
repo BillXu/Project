@@ -18,9 +18,12 @@ public:
 	virtual void Update(float fTimeElpas, unsigned int nTimerID );
 	virtual bool OnPeerMsg(CRoomPeer* pPeer, stMsg* pmsg );
 protected:
+	void SwitchToRoomSate( eRoomState eFrom, eRoomState eToDest );
+	void NextPlayerAction();
 	char GetReadyPeerCount();
 protected:
 	static unsigned int s_RoomID ;
 protected:
-	float m_fRoomTime[eRoomState_Max] ;
+	float m_fRoomSateTick[eRoomState_Max] ;
+	char m_nCurMainPeerIdx ;
 };
