@@ -90,6 +90,7 @@ bool CRoomLayer::init()
     {
         m_pPlayer[i]->setDelegate(this) ;
     }
+    
     return true ;
 }
 
@@ -163,6 +164,11 @@ bool CRoomLayer::onAssignCCBMemberVariable(CCObject* pTarget, const char* pMembe
         memset(pBuffer, 0, sizeof(pBuffer)) ;
         sprintf(pBuffer, "m_pDefault[%d]",i) ;
         CCB_MEMBERVARIABLEASSIGNER_GLUE_WEAK(this,pBuffer,CCSprite*,m_pDefault[i]);
+        
+        // pk icon
+        memset(pBuffer, 0, sizeof(pBuffer)) ;
+        sprintf(pBuffer, "m_pPKIcon[%d]",i) ;
+        CCB_MEMBERVARIABLEASSIGNER_GLUE_WEAK(this,pBuffer,CCSprite*,m_pPKIcon[i]);
     }
     CCB_MEMBERVARIABLEASSIGNER_GLUE_WEAK(this,"m_pDefault[4]",CCSprite*,m_pDefault[4]);
     CCB_MEMBERVARIABLEASSIGNER_GLUE_WEAK(this,"m_pCardSender",CCSprite*,m_pCardSender);
@@ -189,7 +195,10 @@ void CRoomLayer::OnFollow(CCObject*, CCControlEvent)
 
 void CRoomLayer::OnAdd(CCObject*, CCControlEvent)
 {
-    animationManager->runAnimationsForSequenceNamed("GoBack") ;
+    for ( int i = 0 ; i < 4 ; ++i )
+    {
+        RunPKIconAnimationByPlayerIdx(i) ;
+    }
 }
 
 void CRoomLayer::OnLook(CCObject*, CCControlEvent)
@@ -334,6 +343,61 @@ void CRoomLayer::ResetRoomState()
     m_pbtnReady->setVisible(true) ;
     m_pbtnReady->setEnabled(true) ;
     m_pbtnReady->setOpacity(255) ;
+}
+
+void CRoomLayer::RunPKIconAnimationByPlayerIdx(char nIdx )
+{
+    if ( nIdx < 0 || nIdx > 3 )
+    {
+        CCAssert(0, "unknown idx ") ;
+        return ;
+    }
+    CCPoint ptStand = m_pDefault[nIdx]->getPosition() ;
+    CCSequence* pseq = NULL ;
+    CCRepeat* rept = NULL ;
+    CCMoveBy* pMove = NULL ;
+    CCMoveBy* pMove2 = NULL ;
+    CCPoint ptOffset = ccp(12.0,5.0) ;
+    ptOffset = ccpMult(ptOffset, CCBReader::getResolutionScale()) ;
+    switch (nIdx) {
+        case 0:
+        {
+            pMove = CCMoveBy::create(0.5, ccpMult(ptOffset, 1));
+            pMove2 = CCMoveBy::create(0.5, ccpMult(ptOffset, -1));
+        }
+            break;
+        case 1:
+        {
+            ptOffset.x *= -1 ;
+            pMove = CCMoveBy::create(0.5, ccpMult(ptOffset, -1));
+            pMove2 = CCMoveBy::create(0.5, ccpMult(ptOffset, 1));
+        }
+            break ;
+        case 2:
+        {
+            pMove = CCMoveBy::create(0.5, ccpMult(ptOffset, -1));
+            pMove2 = CCMoveBy::create(0.5, ccpMult(ptOffset, 1));
+        }
+            break;
+        case 3:
+        {
+            ptOffset.x *= -1 ;
+            pMove = CCMoveBy::create(0.5, ccpMult(ptOffset, 1));
+            pMove2 = CCMoveBy::create(0.5, ccpMult(ptOffset, -1));
+        }
+            break ;
+        default:
+        {
+            CCAssert(0, "unknow idx ") ;
+            return ;
+        }
+            break;
+    }
+    
+    pseq = CCSequence::createWithTwoActions(pMove, pMove2) ;
+    rept = CCRepeat::create(pseq, 99999999) ;
+    m_pPKIcon[nIdx]->setVisible(true) ;
+    m_pPKIcon[nIdx]->runAction(rept) ;
 }
 
 void CRoomLayer::StartGame(unsigned int nMainPlayer )

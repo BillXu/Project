@@ -53,6 +53,7 @@ public:
 protected:
     void StartDistributeCard();
     void ResetRoomState();
+    void RunPKIconAnimationByPlayerIdx(char nIdx );
 protected:
     CCLabelTTF* m_pMyCoin ,*m_pMyDiamen,*m_pMyName, *m_pMyTitle,*m_pMyBetCoin, *m_pRound, *m_pTotalBet,*m_pSingleBet, *m_pTime;
     CCSprite* m_pTable,*m_pClock ;
@@ -61,13 +62,14 @@ protected:
     CRoomPlayerInfor* m_pPlayer[4];
     CCSprite* m_pDefault[5];
     CCSprite* m_pLook[4] ;
+    CCSprite* m_pPKIcon[4] ;
     CCSprite* m_pGive[4];
     CCSprite* m_pFail[4] ;
     CCSprite* m_pReadyIcon[5] ;
     CCSprite* m_pCardSender ;
     CCSprite* m_pDistributeCard[15] ;
     CCPoint m_ptDistributePoint[5];
-    float m_fMyTimerCount ;
+    float m_fMyTimerCount ;  // for clock display ;
 };
 
 #endif /* defined(__Gold__RoomLayer__) */
