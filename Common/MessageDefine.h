@@ -88,6 +88,35 @@ public:
 	 stRoomPeerBrifInfo* pInfos ;
 };
 
+struct stMsgRoomPlayerEnter
+	:public stMsg
+{
+public:
+	stMsgRoomPlayerEnter(){cSysIdentifer = ID_MSG_GAME2C ; usMsgType = MSG_ROOM_PLAYER_ENTER ; }
+	stRoomPeerBrifInfo nEnterPlayerInfo ;
+};
+
+struct stMsgRoomReady
+	:public stMsg
+{
+public:
+	stMsgRoomReady(){ cSysIdentifer = ID_MSG_C2GAME ; usMsgType = MSG_ROOM_READY ; }
+};
+
+struct stMsgRoomReadyRet
+	:public stMsg 
+{
+	stMsgRoomReadyRet(){ cSysIdentifer = ID_MSG_GAME2C ; usMsgType = MSG_ROOM_READY ; }
+	unsigned char nRet ; // 0 means success , other value means failed ;
+};
+
+struct stMsgRoomPlayerReady
+	:public stMsg
+{
+	stMsgRoomPlayerReady(){ cSysIdentifer = ID_MSG_GAME2C ; usMsgType = MSG_ROOM_PLAYER_READY  ; }
+	unsigned nReadyPlayerSessionID ; 
+};
+
 //----UPLOW IS NEW 
 //struct stMsgRegister
 //	:public stMsg
