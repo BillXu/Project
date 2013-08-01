@@ -26,4 +26,7 @@ protected:
 protected:
 	float m_fRoomSateTick[eRoomState_Max] ;
 	char m_nCurMainPeerIdx ;
+	char m_nCurWaitPeerIdx ;
+	short m_nRound ;
+	CPoker m_Poker;
 };

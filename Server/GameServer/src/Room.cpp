@@ -22,17 +22,44 @@ void CRoom::Init( unsigned int nRoomID , unsigned char nMaxSeat )
 
 unsigned char CRoom::GetEmptySeatCount()
 {
-
+	unsigned char n = 0 ;
+	for ( int i =0  ; i < GetMaxSeat(); ++i )
+	{
+		if ( m_vRoomPeer[i] == NULL )
+		{
+			++n ;
+		}
+	}
+	return n ;
 }
 
 bool CRoom::CanJoin(CRoomPeer* peer )
 {
+	if ( CRoomBase::CanJoin(peer) == false )
+	{
+		return false ;
+	}
 
+	// some other condition ;
+	return true ;
 }
 
 void CRoom::AddPeer(CRoomPeer* peer )
 {
+	// find a empty place 
+	for ( int i = 0 ; i < GetMaxSeat() ; ++i )
+	{
+		if ( m_vRoomPeer[i] == NULL )
+		{
+			peer->m_nPeerIdx = i ;
+			break; 
+		}
+	}
 
+	stMsgRoomPlayerEnter msg ;
+	peer->GetBrifBaseInfo(msg.nEnterPlayerInfo) ;
+	SendMsgRoomPeers(&msg,sizeof(msg)) ;
+	m_vRoomPeer[peer->GetPeerIdxInRoom()] = peer ;
 }
 
 void CRoom::Update(float fTimeElpas, unsigned int nTimerID )
@@ -68,7 +95,7 @@ void CRoom::Update(float fTimeElpas, unsigned int nTimerID )
 			m_fRoomSateTick[eState]-= fTimeElpas ;
 			if ( m_fRoomSateTick[eState] <= 0 )
 			{
-				// tell timer out player take default action ;
+				m_vRoomPeer[m_nCurWaitPeerIdx]->OnWaitTimeOut();
 			}
 		}
 		break;
@@ -114,8 +141,19 @@ void CRoom::SwitchToRoomSate( eRoomState eFrom, eRoomState eToDest )
 		break;
 	case eRoomState_DistributeCard:
 		{
-			// send distribute msg , switch ready player's state to active ;
+			// send distribute msg , switch ready player's state to unkook ;
 			m_fRoomSateTick[eToDest] = TIME_ROOM_DISTRIBUTE ;
+			m_Poker.ComfirmKeepCard(GetReadyPeerCount() * 3 ) ;
+			for ( int i = 0 ; i < GetMaxSeat() ; ++i )
+			{
+				if (m_vRoomPeer[i] && eRoomPeer_Ready == m_vRoomPeer[i]->GetState() )
+				{
+					m_vRoomPeer[i]->OnGetCard(m_Poker.GetCardWithCompositeNum(),m_Poker.GetCardWithCompositeNum(),m_Poker.GetCardWithCompositeNum() );
+					m_vRoomPeer[i]->m_eState = eRoomPeer_Unlook ;
+				}
+			}
+			stMsgDistributeCard msg ;
+			SendMsgRoomPeers(&msg,sizeof(msg)) ;
 		}
 		break;
 	case eRoomState_WaitPeerAction:
@@ -158,7 +196,29 @@ void CRoom::SwitchToRoomSate( eRoomState eFrom, eRoomState eToDest )
 
 void CRoom::NextPlayerAction()
 {
+	for ( int i = m_nCurWaitPeerIdx + 1 ; 1 ;++i )
+	{
+		int nIdx = i ;
+		if ( nIdx >= GetMaxSeat() - 1 )
+		{
+			nIdx -= GetMaxSeat() ;
+		}
+		
+		if ( nIdx == m_nCurMainPeerIdx )
+		{
+			++m_nRound ;
+		}
 
+		if ( m_vRoomPeer[nIdx] && m_vRoomPeer[nIdx]->IsActive() )
+		{
+			m_nCurWaitPeerIdx = nIdx ;
+			break; 
+		}
+	}
+	stMsgRoomWaitPlayerAction msg ;
+	msg.nRound = m_nRound ;
+	msg.nSessionID = m_vRoomPeer[m_nCurWaitPeerIdx]->GetSessionID() ;
+	SendMsgRoomPeers(&msg,sizeof(msg)) ;
 }
 
 bool CRoom::OnPeerMsg(CRoomPeer* pPeer, stMsg* pmsg )

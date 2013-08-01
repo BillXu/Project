@@ -72,6 +72,7 @@ int CRoomBase::GetRoomPeerCount()
 void CRoomBase::OnPeerLeave( CRoomPeer* peer ) 
 {
 	// send Leave msg ;
+	m_vRoomPeer[peer->GetPeerIdxInRoom()] = NULL ;
 	stMsgRoomPlayerLeave msg ;
 	msg.nSessionID = peer->GetPlayer()->GetSessionID() ;
 	SendMsgRoomPeers(&msg,sizeof(msg)) ;
