@@ -70,12 +70,12 @@ void CRoomPlayerInfor::OnClickPhoto(CCObject*, CCControlEvent)
     }
 }
 
-void CRoomPlayerInfor::SetPlayerInfo( unsigned int nSessionID ,const char* pname , const char* ptitle, int nCoin )
+void CRoomPlayerInfor::SetPlayerInfo( unsigned int nSessionID ,const char* pname , const char* ptitle, int nCoin  , int nBetCoin )
 {
     setSessionID(nSessionID) ;
     m_pName->setString(pname) ;
     m_pTitle->setString(ptitle) ;
-    UpdateCoinInfo(0, nCoin);
+    UpdateCoinInfo(nBetCoin, nCoin);
 }
 
 void CRoomPlayerInfor::UpdateCoinInfo(int nBetedCoin , int nOwnCoin)

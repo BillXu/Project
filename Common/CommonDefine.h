@@ -35,7 +35,7 @@ enum eRoomPeerState
 	eRoomPeer_None,
 	eRoomPeer_Ready,
     eRoomPeer_Look,
-	eRoomPeer_Active,
+	eRoomPeer_Unlook,
 	eRoomPeer_GiveUp,
 	eRoomPeer_Failed,
 	eRoomPeer_Max,

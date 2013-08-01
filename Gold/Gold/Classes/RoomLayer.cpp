@@ -481,17 +481,46 @@ void CRoomLayer::OnPlayerEnter( char nIdx , stRoomPeerData* pPlayerData )
 {
     m_pPlayer[nIdx]->setVisible(true) ;
     m_pPlayer[nIdx]->setSessionID(pPlayerData->nSessionID) ;
-    m_pPlayer[nIdx]->SetPlayerInfo(pPlayerData->nSessionID, pPlayerData->pName, "Master", pPlayerData->nCoin) ;
+    m_pPlayer[nIdx]->SetPlayerInfo(pPlayerData->nSessionID, pPlayerData->pName, "Master", pPlayerData->nCoin,pPlayerData->nBetCoin ) ;
 }
 
 void CRoomLayer::OnRefreshRoomInfo(CRoomData*proomdata)
 {
-
+    ResetRoomState();
+    char pBuffer[100] = {0} ;
+    sprintf(pBuffer, "%d",proomdata->m_nSingleBetCoin ) ;
+    m_pSingleBet->setString(pBuffer) ;
+    
+    // total ;
+    memset(pBuffer, 0, sizeof(pBuffer) ) ;
+    sprintf(pBuffer, "%d",proomdata->m_nTotalBetCoin ) ;
+    m_pTotalBet->setString(pBuffer) ;
+    
+    memset(pBuffer, 0, sizeof(pBuffer) ) ;
+    sprintf(pBuffer, "%d",proomdata->m_nRound ) ;
+    m_pRound->setString(pBuffer) ;
+    
+    for ( int i = 0 ; i < MAX_ROOM_PEER ; ++i )
+    {
+        stRoomPeerData* pRoomPeerdata = proomdata->GetRoomPeerDataByClientIdx(i) ;
+        if ( pRoomPeerdata)
+        {
+            OnPlayerEnter(i, pRoomPeerdata ) ;
+            OnUpdatePlayerState(i, (eRoomPeerState)pRoomPeerdata->ePeerState ) ;
+        }
+        else
+        {
+            OnPlayerLeave(i) ;
+        }
+    }
 }
 
 void CRoomLayer::OnUpdatePlayerState(char nIdx , eRoomPeerState ePeerState )
 {
-
+    m_pDefault[nIdx]->setVisible(ePeerState == eRoomPeer_Unlook) ;
+    m_pLook[nIdx]->setVisible(ePeerState == eRoomPeer_Look) ;
+    m_pGive[nIdx]->setVisible(ePeerState == eRoomPeer_GiveUp) ;
+    m_pFail[nIdx]->setVisible(ePeerState == eRoomPeer_Failed) ;
 }
 
 void CRoomLayer::OnDistributeCard()

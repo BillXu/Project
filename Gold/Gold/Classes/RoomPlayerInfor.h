@@ -38,7 +38,7 @@ public:
     void StopTiming(){ m_bTiming = false ; m_fRunedTime = 0 ; m_pRadial->setVisible(false) ;}
     bool IsReady(){ return true ;}
     void OnClickPhoto(CCObject*, CCControlEvent);
-    void SetPlayerInfo( unsigned int nSessionID ,const char* pname , const char* ptitle, int nCoin );
+    void SetPlayerInfo( unsigned int nSessionID ,const char* pname , const char* ptitle, int nCoin , int nBetCoin);
     void UpdateCoinInfo(int nBetedCoin , int nOwnCoin);
 protected:
     CCLabelTTF* m_pTitle,*m_pName,*m_pCoin,*m_pBetCoin ;
