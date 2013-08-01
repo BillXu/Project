@@ -48,6 +48,46 @@ public:
 	unsigned int nSessionID ; // the leaved player's seessionID ;
 };
 
+struct stMsgRoomEnter
+	:public stMsg
+{
+	stMsgRoomEnter(){ cSysIdentifer = ID_MSG_C2GAME; usMsgType = MSG_ROOM_ENTER ; }
+	unsigned char nRoomType ;
+	unsigned char nRoomID ;
+};
+
+struct stMsgRoomEnterRet
+	:public stMsg 
+{
+	stMsgRoomEnterRet(){ cSysIdentifer = ID_MSG_C2GAME ; usMsgType = MSG_ROOM_ENTER ; }
+	unsigned char nRet ; // 0 success ; other value failed ;
+};
+
+struct stRoomPeerBrifInfo
+{
+	unsigned  int nSessionID ;
+	unsigned char nIdx ; // index in the room ;
+	char pName[MAX_LEN_CHARACTER_NAME] ;
+	unsigned char nTitle ;
+	unsigned int nCoin ;
+	unsigned int nBetCoin ;
+	char nDefaulPhotoID ;     
+	unsigned int nUserDefinePhotoID ;
+};
+
+struct stMsgRoomCurInfo
+	:public stMsg 
+{
+	 stMsgRoomCurInfo(){ cSysIdentifer = ID_MSG_C2GAME ; usMsgType = MSG_ROOM_CURRENT_INFO  ; }
+public:
+	 int nSingleBetCoin;
+	 int nTotalBetCoin; 
+	 unsigned short nRound ;
+	 unsigned char eRoomSate ;  // eRoomState 
+	 unsigned char nPlayerCount ;
+	 stRoomPeerBrifInfo* pInfos ;
+};
+
 //----UPLOW IS NEW 
 //struct stMsgRegister
 //	:public stMsg
