@@ -8,6 +8,7 @@
 
 #include "RoomLayer.h"
 #include "RoomPlayerInforLoader.h"
+#include "RoomData.h"
 CCScene* CRoomLayer::RoomScene()
 {
     CRoomLayer* pLayer = new CRoomLayer ;
@@ -448,10 +449,72 @@ void CRoomLayer::StopMyClock()
 
 void CRoomLayer::OnClickRoomPlayerInfo(CRoomPlayerInfor* pPlayerInfo )
 {
+    if (pPlayerInfo->isVisible() == false )
+    {
+        return  ;
+    }
     CCMessageBox("clicked player", "Tip") ;
 }
 
 void CRoomLayer::OnSelectedAddBetCoin(CSelectAddBetCoin* pBtn , int nCoin )
 {
     
+}
+
+// logic invoke 
+void CRoomLayer::OnPlayerLeave( char nIdx )
+{
+    if ( nIdx < 0 || nIdx >= 4 )
+    {
+        CCAssert(0, "invalid idx") ;
+        return ;
+    }
+    m_pPlayer[nIdx]->setVisible(false) ;
+    m_pDefault[nIdx]->setVisible(false) ;
+    m_pLook[nIdx]->setVisible(false) ;
+    m_pPKIcon[nIdx]->setVisible(false) ;
+    m_pGive[nIdx]->setVisible(false) ;
+    m_pFail[nIdx]->setVisible(false) ;
+}
+
+void CRoomLayer::OnPlayerEnter( char nIdx , stRoomPeerData* pPlayerData )
+{
+    m_pPlayer[nIdx]->setVisible(true) ;
+    m_pPlayer[nIdx]->setSessionID(pPlayerData->nSessionID) ;
+    m_pPlayer[nIdx]->SetPlayerInfo(pPlayerData->nSessionID, pPlayerData->pName, "Master", pPlayerData->nCoin) ;
+}
+
+void CRoomLayer::OnRefreshRoomInfo(CRoomData*proomdata)
+{
+
+}
+
+void CRoomLayer::OnUpdatePlayerState(char nIdx , eRoomPeerState ePeerState )
+{
+
+}
+
+void CRoomLayer::OnDistributeCard()
+{
+
+}
+
+void CRoomLayer::OnWaitPlayerAction(char nIdx )
+{
+
+}
+
+void CRoomLayer::OnPlayerFollow(char nIdx , int nFollowedCoin )
+{
+
+}
+
+void CRoomLayer::OnPlayerAdd(char nIdx , int nOffsetCoin )
+{
+
+}
+
+void CRoomLayer::OnPlayerPK(char nIdxInvoke , char nIdxWith , bool bWin )
+{
+
 }

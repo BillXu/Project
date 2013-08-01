@@ -15,8 +15,11 @@
 #include "RoomPlayerInfor.h"
 #include "SelectAddBetCoin.h"
 #include "SelectAddBetCoinLoader.h"
+#include "CommonDefine.h"
 USING_NS_CC ;
 USING_NS_CC_EXT ;
+struct stRoomPeerData ;
+class CRoomData ;
 class CRoomPlayerInfor ;
 class CRoomLayer
 :public CCLayer
@@ -54,6 +57,17 @@ public:
     void StartMyClock();
     void OnClocked(float fTime );
     void StopMyClock();
+    
+    // logic invoke 
+    void OnPlayerLeave( char nIdx );
+    void OnPlayerEnter( char nIdx , stRoomPeerData* pPlayerData );
+    void OnRefreshRoomInfo(CRoomData*proomdata);
+    void OnUpdatePlayerState(char nIdx , eRoomPeerState ePeerState );
+    void OnDistributeCard();
+    void OnWaitPlayerAction(char nIdx );
+    void OnPlayerFollow(char nIdx , int nFollowedCoin );
+    void OnPlayerAdd(char nIdx , int nOffsetCoin );
+    void OnPlayerPK(char nIdxInvoke , char nIdxWith , bool bWin );
 protected:
     void StartDistributeCard();
     void ResetRoomState();

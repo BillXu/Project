@@ -34,6 +34,7 @@ enum eRoomPeerState
 {
 	eRoomPeer_None,
 	eRoomPeer_Ready,
+    eRoomPeer_Look,
 	eRoomPeer_Active,
 	eRoomPeer_GiveUp,
 	eRoomPeer_Failed,

@@ -33,6 +33,7 @@ enum eMsgType
 	MSG_RECONNECT,   // client with gate 
 	// all room msg here ;
 	MSG_ROOM_MSG_BEGIN,
+    MSG_ROOM_RET,
 	MSG_ROOM_ENTER,
 	MSG_ROOM_PLAYER_ENTER,  // MSG_ROOM_PLAYER_x means other player actions 
 	MSG_ROOM_CURRENT_INFO, // when player enter room , will receive the room's current info ;
@@ -51,6 +52,9 @@ enum eMsgType
 
 	MSG_ROOM_ADD,
 	MSG_ROOM_PLAYER_ADD,
+    
+    MSG_ROOM_LOOK,
+	MSG_ROOM_PLAYER_LOOK,
 
 	MSG_ROOM_PK,
 	MSG_ROOM_PLAYER_PK,
@@ -66,9 +70,6 @@ enum eMsgType
 	MSG_ACTION,
 	MSG_ACTION_RET,
 	MSG_ROOM_PLAYER_ACTION,
-	MSG_ROOM_DISTRIBUTE_CARD,
-	MSG_ROOM_PLAYER_ACTION_TURN,
-	MSG_ROOM_RESULT,
 	MSG_ROOM_MSG_END,
 	// all room msg above ,
 };
