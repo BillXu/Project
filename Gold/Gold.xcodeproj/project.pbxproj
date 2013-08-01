@@ -287,6 +287,8 @@
 		9A1A2EAA17A14B3200B99BE0 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 9A1A2EA917A14B3200B99BE0 /* Default-568h@2x.png */; };
 		9A29144217A3CADD003A62E2 /* RoomPlayerInforLoader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A29144017A3CADD003A62E2 /* RoomPlayerInforLoader.cpp */; };
 		9A29144517A3CAF9003A62E2 /* RoomPlayerInfor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A29144317A3CAF9003A62E2 /* RoomPlayerInfor.cpp */; };
+		9A52B58617AA0028009CD567 /* SelectAddBetCoin.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A52B58417AA0028009CD567 /* SelectAddBetCoin.cpp */; };
+		9A52B58917AA0072009CD567 /* SelectAddBetCoinLoader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A52B58717AA0072009CD567 /* SelectAddBetCoinLoader.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -890,6 +892,10 @@
 		9A29144117A3CADD003A62E2 /* RoomPlayerInforLoader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RoomPlayerInforLoader.h; path = Classes/RoomPlayerInforLoader.h; sourceTree = "<group>"; };
 		9A29144317A3CAF9003A62E2 /* RoomPlayerInfor.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = RoomPlayerInfor.cpp; path = Classes/RoomPlayerInfor.cpp; sourceTree = "<group>"; };
 		9A29144417A3CAF9003A62E2 /* RoomPlayerInfor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RoomPlayerInfor.h; path = Classes/RoomPlayerInfor.h; sourceTree = "<group>"; };
+		9A52B58417AA0028009CD567 /* SelectAddBetCoin.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SelectAddBetCoin.cpp; path = Classes/SelectAddBetCoin.cpp; sourceTree = "<group>"; };
+		9A52B58517AA0028009CD567 /* SelectAddBetCoin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SelectAddBetCoin.h; path = Classes/SelectAddBetCoin.h; sourceTree = "<group>"; };
+		9A52B58717AA0072009CD567 /* SelectAddBetCoinLoader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SelectAddBetCoinLoader.cpp; path = Classes/SelectAddBetCoinLoader.cpp; sourceTree = "<group>"; };
+		9A52B58817AA0072009CD567 /* SelectAddBetCoinLoader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SelectAddBetCoinLoader.h; path = Classes/SelectAddBetCoinLoader.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -923,6 +929,10 @@
 				9A29144117A3CADD003A62E2 /* RoomPlayerInforLoader.h */,
 				9A29144317A3CAF9003A62E2 /* RoomPlayerInfor.cpp */,
 				9A29144417A3CAF9003A62E2 /* RoomPlayerInfor.h */,
+				9A52B58417AA0028009CD567 /* SelectAddBetCoin.cpp */,
+				9A52B58517AA0028009CD567 /* SelectAddBetCoin.h */,
+				9A52B58717AA0072009CD567 /* SelectAddBetCoinLoader.cpp */,
+				9A52B58817AA0072009CD567 /* SelectAddBetCoinLoader.h */,
 			);
 			name = RoomScene;
 			sourceTree = "<group>";
@@ -2465,6 +2475,8 @@
 				9A0E2C2C17A217790052B3D0 /* RoomLayer.cpp in Sources */,
 				9A29144217A3CADD003A62E2 /* RoomPlayerInforLoader.cpp in Sources */,
 				9A29144517A3CAF9003A62E2 /* RoomPlayerInfor.cpp in Sources */,
+				9A52B58617AA0028009CD567 /* SelectAddBetCoin.cpp in Sources */,
+				9A52B58917AA0072009CD567 /* SelectAddBetCoinLoader.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

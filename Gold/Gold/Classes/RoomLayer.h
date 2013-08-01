@@ -13,6 +13,8 @@
 #include "cocos2d.h"
 #include "cocos-ext.h"
 #include "RoomPlayerInfor.h"
+#include "SelectAddBetCoin.h"
+#include "SelectAddBetCoinLoader.h"
 USING_NS_CC ;
 USING_NS_CC_EXT ;
 class CRoomPlayerInfor ;
@@ -22,6 +24,7 @@ class CRoomLayer
 ,public CCBMemberVariableAssigner
 ,public CCBAnimationManagerDelegate
 ,public CRoomPlayerInforDelegate
+,public CSelectAddBetCoinDelegate
 {
 public:
     static CCScene* RoomScene();
@@ -32,6 +35,7 @@ public:
     virtual bool onAssignCCBMemberVariable(CCObject* pTarget, const char* pMemberVariableName, CCNode* pNode);
     void completedAnimationSequenceNamed(const char *name);
     void OnClickRoomPlayerInfo(CRoomPlayerInfor* pPlayerInfo );
+    void OnSelectedAddBetCoin(CSelectAddBetCoin* pBtn , int nCoin );
 
     // btn event
     void OnFollow(CCObject*, CCControlEvent);
@@ -69,6 +73,7 @@ protected:
     CCSprite* m_pCardSender ;
     CCSprite* m_pDistributeCard[15] ;
     CCPoint m_ptDistributePoint[5];
+    CSelectAddBetCoin* m_pSelectAddBetCoin ;
     float m_fMyTimerCount ;  // for clock display ;
 };
 

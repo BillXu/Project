@@ -25,6 +25,7 @@ bool CRoomLayer::init()
     CCNodeLoaderLibrary * ccNodeLoaderLibrary = CCNodeLoaderLibrary::newDefaultCCNodeLoaderLibrary();
     
     ccNodeLoaderLibrary->registerCCNodeLoader("RoomPlayer", CRoomPlayerInforLoader::loader());
+    ccNodeLoaderLibrary->registerCCNodeLoader("SelectAddBetCoin", CSelectAddBetCoinLoader::loader());
     
     CCBReader* pReader = new CCBReader(ccNodeLoaderLibrary);
     float fHfactor = 320.0 / CCDirector::sharedDirector()->getWinSize().height ;
@@ -91,6 +92,10 @@ bool CRoomLayer::init()
         m_pPlayer[i]->setDelegate(this) ;
     }
     
+    // set selecte add bet coin delegate ;
+    m_pSelectAddBetCoin->SetDelegate(this) ;
+    m_pSelectAddBetCoin->InitSelectedMoney(10, 20, 50, 100, 1000) ;
+    m_pSelectAddBetCoin->SetMinEnable(50, true) ;
     return true ;
 }
 
@@ -151,6 +156,7 @@ bool CRoomLayer::onAssignCCBMemberVariable(CCObject* pTarget, const char* pMembe
     CCB_MEMBERVARIABLEASSIGNER_GLUE_WEAK(this,"m_pbtnPK",CCControlButton*,m_pbtnPK);
     CCB_MEMBERVARIABLEASSIGNER_GLUE_WEAK(this,"m_pbtnGiveUp",CCControlButton*,m_pbtnGiveUp);
     CCB_MEMBERVARIABLEASSIGNER_GLUE_WEAK(this,"m_pbtnReady",CCControlButton*,m_pbtnReady);
+    CCB_MEMBERVARIABLEASSIGNER_GLUE_WEAK(this,"m_pSelectAddBetCoin",CSelectAddBetCoin*,m_pSelectAddBetCoin);
     
     char pBuffer[50] = { 0 } ;
     for ( int i = 0 ; i < 4 ; ++i )
@@ -241,6 +247,11 @@ void CRoomLayer::OnBack(CCObject*, CCControlEvent)
 
 void CRoomLayer::OnSay(CCObject*, CCControlEvent)
 {
+    if ( m_pSelectAddBetCoin->isVisible())
+    {
+        return ;   // when covered by m_pSelectAddBetCoin , say button will not invoke ;
+    }
+    
     for ( int i = 0 ; i < 5 ; ++i )
     {
         m_pDefault[i]->setVisible(!m_pDefault[i]->isVisible()) ;
@@ -438,4 +449,9 @@ void CRoomLayer::StopMyClock()
 void CRoomLayer::OnClickRoomPlayerInfo(CRoomPlayerInfor* pPlayerInfo )
 {
     CCMessageBox("clicked player", "Tip") ;
+}
+
+void CRoomLayer::OnSelectedAddBetCoin(CSelectAddBetCoin* pBtn , int nCoin )
+{
+    
 }
