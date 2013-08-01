@@ -22,7 +22,7 @@ CCScene* CRoomLayer::RoomScene()
 bool CRoomLayer::init()
 {
     CCLayer::init() ;
-    
+    m_pRoomData = NULL ;
     CCNodeLoaderLibrary * ccNodeLoaderLibrary = CCNodeLoaderLibrary::newDefaultCCNodeLoaderLibrary();
     
     ccNodeLoaderLibrary->registerCCNodeLoader("RoomPlayer", CRoomPlayerInforLoader::loader());
@@ -525,12 +525,22 @@ void CRoomLayer::OnUpdatePlayerState(char nIdx , eRoomPeerState ePeerState )
 
 void CRoomLayer::OnDistributeCard()
 {
-
+    animationManager->runAnimationsForSequenceNamed("ComeIn") ;
 }
 
 void CRoomLayer::OnWaitPlayerAction(char nIdx )
 {
-
+    char pBuffer[20] = { 0 } ;
+    sprintf(pBuffer, "%d",m_pRoomData->m_nRound ) ;
+    m_pRound->setString(pBuffer) ;
+    if ( nIdx == 4 )
+    {
+        StartMyClock() ;
+    }
+    else
+    {
+        m_pPlayer[nIdx]->StartTiming() ;
+    }
 }
 
 void CRoomLayer::OnPlayerFollow(char nIdx , int nFollowedCoin )

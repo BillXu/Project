@@ -32,6 +32,7 @@ class CRoomLayer
 public:
     static CCScene* RoomScene();
     virtual bool init();
+    void SetRoomData(CRoomData* pdata ){ m_pRoomData = pdata ;}
     // delete gate ;
     SEL_MenuHandler onResolveCCBCCMenuItemSelector(CCObject * pTarget, const char* pSelectorName){ return NULL ;}
     virtual SEL_CCControlHandler onResolveCCBCCControlSelector(CCObject * pTarget, const char* pSelectorName);
@@ -89,6 +90,7 @@ protected:
     CCPoint m_ptDistributePoint[5];
     CSelectAddBetCoin* m_pSelectAddBetCoin ;
     float m_fMyTimerCount ;  // for clock display ;
+    CRoomData* m_pRoomData ;
 };
 
 #endif /* defined(__Gold__RoomLayer__) */
