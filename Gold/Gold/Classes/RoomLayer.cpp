@@ -9,6 +9,7 @@
 #include "RoomLayer.h"
 #include "RoomPlayerInforLoader.h"
 #include "RoomData.h"
+#include "ClientApp.h"
 CCScene* CRoomLayer::RoomScene()
 {
     CRoomLayer* pLayer = new CRoomLayer ;
@@ -197,74 +198,72 @@ void CRoomLayer::completedAnimationSequenceNamed(const char *name)
 
 void CRoomLayer::OnFollow(CCObject*, CCControlEvent)
 {
-    animationManager->runAnimationsForSequenceNamed("ComeIn") ;
+    
 }
 
 void CRoomLayer::OnAdd(CCObject*, CCControlEvent)
 {
-    for ( int i = 0 ; i < 4 ; ++i )
-    {
-        RunPKIconAnimationByPlayerIdx(i) ;
-    }
+    m_pSelectAddBetCoin->setVisible(true) ;
 }
 
 void CRoomLayer::OnLook(CCObject*, CCControlEvent)
 {
-    m_pPlayer[0]->StartTiming();
-    StartMyClock();
+
 }
 
 void CRoomLayer::OnPK(CCObject*, CCControlEvent)
 {
-    m_pPlayer[1]->StartTiming();
+    bool bDirectPK = m_pRoomData->GetActiveCount() == 1 ;
+    
+    stRoomPeerData* pData = NULL ;
+    for ( int i = 0 ; i < MAX_ROOM_PEER -1 ; ++i )
+    {
+        pData = m_pRoomData->GetRoomPeerDataByClientIdx(i) ;
+        if ( !pData || pData->nSessionID == 0  )
+        {
+            continue ;
+        }
+        
+        if ( pData->IsActive() == false )
+        {
+            continue ;
+        }
+        
+        if ( bDirectPK )
+        {
+            // send pk message ;
+            return ;
+        }
+        else
+        {
+            RunPKIconAnimationByPlayerIdx(i) ;
+        }
+    }
 }
 
 void CRoomLayer::OnGiveUp(CCObject*, CCControlEvent)
 {
-    m_pPlayer[2]->StartTiming();
-    for ( int i = 0 ; i < 4 ; ++i )
-    {
-        m_pFail[i]->setVisible(!m_pFail[i]->isVisible()) ;
-    }
+
 }
 
 void CRoomLayer::OnBuy(CCObject*, CCControlEvent)
 {
-    m_pPlayer[3]->StartTiming();
-    for ( int i = 0 ; i < 4 ; ++i )
-    {
-        m_pGive[i]->setVisible(!m_pGive[i]->isVisible()) ;
-    }
+
 }
 
 void CRoomLayer::OnBack(CCObject*, CCControlEvent)
 {
-    for ( int i = 0 ; i < 4 ; ++i )
-    {
-        m_pLook[i]->setVisible(!m_pLook[i]->isVisible()) ;
-    }
-    ResetRoomState();
+
 }
 
 void CRoomLayer::OnSay(CCObject*, CCControlEvent)
 {
-    if ( m_pSelectAddBetCoin->isVisible())
-    {
-        return ;   // when covered by m_pSelectAddBetCoin , say button will not invoke ;
-    }
-    
-    for ( int i = 0 ; i < 5 ; ++i )
-    {
-        m_pDefault[i]->setVisible(!m_pDefault[i]->isVisible()) ;
-    }
+
 }
 
 void CRoomLayer::OnReady(CCObject*, CCControlEvent)
 {
-    m_pbtnReady->setEnabled(false) ;
-    CCFadeOut* pfade = CCFadeOut::create(0.26);
-    CCEaseOut* ccer = CCEaseOut::create(pfade, 0.7);
-    m_pbtnReady->runAction(ccer) ;
+
 }
 
 void CRoomLayer::StartDistributeCard()
@@ -412,6 +411,11 @@ void CRoomLayer::RunPKIconAnimationByPlayerIdx(char nIdx )
     m_pPKIcon[nIdx]->runAction(rept) ;
 }
 
+void CRoomLayer::StartPushCoinAnimation( char nIdx , unsigned int nCoin )
+{
+    
+}
+
 void CRoomLayer::StartGame(unsigned int nMainPlayer )
 {
     animationManager->runAnimationsForSequenceNamed("ComeIn");
@@ -545,15 +549,31 @@ void CRoomLayer::OnWaitPlayerAction(char nIdx )
 
 void CRoomLayer::OnPlayerFollow(char nIdx , int nFollowedCoin )
 {
-
+    StartPushCoinAnimation(nIdx, nFollowedCoin) ;
+    stRoomPeerData* pData = m_pRoomData->GetRoomPeerDataByClientIdx(nIdx);
+    m_pPlayer[nIdx]->UpdateCoinInfo(pData->nBetCoin, pData->nCoin) ;
+    char nBuffer[20]={0} ;
+    sprintf(nBuffer, "%d",m_pRoomData->m_nTotalBetCoin ) ;
+    m_pTotalBet->setString(nBuffer) ;
 }
 
 void CRoomLayer::OnPlayerAdd(char nIdx , int nOffsetCoin )
 {
+    StartPushCoinAnimation(nIdx, nOffsetCoin) ;
+    stRoomPeerData* pData = m_pRoomData->GetRoomPeerDataByClientIdx(nIdx);
+    m_pPlayer[nIdx]->UpdateCoinInfo(pData->nBetCoin, pData->nCoin) ;
+    
+    char nBuffer[20]={0} ;
+    sprintf(nBuffer, "%d",m_pRoomData->m_nTotalBetCoin ) ;
+    m_pTotalBet->setString(nBuffer) ;
+
+    memset(nBuffer, 0, sizeof(nBuffer)) ;
+    sprintf(nBuffer, "%d",m_pRoomData->m_nSingleBetCoin ) ;
+    m_pSingleBet->setString(nBuffer) ;
 
 }
 
 void CRoomLayer::OnPlayerPK(char nIdxInvoke , char nIdxWith , bool bWin )
 {
-
+    
 }

@@ -73,6 +73,7 @@ protected:
     void StartDistributeCard();
     void ResetRoomState();
     void RunPKIconAnimationByPlayerIdx(char nIdx );
+    void StartPushCoinAnimation( char nIdx , unsigned int nCoin );
 protected:
     CCLabelTTF* m_pMyCoin ,*m_pMyDiamen,*m_pMyName, *m_pMyTitle,*m_pMyBetCoin, *m_pRound, *m_pTotalBet,*m_pSingleBet, *m_pTime;
     CCSprite* m_pTable,*m_pClock ;

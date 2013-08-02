@@ -16,6 +16,7 @@ struct stRoomPeerData
 :public stRoomPeerBrifInfo
 {
     bool bRecievedUserDefinePhoto ;
+    bool IsActive();
 };
 
 class CRoomLayer ;
@@ -27,6 +28,7 @@ public:
     bool OnMessage( RakNet::Packet* pMsg );
     stRoomPeerData* GetRoomPeerDataBySessionID( unsigned int nSessionID ) ;
     char GetPlayerCount();
+    char GetActiveCount();
     // client index : the players sequnced is the same as the server , but in the client , selft must the last idx , as the UI need ;
     stRoomPeerData* GetRoomPeerDataByClientIdx( char nClientIdx ); 
 protected:

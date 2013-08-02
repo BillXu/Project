@@ -399,6 +399,10 @@
 		9A52B70017AA39C4009CD567 /* VitaIncludes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A52B69317AA39C4009CD567 /* VitaIncludes.cpp */; };
 		9A52B70117AA39C4009CD567 /* WSAStartupSingleton.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A52B69617AA39C4009CD567 /* WSAStartupSingleton.cpp */; };
 		9A52B70417AA3E75009CD567 /* RoomData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A52B70217AA3E74009CD567 /* RoomData.cpp */; };
+		9A52B70717AB9350009CD567 /* ClientApp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A52B70517AB934F009CD567 /* ClientApp.cpp */; };
+		9A52B70B17ABB1F2009CD567 /* PlayerData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A52B70917ABB1F2009CD567 /* PlayerData.cpp */; };
+		9A52B70E17ABB28F009CD567 /* IPlayerData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A52B70C17ABB28F009CD567 /* IPlayerData.cpp */; };
+		9A52B71117ABB9A9009CD567 /* PlayerBaseData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A52B70F17ABB9A9009CD567 /* PlayerBaseData.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -1273,6 +1277,14 @@
 		9A52B69817AA39C4009CD567 /* XBox360Includes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XBox360Includes.h; sourceTree = "<group>"; };
 		9A52B70217AA3E74009CD567 /* RoomData.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = RoomData.cpp; path = Classes/RoomData.cpp; sourceTree = "<group>"; };
 		9A52B70317AA3E74009CD567 /* RoomData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RoomData.h; path = Classes/RoomData.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.cpp; };
+		9A52B70517AB934F009CD567 /* ClientApp.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ClientApp.cpp; path = Classes/ClientApp.cpp; sourceTree = "<group>"; };
+		9A52B70617AB9350009CD567 /* ClientApp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ClientApp.h; path = Classes/ClientApp.h; sourceTree = "<group>"; };
+		9A52B70917ABB1F2009CD567 /* PlayerData.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PlayerData.cpp; path = Classes/PlayerData.cpp; sourceTree = "<group>"; };
+		9A52B70A17ABB1F2009CD567 /* PlayerData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PlayerData.h; path = Classes/PlayerData.h; sourceTree = "<group>"; };
+		9A52B70C17ABB28F009CD567 /* IPlayerData.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = IPlayerData.cpp; path = Classes/IPlayerData.cpp; sourceTree = "<group>"; };
+		9A52B70D17ABB28F009CD567 /* IPlayerData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = IPlayerData.h; path = Classes/IPlayerData.h; sourceTree = "<group>"; };
+		9A52B70F17ABB9A9009CD567 /* PlayerBaseData.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PlayerBaseData.cpp; path = Classes/PlayerBaseData.cpp; sourceTree = "<group>"; };
+		9A52B71017ABB9A9009CD567 /* PlayerBaseData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PlayerBaseData.h; path = Classes/PlayerBaseData.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -2516,12 +2528,15 @@
 		9A1A2E9717A0CC5D00B99BE0 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				9A52B70817ABB1CA009CD567 /* PlayerData */,
 				9A52B58A17AA3899009CD567 /* Common */,
 				9A0E2C2917A2174E0052B3D0 /* RoomScene */,
 				9A1A2E9817A0CC5D00B99BE0 /* AppDelegate.h */,
 				9A1A2E9917A0CC5D00B99BE0 /* AppDelegate.cpp */,
 				9A1A2E9B17A0CC5D00B99BE0 /* HelloWorldScene.h */,
 				9A1A2E9C17A0CC5D00B99BE0 /* HelloWorldScene.cpp */,
+				9A52B70517AB934F009CD567 /* ClientApp.cpp */,
+				9A52B70617AB9350009CD567 /* ClientApp.h */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -2805,6 +2820,19 @@
 			);
 			name = NetLib;
 			path = ../../Common/NetLib;
+			sourceTree = "<group>";
+		};
+		9A52B70817ABB1CA009CD567 /* PlayerData */ = {
+			isa = PBXGroup;
+			children = (
+				9A52B70917ABB1F2009CD567 /* PlayerData.cpp */,
+				9A52B70A17ABB1F2009CD567 /* PlayerData.h */,
+				9A52B70C17ABB28F009CD567 /* IPlayerData.cpp */,
+				9A52B70D17ABB28F009CD567 /* IPlayerData.h */,
+				9A52B70F17ABB9A9009CD567 /* PlayerBaseData.cpp */,
+				9A52B71017ABB9A9009CD567 /* PlayerBaseData.h */,
+			);
+			name = PlayerData;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -3248,6 +3276,10 @@
 				9A52B70017AA39C4009CD567 /* VitaIncludes.cpp in Sources */,
 				9A52B70117AA39C4009CD567 /* WSAStartupSingleton.cpp in Sources */,
 				9A52B70417AA3E75009CD567 /* RoomData.cpp in Sources */,
+				9A52B70717AB9350009CD567 /* ClientApp.cpp in Sources */,
+				9A52B70B17ABB1F2009CD567 /* PlayerData.cpp in Sources */,
+				9A52B70E17ABB28F009CD567 /* IPlayerData.cpp in Sources */,
+				9A52B71117ABB9A9009CD567 /* PlayerBaseData.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
