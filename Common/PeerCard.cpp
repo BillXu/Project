@@ -217,3 +217,11 @@ void CPeerCard::Reset()
 	m_vRepacedCard.clear();
 	m_vShowedCard.clear() ;
 }
+
+void CPeerCard::GetCompositeCardRepresent(char* vCard )
+{
+	for ( int i = 0 ; i < PEER_CARD_COUNT ; ++i )
+	{
+		vCard[i] = m_vCard[i]->GetCardCompositeNum() ;
+	}
+}

@@ -19,83 +19,33 @@ CRoomPeer::~CRoomPeer()
 
 bool CRoomPeer::OnMessage(stMsg* pMsg )
 {
-	//if ( pMsg->usMsgType == MSG_ENTER )
-	//{
-	//	stMsgRoomEnter* pRealMsg = (stMsgRoomEnter*)pMsg ;
-	//	stMsgRoomEnterRet msgRet ;
-	//	msgRet.nRet = 0 ;
-	//	CRoom* pRoom = NULL ;
-	//	if ( pRealMsg->bVip )
-	//	{
-	//		if ( GetPlayerBaseData()->nVipLevel <= 0 )
-	//		{
-	//			msgRet.nRet = 1 ;
-	//		}
-	//		else
-	//		{
-	//			pRoom = CGameServerApp::SharedGameServerApp()->GetRoomMgr()->GetVipRoom(pRealMsg->nVipRoomID) ;
-	//			if ( !pRoom )
-	//			{
-	//				msgRet.nRet = 2 ;
-	//			}
-	//			else if ( pRoom->GetRoomPeerCount() >= MAX_ROOM_PEER )
-	//			{
-	//				msgRet.nRet = 3 ;
-	//			}
-	//		}
-	//	}
-	//	else
-	//	{
-	//		if ( CGameServerApp::SharedGameServerApp()->GetRoomMgr()->CanEnterRoom((eBigRoomType)pRealMsg->nBigRoomType,pRealMsg->nRoomLevel,GetPlayer()))
-	//		{
-	//			pRoom = CGameServerApp::SharedGameServerApp()->GetRoomMgr()->GetRoomToEnter((eBigRoomType)pRealMsg->nBigRoomType,pRealMsg->nRoomLevel);
-	//			if ( !pRoom )
-	//			{
-	//				msgRet.nRet = 2 ;
-	//			}
-	//		}
-	//		else
-	//		{
-	//			msgRet.nRet = 1 ;
-	//		}
-	//	}
-
-	//	SendMsgToClient((char*)&msgRet,sizeof(msgRet));
-	//	if ( msgRet.nRet == 0 )
-	//	{
-	//		pRoom->OnPlayerEnter(this) ;
-	//		m_pRoom = pRoom ;
-	//	}
-	//}
-	//else if ( pMsg->usMsgType > MSG_ROOM_MSG_BEGIN && pMsg->usMsgType < MSG_ROOM_MSG_END )
-	//{
-	//	if ( m_pRoom )
-	//	{
-	//		m_pRoom->OnRoomMsg(pMsg,this) ;
-	//	}
-	//	else
-	//	{
-	//		CLogMgr::SharedLogMgr()->ErrorLog("Can n't do room action ,befor enter room ; name = %s",GetPlayerBaseData()->strName ) ;
-	//	}
-	//}
+	if ( MSG_ROOM_ENTER == pMsg->usMsgType )
+	{
+		stMsgRoomEnter msgEnter ;
+		// find a room to enter ;
+		return true ;
+	}
+	if ( m_pRoom )
+	{
+		return m_pRoom->OnPeerMsg(this,pMsg) ;
+	}
 	return false ;
 }
 
 
 void CRoomPeer::OnPlayerDisconnect()
 {
-
+	LeaveRoom();
 }
 
 void CRoomPeer::Reset()
 {
-	m_nTimesMoneyForPK = 1 ;
 	m_nBetCoin = 0 ;
 	m_eState = eRoomPeer_None ;
 	m_PeerCard.Reset();
 }
 
-stBaseData* CRoomPeer::GetPlayerBaseData()
+CPlayerBaseData* CRoomPeer::GetPlayerBaseData()
 {
 	return GetPlayer()->GetBaseData() ;
 }
@@ -105,12 +55,65 @@ void CRoomPeer::OnGetCard( unsigned char nCardA, unsigned char nCardB , unsigned
 	m_PeerCard.SetPeerCardByNumber(nCardA,nCardB,nCardC) ;
 }
 
-void CRoomPeer::OnEnterRoom(CRoom* pRoom )
+void CRoomPeer::LeaveRoom()
 {
-	m_pRoom = pRoom ;
+	if ( m_pRoom )
+	{
+		m_pRoom->OnPeerLeave(this);
+		m_pRoom = NULL ;
+	}
 }
 
-void CRoomPeer::OnExitRoom(CRoom* pRoom)
+void CRoomPeer::OnWaitTimeOut()// please make a message fake ;
 {
-	m_pRoom = NULL ;
+	if ( m_pRoom )
+	{
+		stMsgRoomGiveUp msg ;
+		m_pRoom->OnPeerMsg(this,&msg) ;
+	}
+}
+
+bool CRoomPeer::IsActive() // not fail ,not give, not null 
+{
+	return (GetState() == eRoomPeer_Unlook || GetState() == eRoomPeer_Look );
+}
+
+unsigned int CRoomPeer::GetSessionID()
+{
+	return GetPlayer()->GetSessionID() ;
+}
+
+unsigned int CRoomPeer::GetCoin()
+{
+	return GetPlayerBaseData()->nCoin ;
+}
+
+unsigned int  CRoomPeer::AddBetCoin( unsigned int naddBetCoin ) // return indeeed added betCoin ;
+{
+	if ( naddBetCoin > GetCoin() )
+	{
+		naddBetCoin  = GetCoin() ;
+	}
+	m_nBetCoin += naddBetCoin ;
+	GetPlayerBaseData()->nCoin -= naddBetCoin ;
+	return naddBetCoin ;
+}
+
+void CRoomPeer::GetBrifBaseInfo(stRoomPeerBrifInfo& vInfoOut )
+{
+	vInfoOut.ePeerState = GetState() ;
+	vInfoOut.nBetCoin = m_nBetCoin ;
+	vInfoOut.nCoin = GetCoin() ;
+	vInfoOut.nDefaulPhotoID = GetPlayerBaseData()->nDefaulPhotoID ;
+	vInfoOut.nIdx = m_nPeerIdx ;
+	vInfoOut.nSessionID = GetSessionID() ;
+	vInfoOut.nTitle = GetPlayerBaseData()->nTitle ;
+	vInfoOut.nUserDefinePhotoID = GetPlayerBaseData()->nUserDefinePhotoID ;
+	memset(vInfoOut.pName,0	,sizeof(vInfoOut.pName));
+	sprintf_s(vInfoOut.pName,"%s",GetPlayerBaseData()->strName);
+}
+
+void CRoomPeer::OnWinCoin(unsigned int nWinCoin )
+{
+	GetPlayerBaseData()->nCoin += nWinCoin ;
 }

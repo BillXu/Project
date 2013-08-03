@@ -3,6 +3,8 @@
 #include "LogManager.h"
 #include "PlayerManager.h"
 #include "GameServerApp.h"
+#include "PlayerBaseData.h"
+#include "RoomPeer.h"
 CPlayer::CPlayer( )
 {
 	m_nUserUID = 0 ;
@@ -24,6 +26,17 @@ void CPlayer::Init(unsigned int nUserUID, unsigned int nSessionID )
 	m_nSessionID = nSessionID ;
 	m_nUserUID = nUserUID ;
 	/// new components ;here ;
+	m_vAllComponents[ePlayerComponent_BaseData] = new CPlayerBaseData(this) ;
+	m_vAllComponents[ePlayerComponent_RoomPeer] = new CRoomPeer(this) ;
+
+	for ( int i = ePlayerComponent_None; i < ePlayerComponent_Max ; ++i )
+	{
+		IPlayerComponent* p = m_vAllComponents[i] ;
+		if ( p )
+		{
+			p->Init();
+		}
+	}
 }
 
 void CPlayer::Reset(unsigned int nUserUID, unsigned int nSessionID )

@@ -79,13 +79,6 @@ enum eRoomFlag
 
  
 
-enum eBigRoomType
-{
-	eRoomType_None,
-	eRoomType_Common = eRoomType_None,
-	eRoomType_Max,
-};
-
 #define CHECK_MSG_SIZE(CHECK_MSG,nLen) \
 {\
 	if (sizeof(CHECK_MSG) > (nLen) ) \

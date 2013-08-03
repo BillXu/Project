@@ -1,6 +1,6 @@
 #pragma once 
-#include "BaseData.h"
 #include "IPlayerComponent.h"
+class CPlayerBaseData ;
 struct stMsg ;
 class CPlayer
 {
@@ -15,8 +15,8 @@ public:
 	void SendMsgToDBServer(const char* pBuffer, unsigned short nLen);
 	unsigned int GetUserUID(){ return m_nUserUID ;}
 	unsigned int GetSessionID(){ return m_nSessionID ;}
-	IPlayerComponent* GetComponent(ePlayerComponentType eType );
-	stBaseData* GetBaseData(){ return (stBaseData*)GetComponent(ePlayerComponent_BaseData);}
+	IPlayerComponent* GetComponent(ePlayerComponentType eType ){ return m_vAllComponents[eType];}
+	CPlayerBaseData* GetBaseData(){ return (CPlayerBaseData*)GetComponent(ePlayerComponent_BaseData);}
 protected:
 	unsigned int m_nUserUID ;
 	unsigned int m_nSessionID ;  // comunicate with the client ;

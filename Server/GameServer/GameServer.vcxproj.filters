@@ -490,9 +490,6 @@
     <ClInclude Include="..\..\Common\Utility.h">
       <Filter>Common</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Common\BaseData.h">
-      <Filter>Common</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Common\MessageDefine.h">
       <Filter>Common</Filter>
     </ClInclude>
@@ -537,6 +534,12 @@
     </ClInclude>
     <ClInclude Include="src\RoomBase.h">
       <Filter>head\Room</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\BaseData.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="src\PlayerBaseData.h">
+      <Filter>head\Player</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -840,9 +843,6 @@
     <ClCompile Include="..\..\Common\Utility.cpp">
       <Filter>Common</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Common\BaseData.cpp">
-      <Filter>Common</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\Common\NetWorkManager.cpp">
       <Filter>Common</Filter>
     </ClCompile>
@@ -878,6 +878,12 @@
     </ClCompile>
     <ClCompile Include="src\RoomBase.cpp">
       <Filter>src\Room</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\BaseData.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="src\PlayerBaseData.cpp">
+      <Filter>src\Player</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -4,6 +4,7 @@
 #include "Player.h"
 #include "LogManager.h"
 #include <list>
+#define TAX_START_COIN 10000
 unsigned int CRoom::s_RoomID = 0 ;
 
 CRoom::CRoom()
@@ -282,28 +283,67 @@ bool CRoom::CheckFinish()
 		return true ;
 	}
 
-	// unfinish below ;
 	std::list<stResultData*> vRData ;
 	for ( int i = 0 ; i < GetMaxSeat() ; ++i )
 	{
-		if ( m_vRoomPeer[i]->GetState())
+		if ( m_vRoomPeer[i] == NULL )
 		{
-			++nCount ;
-			peer = m_vRoomPeer[i] ;
-			if ( nCount > 1 )
+			continue; 
+		}
+		if ( m_vRoomPeer[i]->GetState() == eRoomPeer_GiveUp || eRoomPeer_Failed == m_vRoomPeer[i]->GetState() )
+		{
+			stResultData* pData = new stResultData ;
+			pData->idx = i ;
+			pData->nResultCoin = m_vRoomPeer[i]->m_nBetCoin ;
+			pData->nResultCoin *= -1 ;
+			m_vRoomPeer[i]->m_PeerCard.GetCompositeCardRepresent(pData->vCard) ;
+			vRData.push_back(pData) ;
+		}
+		else  if ( m_vRoomPeer[i]->IsActive() ) // win ;
+		{
+			stResultData* pData = new stResultData ;
+			pData->idx = i ;
+			pData->nResultCoin = m_nTotalBetCoin ;
+			if ( m_nTotalBetCoin > TAX_START_COIN )
 			{
-				return false ;
+				float nValue = (float)pData->nResultCoin * 0.95f ;
+				pData->nResultCoin = (int)nValue ;
 			}
+			m_vRoomPeer[i]->OnWinCoin(pData->nResultCoin) ;
+			m_vRoomPeer[i]->m_PeerCard.GetCompositeCardRepresent(pData->vCard) ;
+			vRData.push_back(pData) ;
+		}
+		else
+		{
+			CLogMgr::SharedLogMgr()->ErrorLog("what happen other state ") ;
 		}
 	}
 
-	stMsgRoomResult msg ;
+	stMsgRoomResult msgResult ;
+	msgResult.nCount = vRData.size();
+	char * pbuffer = new char[sizeof(msgResult) + vRData.size()*sizeof(stResultData)] ;
+	int nOffset = 0 ;
+	memcpy(pbuffer,&msgResult,sizeof(msgResult));
+	nOffset += sizeof(msgResult) ;
+
+	for (std::list<stResultData*>::iterator iter = vRData.begin() ; iter != vRData.end(); ++iter  )
+	{
+		stResultData* pData = *iter ;
+		memcpy(pbuffer+nOffset,&pData,sizeof(stResultData));
+		nOffset += sizeof(stResultData) ;
+		delete pData ; // delete because have copyed to buffer ;
+		pData = NULL ;
+	}
+	SendMsgRoomPeers((stMsg*)pbuffer,nOffset ) ;
+	delete[] pbuffer ;
+
+	vRData.clear() ; // new data have been delete in uplown loop ;
 	return true;
 }
 
 void CRoom::DebugRoomInfo()
 {
-
+	CLogMgr::SharedLogMgr()->PrintLog("Room id = %d , totalBetCoin = %d , singleBetCoin = %d , roomState = %d , Round = %d , curIdx = %d , MainIdx = %d",m_nRoomID,m_nTotalBetCoin,m_nSingleBetCoin,GetRoomState(),m_nRound,m_nCurWaitPeerIdx,m_nCurMainPeerIdx )  ;
 }
 
 bool CRoom::OnPeerMsg(CRoomPeer* pPeer, stMsg* pmsg )
@@ -334,7 +374,7 @@ bool CRoom::OnPeerMsg(CRoomPeer* pPeer, stMsg* pmsg )
 			}
 			DebugRoomInfo();
 		}
-		break; 
+		return true; 
 	case MSG_ROOM_FOLLOW:
 		{
 			if ( eRoomState_WaitPeerAction != GetRoomState() )
@@ -355,7 +395,7 @@ bool CRoom::OnPeerMsg(CRoomPeer* pPeer, stMsg* pmsg )
 			DebugRoomInfo();
 			NextPlayerAction();
 		}
-		break; 
+		return true; 
 	case MSG_ROOM_ADD:
 		{
 			if ( eRoomState_WaitPeerAction != GetRoomState() )
@@ -372,7 +412,7 @@ bool CRoom::OnPeerMsg(CRoomPeer* pPeer, stMsg* pmsg )
 			{
 				m_nSingleBetCoin *= 2 ;
 			}
-			else if ( msgAdd->nAddMoney < m_nSingleBetCoin )
+			else if ( (unsigned int )msgAdd->nAddMoney < m_nSingleBetCoin )
 			{
 				stMsgRoomRet msgRet ;
 				msgRet.nRet = 2 ; // add money should greate than crrent ;
@@ -397,7 +437,7 @@ bool CRoom::OnPeerMsg(CRoomPeer* pPeer, stMsg* pmsg )
 			NextPlayerAction();
 			DebugRoomInfo() ;
 		}
-		break;
+		return true;
 	case MSG_ROOM_PK:
 		{
 			if ( eRoomState_WaitPeerAction != GetRoomState() )
@@ -440,7 +480,7 @@ bool CRoom::OnPeerMsg(CRoomPeer* pPeer, stMsg* pmsg )
 			SendMsgRoomPeers(&msgplayerpk,sizeof(msgplayerpk)) ;
 			DebugRoomInfo() ;
 		}
-		break ;
+		return true ;
 	case MSG_ROOM_LOOK:
 		{
 			if ( eRoomState_WaitPeerAction != GetRoomState() && eRoomPeer_Unlook == pPeer->GetState() )
@@ -456,7 +496,7 @@ bool CRoom::OnPeerMsg(CRoomPeer* pPeer, stMsg* pmsg )
 			pPeer->m_PeerCard.GetCompositeCardRepresent(msgLook.vCard);
 			SendMsgRoomPeers(&msgLook,sizeof(msgLook)) ;
 		}
-		break;
+		return true;
 	case MSG_ROOM_GIVEUP:
 		{
 			if ( eRoomState_WaitPeerAction != GetRoomState() )
@@ -475,9 +515,9 @@ bool CRoom::OnPeerMsg(CRoomPeer* pPeer, stMsg* pmsg )
 				SwitchToRoomSate(GetRoomState(),eRoomState_ShowingResult) ;
 			}
 		}
-		break; 
+		return true; 
 	}
-	return true ;
+	return false ;
 }
 
 //CRoom::CRoom( int nBaseMoney)
