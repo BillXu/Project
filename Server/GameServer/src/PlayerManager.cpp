@@ -40,7 +40,7 @@ bool CPlayerManager::OnMessage( RakNet::Packet* pMsg )
 		CPlayer* pPlayer = GetPlayerBySessionID(pTransMsg->nSessionID) ;
 		// unpack message ;
 		stMsg* pRealMsg = (stMsg*)(pMsg->data + sizeof(stMsgTransferData)) ;
-		if ( PreProcessLogicMessage(pPlayer,pRealMsg) )
+		if ( PreProcessLogicMessage(pPlayer,pRealMsg,pTransMsg->nSessionID ) )
 		{
 			return true ;
 		}
@@ -170,10 +170,28 @@ bool CPlayerManager::OnMessage( RakNet::Packet* pMsg )
 //	return false ;
 //}
 
-bool CPlayerManager::PreProcessLogicMessage( CPlayer*pPlayer ,stMsg* pmsg )
+bool CPlayerManager::PreProcessLogicMessage( CPlayer*pPlayer ,stMsg* pmsg , unsigned int nSessionID  )
 {
 	// process new player comin ;
-	// void AddPlayer(CPlayer*);
+	if ( !pPlayer )
+	{
+		if ( pmsg->usMsgType == MSG_PLAYER_ENTER_GAME )
+		{
+			stMsgPlayerEnterGame* pmsgenter = (stMsgPlayerEnterGame*)pmsg ;
+			CPlayer* pNew = GetReserverPlayer();
+			if ( pNew )
+			{
+				pNew->Reset(pmsgenter->nUserUID,nSessionID) ;
+			}
+			else
+			{
+				pNew = new CPlayer ;
+				pNew->Init(pmsgenter->nUserUID,nSessionID ) ;
+			}
+			AddPlayer(pPlayer) ;
+		}
+	}
+
 	// process player logout ;
 	if ( MSG_DISCONNECT_CLIENT == pmsg->usMsgType && pPlayer )
 	{

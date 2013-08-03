@@ -31,6 +31,11 @@ enum eMsgType
 	MSG_DISCONNECT_CLIENT,
 	// msg title used between server and client ;
 	MSG_RECONNECT,   // client with gate 
+
+	// login 
+	MSG_PLAYER_ENTER_GAME,
+	// player base Data 
+	MSG_PLAYER_BASE_DATA,
 	// all room msg here ;
 	MSG_ROOM_MSG_BEGIN,
     MSG_ROOM_RET,

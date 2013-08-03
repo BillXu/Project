@@ -40,6 +40,20 @@ public:
 	unsigned char nServerType ; // eServerType ;
 };
 
+struct stMsgPlayerEnterGame
+	:public stMsg
+{
+	stMsgPlayerEnterGame(){cSysIdentifer = ID_MSG_C2GAME ; usMsgType = MSG_PLAYER_ENTER_GAME ;}
+	unsigned int nUserUID ;
+};
+
+struct stMsgPlayerBaseData
+	:public stMsg
+{
+	stMsgPlayerBaseData(){ cSysIdentifer = ID_MSG_GAME2C; usMsgType = MSG_PLAYER_BASE_DATA ; }
+	unsigned int nSessionID ; 
+};
+
 struct stMsgRoomPlayerLeave
 	:public stMsg
 {

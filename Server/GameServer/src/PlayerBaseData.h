@@ -10,6 +10,7 @@ public:
 	CPlayerBaseData(CPlayer*);
 	void Init();
 	bool OnMessage(stMsg* pMsg );
+	void SendBaseDatToClient();
 public:
 	int nCoin ;
 	unsigned int nDiamoned ;

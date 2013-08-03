@@ -150,6 +150,33 @@ void CRoom::Update(float fTimeElpas, unsigned int nTimerID )
 	}
 }
 
+void CRoom::SendCurRoomToPeer(CRoomPeer* peer )
+{
+	stMsgRoomCurInfo msgRoomInfo ;
+	msgRoomInfo.eRoomSate = GetRoomState() ;
+	msgRoomInfo.nPlayerCount = GetMaxSeat() - GetEmptySeatCount() ;
+	msgRoomInfo.nRound = m_nRound ;
+	msgRoomInfo.nSingleBetCoin = m_nSingleBetCoin ;
+	msgRoomInfo.nTotalBetCoin = m_nTotalBetCoin ;
+	int nAllLen = sizeof(msgRoomInfo) + msgRoomInfo.nPlayerCount * sizeof(stRoomPeerBrifInfo) ;
+	stRoomPeerBrifInfo stBrifInfo ;
+	char* pBuffer = new char[nAllLen] ;
+	int nOffset = 0 ;
+	memcpy(pBuffer,&msgRoomInfo,sizeof(msgRoomInfo));
+	nOffset += sizeof(msgRoomInfo);
+	for ( int i = 0 ; i < GetMaxSeat(); ++i )
+	{
+		if ( m_vRoomPeer[i] == NULL )
+		{
+			continue;
+		}
+		m_vRoomPeer[i]->GetBrifBaseInfo(stBrifInfo) ;
+		memcpy(pBuffer + nOffset, &stBrifInfo,sizeof(stRoomPeerBrifInfo)) ;
+		nOffset += sizeof(stRoomPeerBrifInfo);
+	}
+	peer->SendMsgToClient(pBuffer,nAllLen) ;
+}
+
 void CRoom::SwitchToRoomSate( eRoomState eFrom, eRoomState eToDest )
 {
 	switch ( eToDest )
@@ -348,6 +375,11 @@ void CRoom::DebugRoomInfo()
 
 bool CRoom::OnPeerMsg(CRoomPeer* pPeer, stMsg* pmsg )
 {
+	if ( CRoomBase::OnPeerMsg(pPeer,pmsg) )
+	{
+		return true ;
+	}
+
 	switch ( pmsg->usMsgType )
 	{
 	case MSG_ROOM_READY:

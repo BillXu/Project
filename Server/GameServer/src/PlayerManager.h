@@ -16,7 +16,7 @@ public:
 	CPlayer* GetPlayerByUserUID( unsigned int nUserUID );
 	CPlayer* GetPlayerBySessionID(unsigned int nSessionID );
 protected:
-	bool PreProcessLogicMessage( CPlayer*pPlayer ,stMsg* pmsg );
+	bool PreProcessLogicMessage( CPlayer*pPlayer ,stMsg* pmsg , unsigned int nSessionID );
 	void PushReserverPlayers( CPlayer* ) ;
 	CPlayer* GetReserverPlayer();
 	void RemovePlayer(CPlayer*);

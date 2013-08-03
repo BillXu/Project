@@ -22,6 +22,14 @@ bool CRoomPeer::OnMessage(stMsg* pMsg )
 	if ( MSG_ROOM_ENTER == pMsg->usMsgType )
 	{
 		stMsgRoomEnter msgEnter ;
+		CRoom* pRoom = CGameServerApp::SharedGameServerApp()->GetRoomMgr()->GetRoom(msgEnter.nRoomType,msgEnter.nRoomLevel) ;
+		if ( pRoom->CanJoin(this))
+		{
+			// sent cur room info to client ;
+			pRoom->SendCurRoomToPeer(this);
+			m_pRoom = pRoom ;
+			pRoom->AddPeer(this) ;
+		}
 		// find a room to enter ;
 		return true ;
 	}
@@ -57,6 +65,7 @@ void CRoomPeer::OnGetCard( unsigned char nCardA, unsigned char nCardB , unsigned
 
 void CRoomPeer::LeaveRoom()
 {
+	Reset();
 	if ( m_pRoom )
 	{
 		m_pRoom->OnPeerLeave(this);

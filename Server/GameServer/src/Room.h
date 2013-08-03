@@ -18,13 +18,14 @@ public:
 	virtual void Update(float fTimeElpas, unsigned int nTimerID );
 	virtual bool OnPeerMsg(CRoomPeer* pPeer, stMsg* pmsg );
 	void Rest();
+	void SendCurRoomToPeer(CRoomPeer* peer );
 protected:
 	void SwitchToRoomSate( eRoomState eFrom, eRoomState eToDest );
 	void NextPlayerAction();
 	char GetReadyPeerCount();
 	bool CheckFinish();  // when finished return true ;
 	void DebugRoomInfo();  // print room id player count , total bet coin , room state , single bet coin , round , current idx , main idx .
-protected:
+public:
 	static unsigned int s_RoomID ;
 protected:
 	float m_fRoomSateTick[eRoomState_Max] ;
