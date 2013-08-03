@@ -21,7 +21,7 @@ void CRoomBase::Init( unsigned int nRoomID , unsigned char nMaxSeat )
 	assert(m_eRoomType !=eRoom_Max && "Please assign m_eRoomtype" ) ;
 	m_nRoomID = nRoomID ;
 	m_nMaxSeat = nMaxSeat ;
-	m_eRoomState = eRoomState_PeerToJoin ;
+	m_eRoomState = eRoomState_WaitPeerToJoin ;
 	m_vRoomPeer = new CRoomPeer*[nMaxSeat];
 	for ( int i = 0 ; i < nMaxSeat ; ++i )
 	{

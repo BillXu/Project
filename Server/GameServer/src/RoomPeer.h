@@ -3,6 +3,7 @@
 #include "PeerCard.h"
 #include "BaseData.h"
 #include "CommonDefine.h"
+#include "MessageDefine.h"
 class CRoom ;
 class CRoomPeer
 	:public IPlayerComponent
@@ -22,6 +23,7 @@ public:
 	bool IsActive(); // not fail ,not give, not null 
 	unsigned int GetSessionID();
 	unsigned int GetCoin();
+	unsigned int  AddBetCoin( unsigned int naddBetCoin );  // return indeeed added betCoin ;
 	void GetBrifBaseInfo(stRoomPeerBrifInfo& vInfoOut );
 	unsigned char GetPeerIdxInRoom(){ return m_nPeerIdx ; }
 protected:

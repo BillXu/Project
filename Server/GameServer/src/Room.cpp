@@ -3,6 +3,7 @@
 #include "RoomPeer.h"
 #include "Player.h"
 #include "LogManager.h"
+#include <list>
 unsigned int CRoom::s_RoomID = 0 ;
 
 CRoom::CRoom()
@@ -17,7 +18,19 @@ CRoom::~CRoom()
 
 void CRoom::Init( unsigned int nRoomID , unsigned char nMaxSeat )
 {
+	CRoomBase::Init(nRoomID,nMaxSeat) ;
+	m_nCurMainPeerIdx = 0 ;
+	Rest();
+}
 
+void CRoom::Rest()
+{
+	float m_fRoomSateTick[eRoomState_Max] ;
+	memset(m_fRoomSateTick,0,sizeof(m_fRoomSateTick)) ;
+	m_nCurWaitPeerIdx = m_nCurMainPeerIdx ;
+	m_nSingleBetCoin = 10 ;
+	m_nTotalBetCoin = 0 ;
+	m_nRound = 0;
 }
 
 unsigned char CRoom::GetEmptySeatCount()
@@ -70,12 +83,16 @@ void CRoom::Update(float fTimeElpas, unsigned int nTimerID )
 	case eRoomState_WaitPeerToJoin:
 		{
 			// just wait 
+			if ( GetEmptySeatCount() == 0 )
+			{
+				SwitchToRoomSate(eRoomState_WaitPeerToJoin, eRoomState_WaitPeerToGetReady ) ;
+			}
 		}
 		break;
 	case eRoomState_WaitPeerToGetReady:
 		{
 			m_fRoomSateTick[eState]-= fTimeElpas ;
-			if ( m_fRoomSateTick[eState] <= 0 )
+			if ( m_fRoomSateTick[eState] <= 0 || GetReadyPeerCount() == GetMaxSeat() )
 			{
 				SwitchToRoomSate(eState,eRoomState_DistributeCard) ;
 			}
@@ -104,7 +121,14 @@ void CRoom::Update(float fTimeElpas, unsigned int nTimerID )
 			m_fRoomSateTick[eState]-= fTimeElpas ;
 			if ( m_fRoomSateTick[eState] <= 0 )
 			{
-				SwitchToRoomSate(eState,eRoomState_WaitPeerToJoin) ;
+				if ( CheckFinish() )
+				{
+					SwitchToRoomSate(GetRoomState(),eRoomState_ShowingResult ) ;
+				}
+				else
+				{
+					NextPlayerAction() ;
+				}
 			}
 		}
 		break;
@@ -131,7 +155,7 @@ void CRoom::SwitchToRoomSate( eRoomState eFrom, eRoomState eToDest )
 	{
 	case eRoomState_WaitPeerToJoin:
 		{
-
+			
 		}
 		break;
 	case eRoomState_WaitPeerToGetReady:
@@ -182,6 +206,7 @@ void CRoom::SwitchToRoomSate( eRoomState eFrom, eRoomState eToDest )
 	case eRoomState_ShowingResult:
 		{
 			m_fRoomSateTick[eToDest] = TIME_ROOM_SHOW_RESULT ;
+			Rest();
 		}
 		break;
 	default:
@@ -221,8 +246,237 @@ void CRoom::NextPlayerAction()
 	SendMsgRoomPeers(&msg,sizeof(msg)) ;
 }
 
+char CRoom::GetReadyPeerCount()
+{
+	char nCount = 0 ;
+	for ( int i = 0 ; i < GetMaxSeat() ; ++i )
+	{
+		if ( m_vRoomPeer[i] && m_vRoomPeer[i]->GetState() == eRoomPeer_Ready )
+		{
+			++nCount ;
+		}
+	}
+	return nCount ;
+}
+
+bool CRoom::CheckFinish()
+{
+	char nCount = 0 ;
+	CRoomPeer* peer = NULL ;
+	for ( int i = 0 ; i < GetMaxSeat() ; ++i )
+	{
+		if ( m_vRoomPeer[i] && m_vRoomPeer[i]->IsActive() )
+		{
+			++nCount ;
+			peer = m_vRoomPeer[i] ;
+			if ( nCount > 1 )
+			{
+				return false ;
+			}
+		}
+	}
+
+	if ( peer == NULL )
+	{
+		CLogMgr::SharedLogMgr()->ErrorLog("No winner , no") ;
+		return true ;
+	}
+
+	// unfinish below ;
+	std::list<stResultData*> vRData ;
+	for ( int i = 0 ; i < GetMaxSeat() ; ++i )
+	{
+		if ( m_vRoomPeer[i]->GetState())
+		{
+			++nCount ;
+			peer = m_vRoomPeer[i] ;
+			if ( nCount > 1 )
+			{
+				return false ;
+			}
+		}
+	}
+
+	stMsgRoomResult msg ;
+	return true;
+}
+
+void CRoom::DebugRoomInfo()
+{
+
+}
+
 bool CRoom::OnPeerMsg(CRoomPeer* pPeer, stMsg* pmsg )
 {
+	switch ( pmsg->usMsgType )
+	{
+	case MSG_ROOM_READY:
+		{
+			if ( eRoomState_WaitPeerAction == GetRoomState() || eRoomState_DistributeCard == GetRoomState() )
+			{
+				stMsgRoomRet msgRet ;
+				msgRet.nRet = 1 ; // room state not fitable ;
+				pPeer->SendMsgToClient((char*)&msgRet, sizeof(msgRet)) ; 
+				return false ;
+			}
+
+			pPeer->m_eState = eRoomPeer_Ready ;
+			stMsgRoomPlayerReady msg ;
+			msg.nReadyPlayerSessionID = pPeer->GetSessionID() ;
+			SendMsgRoomPeers(&msg,sizeof(msg)) ;
+			if ( GetReadyPeerCount() == GetMaxSeat() )
+			{
+				SwitchToRoomSate(GetRoomState(),eRoomState_DistributeCard) ;
+			}
+			else if ( GetReadyPeerCount() >= 2 && GetRoomState() != eRoomState_ShowingResult )
+			{
+				SwitchToRoomSate(GetRoomState(),eRoomState_WaitPeerToGetReady ) ;
+			}
+			DebugRoomInfo();
+		}
+		break; 
+	case MSG_ROOM_FOLLOW:
+		{
+			if ( eRoomState_WaitPeerAction != GetRoomState() )
+			{
+				stMsgRoomRet msgRet ;
+				msgRet.nRet = 1 ; // room state not fitable ;
+				pPeer->SendMsgToClient((char*)&msgRet, sizeof(msgRet)) ; 
+				return false;
+			}
+			
+			int factor = pPeer->GetState() == eRoomPeer_Look ? 2 : 1 ;
+			unsigned int naddBet = pPeer->AddBetCoin(m_nSingleBetCoin*factor) ; 
+			m_nTotalBetCoin += naddBet ;
+
+			stMsgRoomPlayerFollow msgFollow ;
+			msgFollow.nSessionID = pPeer->GetSessionID() ;
+			SendMsgRoomPeers(&msgFollow,sizeof(msgFollow)) ;
+			DebugRoomInfo();
+			NextPlayerAction();
+		}
+		break; 
+	case MSG_ROOM_ADD:
+		{
+			if ( eRoomState_WaitPeerAction != GetRoomState() )
+			{
+				stMsgRoomRet msgRet ;
+				msgRet.nRet = 1 ; // room state not fitable ;
+				pPeer->SendMsgToClient((char*)&msgRet, sizeof(msgRet)) ; 
+				return false;
+			}
+
+			// update single 
+			stMsgRoomAdd* msgAdd = (stMsgRoomAdd*)pmsg ;
+			if ( msgAdd->nAddMoney == 0 ) // double ;
+			{
+				m_nSingleBetCoin *= 2 ;
+			}
+			else if ( msgAdd->nAddMoney < m_nSingleBetCoin )
+			{
+				stMsgRoomRet msgRet ;
+				msgRet.nRet = 2 ; // add money should greate than crrent ;
+				pPeer->SendMsgToClient((char*)&msgRet, sizeof(msgRet)) ; 
+				return false;
+			}
+			else
+			{
+				m_nSingleBetCoin = msgAdd->nAddMoney ;
+			}
+
+			// update player self ;
+			int factor = pPeer->GetState() == eRoomPeer_Look ? 2 : 1 ;
+			unsigned int naddBet = pPeer->AddBetCoin(m_nSingleBetCoin*factor) ; 
+			m_nTotalBetCoin += naddBet ;
+
+			stMsgRoomPlayerAdd msgPlayerAdd ;
+			msgPlayerAdd.nBetCoin = naddBet ;
+			msgPlayerAdd.nNewSingle = m_nSingleBetCoin ;
+			msgPlayerAdd.nSessionID = pPeer->GetSessionID() ;
+			SendMsgRoomPeers(&msgPlayerAdd,sizeof(msgPlayerAdd)) ;
+			NextPlayerAction();
+			DebugRoomInfo() ;
+		}
+		break;
+	case MSG_ROOM_PK:
+		{
+			if ( eRoomState_WaitPeerAction != GetRoomState() )
+			{
+				stMsgRoomRet msgRet ;
+				msgRet.nRet = 1 ; // room state not fitable ;
+				pPeer->SendMsgToClient((char*)&msgRet, sizeof(msgRet)) ; 
+				return false;
+			}
+			stMsgRoomPK* pkMsg = (stMsgRoomPK*)pmsg ;
+			CRoomPeer* PKpeer = GetRoomPeerBySessionID(pkMsg->nPKWithSessionID );
+			if ( !PKpeer || PKpeer->IsActive() == false )
+			{
+				stMsgRoomRet msgRet ;
+				msgRet.nRet = 3 ; // unlegal target ;
+				pPeer->SendMsgToClient((char*)&msgRet, sizeof(msgRet)) ; 
+				return false;
+			}
+
+			bool bWin = pPeer->m_PeerCard.PKPeerCard(&PKpeer->m_PeerCard) ;
+			if ( bWin )
+			{
+				PKpeer->m_eState = eRoomPeer_Failed ;
+			}
+			else
+			{
+				pPeer->m_eState = eRoomPeer_Failed ;
+			}
+
+			int factor = pPeer->GetState() == eRoomPeer_Look ? 2 : 1 ;
+			unsigned int nConsum = m_nSingleBetCoin * factor * 2 ;
+			unsigned int naddBet = pPeer->AddBetCoin(nConsum) ; 
+			m_nTotalBetCoin += naddBet ;
+
+			stMsgRoomPlayerPK msgplayerpk  ;
+			msgplayerpk.bWin = bWin ;
+			msgplayerpk.nConsumCoin = naddBet ;
+			msgplayerpk.nPKInvokeSessionID = pPeer->GetSessionID() ;
+			msgplayerpk.nPKWithSessionID = PKpeer->GetSessionID() ;
+			SendMsgRoomPeers(&msgplayerpk,sizeof(msgplayerpk)) ;
+			DebugRoomInfo() ;
+		}
+		break ;
+	case MSG_ROOM_LOOK:
+		{
+			if ( eRoomState_WaitPeerAction != GetRoomState() && eRoomPeer_Unlook == pPeer->GetState() )
+			{
+				stMsgRoomRet msgRet ;
+				msgRet.nRet = 1 ; // room state not fitable ;
+				pPeer->SendMsgToClient((char*)&msgRet, sizeof(msgRet)) ; 
+				return false;
+			}
+
+			stMsgRoomPlayerLook msgLook ;
+			msgLook.nSessionID = pPeer->GetSessionID() ;
+			pPeer->m_PeerCard.GetCompositeCardRepresent(msgLook.vCard);
+			SendMsgRoomPeers(&msgLook,sizeof(msgLook)) ;
+		}
+		break;
+	case MSG_ROOM_GIVEUP:
+		{
+			if ( eRoomState_WaitPeerAction != GetRoomState() )
+			{
+				stMsgRoomRet msgRet ;
+				msgRet.nRet = 1 ; // room state not fitable ;
+				pPeer->SendMsgToClient((char*)&msgRet, sizeof(msgRet)) ; 
+				return false;
+			}
+
+			stMsgRoomPlayerGiveUp msgGiveUp ;
+			msgGiveUp.nIdx = pPeer->m_nPeerIdx ;
+			SendMsgRoomPeers(&msgGiveUp,sizeof(msgGiveUp)) ;	
+			if ( CheckFinish() )
+			{
+				SwitchToRoomSate(GetRoomState(),eRoomState_ShowingResult) ;
+			}
+		}
+		break; 
+	}
 	return true ;
 }
 

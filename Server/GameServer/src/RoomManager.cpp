@@ -48,7 +48,7 @@ bool CBigRoom::CanEnterRoomByLevel( unsigned char nLevel, CPlayer* pPlayer )
 		return false ;
 	}
 	stRoomArgument& pArg = m_vRoomArg[nLevel] ;
-	if ( pArg.nDiamondRequiredToEnter > pPlayer->GetBaseData()->nDiamoned )
+	if ((unsigned int)pArg.nDiamondRequiredToEnter > pPlayer->GetBaseData()->nDiamoned )
 		return false ;
 	if ( pArg.nMoneyRequiredToEnter > pPlayer->GetBaseData()->nCoin )
 		return false ;
@@ -122,10 +122,7 @@ int CBigRoom::GetAllActivePlayerCount()
 
 CRoom* CBigRoom::CreateRoom(stRoomArgument& pArg, int nFlag )
 {
-	CRoom* pRoom = new CRoom(pArg.nBaseBet);
-	pRoom->Init();
-	pRoom->SetFinalFlag(nFlag);
-	return pRoom ;
+
 }
 
 // room manager 

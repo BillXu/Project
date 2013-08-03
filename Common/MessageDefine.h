@@ -109,7 +109,7 @@ struct stMsgRoomRet
 	:public stMsg 
 {
 	stMsgRoomRet(){ cSysIdentifer = ID_MSG_GAME2C ; usMsgType = MSG_ROOM_RET ; }
-	unsigned char nRet ; // 0 means success , other value means failed ;
+	unsigned char nRet ; // 0 means success , 1 room state not fitable , 2 add money should greate than crrent ; 3 , unlegal pk target ;
 };
 
 struct stMsgRoomPlayerReady
@@ -174,6 +174,7 @@ struct stMsgRoomPlayerLook
 {
     stMsgRoomPlayerLook(){ cSysIdentifer = ID_MSG_GAME2C ; usMsgType = MSG_ROOM_PLAYER_LOOK ; }
     char nSessionID ;
+	char vCard[3] ;
 };
 
 struct stMsgRoomPK
