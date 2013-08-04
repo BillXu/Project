@@ -171,7 +171,17 @@ void CGateClientMgr::OnPeerDisconnected(RakNet::RakNetGUID& nPeerDisconnected, R
 	stGateClient* pDstClient = GetGateClientByNetWorkID(pData->guid) ;
 	if ( pDstClient )
 	{
-		pDstClient->StartWaitForReconnect() ;
+		if ( pData->data[0] == ID_DISCONNECTION_NOTIFICATION )
+		{
+			OnClientWaitReconnectTimeUp(pDstClient) ;
+			CLogMgr::SharedLogMgr()->ErrorLog("client disconnect ") ;
+		}
+		else
+		{
+			pDstClient->StartWaitForReconnect() ;
+			CLogMgr::SharedLogMgr()->ErrorLog("client lost") ;
+		}
+		
 		return ;
 	}
 

@@ -3,6 +3,8 @@
 #include "RoomPeer.h"
 #include "Player.h"
 #include "MessageDefine.h"
+#include "GameServerApp.h"
+#include "Timer.h"
 CRoomBase::CRoomBase()
 {
 	m_eRoomType = eRoom_Max ;
@@ -27,6 +29,8 @@ void CRoomBase::Init( unsigned int nRoomID , unsigned char nMaxSeat )
 	{
 		m_vRoomPeer[i] = NULL ;
 	}
+	CGameServerApp::SharedGameServerApp()->GetTimerMgr()->AddTimer(this,cc_selector_timer(CRoomBase::Update));
+	SetEnableUpdate(true) ;
 }
 
 void CRoomBase::SendMsgRoomPeers(stMsg*pMsg ,unsigned short nLen )

@@ -75,15 +75,17 @@ void CGameServerApp::Init()
 	//printf( "A1 win %d , A2 win %d \n" ,A1Win,A2Win);
 	// test end ;
 	m_strDBIP = "" ;
-	m_strGateIP = "192.168.18.107";
+	m_strGateIP = "127.0.0.1";
 	m_pNetWork = new CNetWorkMgr ;
 	m_pNetWork->SetupNetwork(2);
 	m_pNetWork->AddMessageDelegate(this);
 	ConnectToOtherServer();
 	// init component ;
+	m_pTimerMgr = new CTimerManager ;
+
 	m_pRoomMgr.Init() ;
 	m_pPlayerManager = new CPlayerManager ;
-	m_pTimerMgr = new CTimerManager ;
+	
 }
 
 bool CGameServerApp::OnMessage( RakNet::Packet* pMsg )

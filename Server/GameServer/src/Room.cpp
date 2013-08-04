@@ -154,7 +154,7 @@ void CRoom::SendCurRoomToPeer(CRoomPeer* peer )
 {
 	stMsgRoomCurInfo msgRoomInfo ;
 	msgRoomInfo.eRoomSate = GetRoomState() ;
-	msgRoomInfo.nPlayerCount = GetMaxSeat() - GetEmptySeatCount() ;
+	msgRoomInfo.nPlayerCount = GetMaxSeat() - GetEmptySeatCount() -1 ; // -1 self ;
 	msgRoomInfo.nRound = m_nRound ;
 	msgRoomInfo.nSingleBetCoin = m_nSingleBetCoin ;
 	msgRoomInfo.nTotalBetCoin = m_nTotalBetCoin ;
@@ -166,7 +166,7 @@ void CRoom::SendCurRoomToPeer(CRoomPeer* peer )
 	nOffset += sizeof(msgRoomInfo);
 	for ( int i = 0 ; i < GetMaxSeat(); ++i )
 	{
-		if ( m_vRoomPeer[i] == NULL )
+		if ( m_vRoomPeer[i] == NULL || peer->GetSessionID() == m_vRoomPeer[i]->GetSessionID() )
 		{
 			continue;
 		}
@@ -523,6 +523,7 @@ bool CRoom::OnPeerMsg(CRoomPeer* pPeer, stMsg* pmsg )
 				return false;
 			}
 
+			pPeer->m_eState = eRoomPeer_Look ; 
 			stMsgRoomPlayerLook msgLook ;
 			msgLook.nSessionID = pPeer->GetSessionID() ;
 			pPeer->m_PeerCard.GetCompositeCardRepresent(msgLook.vCard);
@@ -538,6 +539,7 @@ bool CRoom::OnPeerMsg(CRoomPeer* pPeer, stMsg* pmsg )
 				pPeer->SendMsgToClient((char*)&msgRet, sizeof(msgRet)) ; 
 				return false;
 			}
+			pPeer->m_eState = eRoomPeer_GiveUp ;
 
 			stMsgRoomPlayerGiveUp msgGiveUp ;
 			msgGiveUp.nIdx = pPeer->m_nPeerIdx ;

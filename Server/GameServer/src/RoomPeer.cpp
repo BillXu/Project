@@ -25,14 +25,16 @@ bool CRoomPeer::OnMessage(stMsg* pMsg )
 		CRoom* pRoom = CGameServerApp::SharedGameServerApp()->GetRoomMgr()->GetRoom(msgEnter.nRoomType,msgEnter.nRoomLevel) ;
 		if ( pRoom->CanJoin(this))
 		{
+			// sent cur room info to client ;
+			pRoom->AddPeer(this) ;
+			m_pRoom = pRoom ;
+
 			stMsgRoomEnterRet msgRet ;
 			msgRet.nRet = 0 ;
 			msgRet.nRoomID = pRoom->GetRoomID();
+			msgRet.nIdx = m_nPeerIdx ;
 			SendMsgToClient((char*)&msgRet,sizeof(msgRet)) ;
-			// sent cur room info to client ;
 			pRoom->SendCurRoomToPeer(this);
-			m_pRoom = pRoom ;
-			pRoom->AddPeer(this) ;
 		}
 		// find a room to enter ;
 		return true ;
@@ -69,12 +71,12 @@ void CRoomPeer::OnGetCard( unsigned char nCardA, unsigned char nCardB , unsigned
 
 void CRoomPeer::LeaveRoom()
 {
-	Reset();
 	if ( m_pRoom )
 	{
 		m_pRoom->OnPeerLeave(this);
 		m_pRoom = NULL ;
 	}
+	Reset();
 }
 
 void CRoomPeer::OnWaitTimeOut()// please make a message fake ;

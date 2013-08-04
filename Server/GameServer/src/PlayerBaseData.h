@@ -11,6 +11,7 @@ public:
 	void Init();
 	bool OnMessage(stMsg* pMsg );
 	void SendBaseDatToClient();
+	void Reset(){SendBaseDatToClient();}
 public:
 	int nCoin ;
 	unsigned int nDiamoned ;

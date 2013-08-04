@@ -206,6 +206,7 @@ bool CPlayerManager::PreProcessLogicMessage( CPlayer*pPlayer ,stMsg* pmsg , unsi
 	// process player logout ;
 	if ( MSG_DISCONNECT_CLIENT == pmsg->usMsgType )
 	{
+		CLogMgr::SharedLogMgr()->SystemLog("client disconnect !") ;
 		if ( pPlayer )
 		{
 			pPlayer->OnPlayerDisconnect() ;
