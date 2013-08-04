@@ -12,6 +12,7 @@
 #include "SimpleAudioEngine.h"
 #include "HelloWorldScene.h"
 #include "RoomLayer.h"
+#include "ClientApp.h"
 USING_NS_CC;
 using namespace CocosDenshion;
 
@@ -47,10 +48,7 @@ bool AppDelegate::applicationDidFinishLaunching()
     float fWfactor = 960.0 / CCDirector::sharedDirector()->getWinSize().width ;
     CCDirector::sharedDirector()->setContentScaleFactor( fHfactor > fWfactor ? fHfactor :fWfactor );
     // create a scene. it's an autorelease object
-    CCScene *pScene = CRoomLayer::RoomScene();
-    // run
-    pDirector->runWithScene(pScene);
-
+    CClientApp::SharedClientApp()->StartApp();
     return true;
 }
 
@@ -60,6 +58,7 @@ void AppDelegate::applicationDidEnterBackground()
     CCDirector::sharedDirector()->stopAnimation();
     SimpleAudioEngine::sharedEngine()->pauseBackgroundMusic();
     SimpleAudioEngine::sharedEngine()->pauseAllEffects();
+    CClientApp::SharedClientApp()->OnExitApp();
 }
 
 // this function will be called when the app is active again

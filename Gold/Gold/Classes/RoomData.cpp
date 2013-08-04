@@ -8,6 +8,12 @@
 
 #include "RoomData.h"
 #include "RoomLayer.h"
+
+bool stRoomPeerData::IsActive()
+{
+    return (ePeerState == eRoomPeer_Look || ePeerState == eRoomPeer_Unlook );
+}
+
 void CRoomData::Init(CRoomLayer* pLayer )
 {
     m_pRoomLayer = pLayer ;
@@ -214,6 +220,19 @@ char CRoomData::GetPlayerCount()
     for ( int i = 0 ; i < MAX_ROOM_PEER ; ++i )
     {
         if ( m_vRoomPeers[i].nSessionID )
+        {
+            ++nCount ;
+        }
+    }
+    return nCount ;
+}
+
+char CRoomData::GetActiveCount()
+{
+    int nCount = 0 ;
+    for ( int i = 0 ; i < MAX_ROOM_PEER ; ++i )
+    {
+        if ( m_vRoomPeers[i].nSessionID && m_vRoomPeers[i].IsActive() )
         {
             ++nCount ;
         }

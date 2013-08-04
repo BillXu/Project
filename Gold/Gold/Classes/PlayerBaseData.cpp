@@ -9,5 +9,16 @@
 #include "PlayerBaseData.h"
 bool CPlayerBaseData::OnMessage(stMsg *pMessage)
 {
+    if ( MSG_PLAYER_BASE_DATA == pMessage->usMsgType )
+    {
+        stMsgPlayerBaseData* pbase = (stMsgPlayerBaseData*)pMessage ;
+        nSessionID = pbase->nSessionID ;
+    }
+    else if ( MSG_ROOM_ENTER == pMessage->usMsgType )
+    {
+        stMsgRoomEnterRet* pret = (stMsgRoomEnterRet*)pMessage ;
+        nIdx = pret->nIdx ;
+        nRoomID = pret->nRoomID ;
+    }
     return false ;
 }

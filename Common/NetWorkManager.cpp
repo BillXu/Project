@@ -16,9 +16,6 @@ void CNetMessageDelegate::SetPriority( unsigned int nPriority )
 	if ( nPriority == GetPriority() )
 		return ;
 	m_nPriority = nPriority ;
-	assert( m_pNetWorkMgr && "can not be null" ) ;
-	m_pNetWorkMgr->RemoveMessageDelegate(this);
-	m_pNetWorkMgr->AddMessageDelegate(this);
 }
 
 CNetWorkMgr::CNetWorkMgr()
@@ -128,6 +125,7 @@ void CNetWorkMgr::ReciveMessage()
 	RakNet::Packet* packet = NULL ;
 	while ( (packet = m_pNetPeer->Receive()))
     {
+        ProcessDelegateAddRemove();
         unsigned char nMessageID = packet->data[0] ;
         s_nCurrentDataSize = packet->length ;
         switch (nMessageID)
@@ -200,26 +198,12 @@ void CNetWorkMgr::AddMessageDelegate(CNetMessageDelegate *pDelegate, unsigned sh
 		return ;
 	pDelegate->SetNetWorkMgr(this) ;
 	pDelegate->SetPriority(nPrio) ;
+    m_vWillAddDelegate.push_back(pDelegate) ;
 }
 
 void CNetWorkMgr::AddMessageDelegate(CNetMessageDelegate *pDelegate )
 {
-	if ( !pDelegate)
-		return ;
-	pDelegate->SetNetWorkMgr(this) ;
-	RemoveMessageDelegate(pDelegate) ;
-	LIST_DELEGATE::iterator iter = m_vAllDelegate.begin();
-	CNetMessageDelegate* pDelegateIter = NULL ;
-	for ( ; iter != m_vAllDelegate.end(); ++iter)
-	{
-		pDelegateIter = *iter ;
-		if ( pDelegateIter->GetPriority() <= pDelegate->GetPriority() )
-		{
-			m_vAllDelegate.insert(iter,pDelegate);
-			return ;
-		}
-	}
-	m_vAllDelegate.push_back(pDelegate) ;
+    m_vWillAddDelegate.push_back(pDelegate) ;
 }
 
 void CNetWorkMgr::RemoveAllDelegate()
@@ -229,14 +213,9 @@ void CNetWorkMgr::RemoveAllDelegate()
 
 void CNetWorkMgr::RemoveMessageDelegate(CNetMessageDelegate *pDelegate)
 {
-    LIST_DELEGATE::iterator iter = m_vAllDelegate.begin() ;
-    for ( ; iter != m_vAllDelegate.end() ; ++iter )
+    if ( pDelegate )
     {
-        if ( *iter == pDelegate )
-        {
-            m_vAllDelegate.erase(iter) ;
-            return ;
-        }
+        m_vWillRemoveDelegate.push_back(pDelegate) ;
     }
 }
 
@@ -299,5 +278,52 @@ bool CNetWorkMgr::OnConnectSateChanged( CNetMessageDelegate* pDeleate,void* pDat
             return true ;
     }
 	return pDeleate->OnConnectStateChanged(eSate,packet) ;
+}
+
+void CNetWorkMgr::ProcessDelegateAddRemove()
+{
+    if ( m_vWillRemoveDelegate.size() > 0 )
+    {
+        LIST_DELEGATE::iterator iter = m_vWillRemoveDelegate.begin();
+        for ( ; iter != m_vWillRemoveDelegate.end() ; ++iter )
+        {
+            LIST_DELEGATE::iterator iterRemove = m_vAllDelegate.begin() ;
+            for ( ; iterRemove != m_vAllDelegate.end() ; ++iterRemove )
+            {
+                if ( *iterRemove == *iter )
+                {
+                    m_vAllDelegate.erase(iterRemove) ;
+                    break ;
+                }
+            }
+        }
+        m_vWillRemoveDelegate.clear();
+    }
+    
+    if ( m_vWillAddDelegate.size() > 0 )
+    {
+        LIST_DELEGATE::iterator iter = m_vWillAddDelegate.begin();
+        CNetMessageDelegate* pDelegate = NULL ;
+        for ( ; iter != m_vWillAddDelegate.end() ; ++iter )
+        {
+            pDelegate = *iter ;
+            if ( !pDelegate)
+                continue;
+            pDelegate->SetNetWorkMgr(this) ;
+            LIST_DELEGATE::iterator iter = m_vAllDelegate.begin();
+            CNetMessageDelegate* pDelegateIter = NULL ;
+            for ( ; iter != m_vAllDelegate.end(); ++iter)
+            {
+                pDelegateIter = *iter ;
+                if ( pDelegateIter->GetPriority() <= pDelegate->GetPriority() )
+                {
+                    m_vAllDelegate.insert(iter,pDelegate);
+                    continue ;
+                }
+            }
+            m_vAllDelegate.push_back(pDelegate) ;
+        }
+        m_vWillAddDelegate.clear();
+    }
 }
 

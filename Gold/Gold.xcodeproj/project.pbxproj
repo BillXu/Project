@@ -403,6 +403,7 @@
 		9A52B70B17ABB1F2009CD567 /* PlayerData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A52B70917ABB1F2009CD567 /* PlayerData.cpp */; };
 		9A52B70E17ABB28F009CD567 /* IPlayerData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A52B70C17ABB28F009CD567 /* IPlayerData.cpp */; };
 		9A52B71117ABB9A9009CD567 /* PlayerBaseData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A52B70F17ABB9A9009CD567 /* PlayerBaseData.cpp */; };
+		9A7C59CF17AE25AC009D6D4E /* LoginScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A7C59CD17AE25AC009D6D4E /* LoginScene.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -1285,6 +1286,8 @@
 		9A52B70D17ABB28F009CD567 /* IPlayerData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = IPlayerData.h; path = Classes/IPlayerData.h; sourceTree = "<group>"; };
 		9A52B70F17ABB9A9009CD567 /* PlayerBaseData.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PlayerBaseData.cpp; path = Classes/PlayerBaseData.cpp; sourceTree = "<group>"; };
 		9A52B71017ABB9A9009CD567 /* PlayerBaseData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PlayerBaseData.h; path = Classes/PlayerBaseData.h; sourceTree = "<group>"; };
+		9A7C59CD17AE25AC009D6D4E /* LoginScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = LoginScene.cpp; path = Classes/LoginScene.cpp; sourceTree = "<group>"; };
+		9A7C59CE17AE25AC009D6D4E /* LoginScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LoginScene.h; path = Classes/LoginScene.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -2528,6 +2531,7 @@
 		9A1A2E9717A0CC5D00B99BE0 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				9A7C59CC17AE258A009D6D4E /* LoginScene */,
 				9A52B70817ABB1CA009CD567 /* PlayerData */,
 				9A52B58A17AA3899009CD567 /* Common */,
 				9A0E2C2917A2174E0052B3D0 /* RoomScene */,
@@ -2833,6 +2837,15 @@
 				9A52B71017ABB9A9009CD567 /* PlayerBaseData.h */,
 			);
 			name = PlayerData;
+			sourceTree = "<group>";
+		};
+		9A7C59CC17AE258A009D6D4E /* LoginScene */ = {
+			isa = PBXGroup;
+			children = (
+				9A7C59CD17AE25AC009D6D4E /* LoginScene.cpp */,
+				9A7C59CE17AE25AC009D6D4E /* LoginScene.h */,
+			);
+			name = LoginScene;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -3280,6 +3293,7 @@
 				9A52B70B17ABB1F2009CD567 /* PlayerData.cpp in Sources */,
 				9A52B70E17ABB28F009CD567 /* IPlayerData.cpp in Sources */,
 				9A52B71117ABB9A9009CD567 /* PlayerBaseData.cpp in Sources */,
+				9A7C59CF17AE25AC009D6D4E /* LoginScene.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3358,6 +3372,7 @@
 				GCC_PREFIX_HEADER = Gold/Prefix.pch;
 				"GCC_THUMB_SUPPORT[arch=armv6]" = "";
 				INFOPLIST_FILE = Gold/Resources/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/Gold/libs/cocos2dx/platform/third_party/ios/libraries\"",
@@ -3384,6 +3399,7 @@
 				GCC_PREFIX_HEADER = Gold/Prefix.pch;
 				"GCC_THUMB_SUPPORT[arch=armv6]" = "";
 				INFOPLIST_FILE = Gold/Resources/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/Gold/libs/cocos2dx/platform/third_party/ios/libraries\"",
