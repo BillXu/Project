@@ -30,7 +30,7 @@ void CClientApp::StartApp()
     // set up net work 
     m_pNetWorkMgr = new CNetWorkMgr ;
     m_pNetWorkMgr->SetupNetwork();
-    m_pNetWorkMgr->ConnectToServer("192.168.18.107", GATE_SERVER_PORT ) ;
+    m_pNetWorkMgr->ConnectToServer("192.168.18.100", GATE_SERVER_PORT ) ;
     m_pNetWorkMgr->AddMessageDelegate(this) ;
     
     // meber var
@@ -109,7 +109,7 @@ bool CClientApp::OnMessage( RakNet::Packet* pRakMsg )
     {
         // send enter game ;
         stMsgPlayerEnterGame msgEntergame ;
-        msgEntergame.nUserUID = 100 ;
+        msgEntergame.nUserUID = time(NULL) ;
         SendMsg(&msgEntergame, sizeof(msgEntergame)) ;
         return true ;
     }
