@@ -25,6 +25,10 @@ bool CRoomPeer::OnMessage(stMsg* pMsg )
 		CRoom* pRoom = CGameServerApp::SharedGameServerApp()->GetRoomMgr()->GetRoom(msgEnter.nRoomType,msgEnter.nRoomLevel) ;
 		if ( pRoom->CanJoin(this))
 		{
+			stMsgRoomEnterRet msgRet ;
+			msgRet.nRet = 0 ;
+			msgRet.nRoomID = pRoom->GetRoomID();
+			SendMsgToClient((char*)&msgRet,sizeof(msgRet)) ;
 			// sent cur room info to client ;
 			pRoom->SendCurRoomToPeer(this);
 			m_pRoom = pRoom ;

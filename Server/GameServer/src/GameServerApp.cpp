@@ -75,7 +75,7 @@ void CGameServerApp::Init()
 	//printf( "A1 win %d , A2 win %d \n" ,A1Win,A2Win);
 	// test end ;
 	m_strDBIP = "" ;
-	m_strGateIP = "192.168.18.108";
+	m_strGateIP = "192.168.18.107";
 	m_pNetWork = new CNetWorkMgr ;
 	m_pNetWork->SetupNetwork(2);
 	m_pNetWork->AddMessageDelegate(this);
@@ -101,11 +101,13 @@ bool CGameServerApp::OnMessage( RakNet::Packet* pMsg )
 		if ( MSG_VERIFY_GATE == MsgVer->usMsgType )
 		{
 			m_nGateServerNetUID = pMsg->guid ;
+			m_bGateServerConnected = true ;
 			return true ;
 		}
 		else if ( MSG_VERIFY_DB == MsgVer->usMsgType )
 		{
 			m_nDBServerNetUID = pMsg->guid ;
+			m_bDBserverConnected = true ;
 			return true ;
 		}
 	}

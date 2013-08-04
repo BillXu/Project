@@ -8,6 +8,10 @@
 CPlayer::CPlayer( )
 {
 	m_nUserUID = 0 ;
+	for ( int i = ePlayerComponent_None; i < ePlayerComponent_Max ; ++i )
+	{
+		 m_vAllComponents[i] = NULL;
+	}
 }
 
 CPlayer::~CPlayer()

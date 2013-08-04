@@ -33,6 +33,16 @@ CPlayerManager::~CPlayerManager()
 bool CPlayerManager::OnMessage( RakNet::Packet* pMsg )
 {
 	stMsg* pMessage = (stMsg*)pMsg->data ;
+	if ( pMessage->usMsgType == MSG_DISCONNECT_CLIENT )
+	{
+		stMsgClientDisconnect* pDisMsg = (stMsgClientDisconnect*)pMessage ;
+		CPlayer* pPlayer = GetPlayerBySessionID(pDisMsg->nSeesionID) ;
+		if ( PreProcessLogicMessage(pPlayer,pMessage,pDisMsg->nSeesionID ) )
+		{
+			return true ;
+		}
+	}
+
 	if ( pMessage->usMsgType == MSG_TRANSER_DATA )
 	{
 		CHECK_MSG_SIZE(stMsgTransferData,pMsg->length);
@@ -188,15 +198,19 @@ bool CPlayerManager::PreProcessLogicMessage( CPlayer*pPlayer ,stMsg* pmsg , unsi
 				pNew = new CPlayer ;
 				pNew->Init(pmsgenter->nUserUID,nSessionID ) ;
 			}
-			AddPlayer(pPlayer) ;
+			AddPlayer(pNew) ;
+			return true ;
 		}
 	}
 
 	// process player logout ;
-	if ( MSG_DISCONNECT_CLIENT == pmsg->usMsgType && pPlayer )
+	if ( MSG_DISCONNECT_CLIENT == pmsg->usMsgType )
 	{
-		pPlayer->OnPlayerDisconnect() ;
-		RemovePlayer(pPlayer);
+		if ( pPlayer )
+		{
+			pPlayer->OnPlayerDisconnect() ;
+			RemovePlayer(pPlayer);
+		}
 		return true ;
 	}
 	return false ;

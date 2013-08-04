@@ -61,8 +61,9 @@ bool CGateClientMgr::OnMessage( RakNet::Packet* pData )
 				pGateClient = new stGateClient ;
 			}
 			pGateClient->Reset(++s_nSeesionIDProducer,pData->guid) ;
+			AddClientGate(pGateClient);
 		}
-		else
+		else 
 		{
 			CLogMgr::SharedLogMgr()->SystemLog("Unknown identify from ip = %s",pData->systemAddress.ToString(true) ) ;
 		}
@@ -203,11 +204,11 @@ void CGateClientMgr::RemoveClientGate(stGateClient* pGateClient )
 {
 	if ( pGateClient == NULL )
 		return ;
+	m_vNetWorkIDGateClient.erase(m_vNetWorkIDGateClient.find(pGateClient->nNetWorkID)) ;
+	m_vSessionGateClient.erase(m_vSessionGateClient.find(pGateClient->nSessionId)) ;
 	RakNet::RakNetGUID guid = RakNet::UNASSIGNED_RAKNET_GUID ;
 	pGateClient->Reset(0,guid) ;
 	m_vGateClientReserver.push_back(pGateClient) ;
-	m_vNetWorkIDGateClient.erase(m_vNetWorkIDGateClient.find(pGateClient->nNetWorkID)) ;
-	m_vSessionGateClient.erase(m_vSessionGateClient.find(pGateClient->nSessionId)) ;
 }
 
 stGateClient* CGateClientMgr::GetReserverGateClient()
