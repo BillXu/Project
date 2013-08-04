@@ -8,7 +8,8 @@
 
 #include "RoomData.h"
 #include "RoomLayer.h"
-
+#include "ClientApp.h"
+#include "PlayerBaseData.h"
 bool stRoomPeerData::IsActive()
 {
     return (ePeerState == eRoomPeer_Look || ePeerState == eRoomPeer_Unlook );
@@ -33,7 +34,7 @@ bool CRoomData::OnMessage( RakNet::Packet* pRakMsg )
         {
             stMsgRoomPlayerEnter* pRet = (stMsgRoomPlayerEnter*)pMsg ;
             memcpy(&m_vRoomPeers[pRet->nEnterPlayerInfo.nIdx], &pRet->nEnterPlayerInfo, sizeof(stRoomPeerBrifInfo)) ;
-            m_pRoomLayer->OnPlayerEnter(pRet->nEnterPlayerInfo.nIdx, &m_vRoomPeers[pRet->nEnterPlayerInfo.nIdx]) ;
+            m_pRoomLayer->OnPlayerEnter(ConvertToClientIdx(pRet->nEnterPlayerInfo.nIdx), &m_vRoomPeers[pRet->nEnterPlayerInfo.nIdx]) ;
         }
             break;
         case MSG_ROOM_PLAYER_LEAVE:
@@ -79,19 +80,44 @@ bool CRoomData::OnMessage( RakNet::Packet* pRakMsg )
                 pData->ePeerState = eRoomPeer_Ready ;
                 m_pRoomLayer->OnUpdatePlayerState(ConvertToClientIdx(pData->nIdx), eRoomPeer_Ready) ;
             }
+            else
+            {
+                if ( pRet->nReadyPlayerSessionID ==  CClientApp::SharedClientApp()->GetSessionID() )
+                {
+                    m_pRoomLayer->OnUpdatePlayerState(4, eRoomPeer_Ready) ;
+                }
+            }
         }
             break ;
         case MSG_ROOM_DISTRIBUTE_CARD:
         {
+            // change ready peer's state to unlook
+            for ( int i = 0 ; i < MAX_ROOM_PEER -1 ; ++i )
+            {
+                if ( m_vRoomPeers[i].nSessionID && m_vRoomPeers[i].ePeerState == eRoomPeer_Ready )
+                {
+                    m_vRoomPeers[i].ePeerState = eRoomPeer_Unlook;
+                }
+            }
             m_pRoomLayer->OnDistributeCard();
         }
             break ;
         case MSG_ROOM_WAIT_PLAYER_ACTION:
         {
             stMsgRoomWaitPlayerAction* pRet = (stMsgRoomWaitPlayerAction*)pMsg ;
-            stRoomPeerData* pdata = GetRoomPeerDataBySessionID(pRet->nSessionID) ;
             m_nRound = pRet->nRound ;
-            m_pRoomLayer->OnWaitPlayerAction(ConvertToClientIdx(pdata->nIdx)) ;
+            stRoomPeerData* pdata = GetRoomPeerDataBySessionID(pRet->nSessionID) ;
+            if ( pdata )
+            {
+                m_pRoomLayer->OnWaitPlayerAction(ConvertToClientIdx(pdata->nIdx)) ;
+            }
+            else
+            {
+                if ( pRet->nSessionID ==  CClientApp::SharedClientApp()->GetSessionID() )
+                {
+                    m_pRoomLayer->OnWaitPlayerAction(4) ;
+                }
+            }
         }
             break ;
         case MSG_ROOM_PLAYER_FOLLOW:
@@ -103,6 +129,11 @@ bool CRoomData::OnMessage( RakNet::Packet* pRakMsg )
             if ( pdata->ePeerState == eRoomPeer_Look )
             {
                 nBetCoin *= 2 ;
+            }
+            
+            if ( pdata->nCoin < nBetCoin )
+            {
+                nBetCoin = pdata->nCoin ;
             }
             pdata->nBetCoin += nBetCoin ;
             pdata->nCoin -= nBetCoin ;
@@ -157,7 +188,11 @@ bool CRoomData::OnMessage( RakNet::Packet* pRakMsg )
             {
                 pdata->ePeerState = eRoomPeer_GiveUp ;
             }
-            m_pRoomLayer->OnUpdatePlayerState(ConvertToClientIdx(pdata->nIdx), eRoomPeer_GiveUp) ;
+            else
+            {
+                CClientApp::SharedClientApp()->GetPlayerData()->GetBaseData()->ePeerState = eRoomPeer_GiveUp ;
+            }
+            m_pRoomLayer->OnUpdatePlayerState(ConvertToClientIdx(pRet->nIdx), eRoomPeer_GiveUp) ;
         }
             break ;
         default:
@@ -192,7 +227,7 @@ stRoomPeerData* CRoomData::GetRoomPeerDataByClientIdx( char nClientIdx )
 
 char CRoomData::ConvertoServerIdx(char nClientIdx)
 {
-    int nMyServerIdx = 3 ;
+    int nMyServerIdx = CClientApp::SharedClientApp()->GetPlayerData()->GetBaseData()->nIdx ;
     if ( nClientIdx == MAX_ROOM_PEER -1 )
         return nMyServerIdx ;
     char nOffset = MAX_ROOM_PEER -1  - nClientIdx ;
@@ -204,7 +239,7 @@ char CRoomData::ConvertoServerIdx(char nClientIdx)
 
 char CRoomData::ConvertToClientIdx(char nServerIdx )
 {
-    char nMyServerIdx = 0 ;;
+    char nMyServerIdx = CClientApp::SharedClientApp()->GetPlayerData()->GetBaseData()->nIdx ;
     char nOffset = nMyServerIdx - nServerIdx ;
     char nClientIdx = MAX_ROOM_PEER - 1 - nOffset  ;
     if ( nClientIdx < 0 )

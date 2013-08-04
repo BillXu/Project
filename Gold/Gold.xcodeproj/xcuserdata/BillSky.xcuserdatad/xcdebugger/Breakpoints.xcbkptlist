@@ -32,11 +32,24 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "Gold/Classes/RoomData.cpp"
-         timestampString = "397298592.509954"
+         timestampString = "397299664.146361"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "75"
-         endingLineNumber = "75"
+         startingLineNumber = "76"
+         endingLineNumber = "76"
+         landmarkName = "CRoomData::OnMessage( RakNet::Packet* pRakMsg )"
+         landmarkType = "5">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "Yes"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         filePath = "Gold/Classes/RoomData.cpp"
+         timestampString = "397325771.644263"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "107"
+         endingLineNumber = "107"
          landmarkName = "CRoomData::OnMessage( RakNet::Packet* pRakMsg )"
          landmarkType = "5">
       </FileBreakpoint>

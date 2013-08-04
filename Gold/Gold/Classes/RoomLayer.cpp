@@ -112,7 +112,15 @@ void CRoomLayer::OnDistributeCardOver(float fTime )
     // clearn distribute elements ;
     for ( int i = 0 ; i < 4 ; ++i )
     {
-        m_pDefault[i]->setVisible(true) ;
+        stRoomPeerData* pData = m_pRoomData->GetRoomPeerDataByClientIdx(i) ;
+        if (pData != NULL &&  pData->ePeerState == eRoomPeer_Unlook )
+        {
+            m_pDefault[i]->setVisible(true) ;
+        }
+        else
+        {
+            m_pDefault[i]->setVisible(false) ;
+        }
         m_pLook[i]->setVisible(false) ;
         m_pGive[i]->setVisible(false) ;
         m_pFail[i]->setVisible(false) ;
@@ -299,8 +307,8 @@ void CRoomLayer::StartDistributeCard()
         {
             idx -= 5 ;
         }
-        
-        if ( m_pPlayer[idx]->IsReady() == false )
+        stRoomPeerData* pData = m_pRoomData->GetRoomPeerDataByClientIdx(i) ;
+        if ( (pData != NULL && pData->ePeerState != eRoomPeer_Unlook) || ( pData == NULL && i != 4 ) )
         {
             continue ;
         }
@@ -544,6 +552,11 @@ void CRoomLayer::OnUpdatePlayerState(char nIdx , eRoomPeerState ePeerState )
 
 void CRoomLayer::OnDistributeCard()
 {
+    // hide ready icon ;
+    for ( int i = 0 ; i < MAX_ROOM_PEER ; ++i )
+    {
+        m_pReadyIcon[i]->setVisible(false) ;
+    }
     animationManager->runAnimationsForSequenceNamed("ComeIn") ;
 }
 
