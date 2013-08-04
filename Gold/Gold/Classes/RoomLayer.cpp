@@ -15,6 +15,7 @@ CCScene* CRoomLayer::RoomScene()
     CRoomLayer* pLayer = new CRoomLayer ;
     pLayer->init() ;
     CCScene* pScene = CCScene::create() ;
+    pLayer->setTag(0);
     pScene->addChild(pLayer) ;
     pLayer->release() ;
     return  pScene ;
@@ -98,6 +99,8 @@ bool CRoomLayer::init()
     m_pSelectAddBetCoin->SetDelegate(this) ;
     m_pSelectAddBetCoin->InitSelectedMoney(10, 20, 50, 100, 1000) ;
     m_pSelectAddBetCoin->SetMinEnable(50, true) ;
+    
+    ResetRoomState();
     return true ;
 }
 
@@ -198,7 +201,8 @@ void CRoomLayer::completedAnimationSequenceNamed(const char *name)
 
 void CRoomLayer::OnFollow(CCObject*, CCControlEvent)
 {
-    
+    stMsgRoomFollow msg ;
+    CClientApp::SharedClientApp()->SendMsg(&msg, sizeof(msg)) ;
 }
 
 void CRoomLayer::OnAdd(CCObject*, CCControlEvent)
@@ -243,7 +247,8 @@ void CRoomLayer::OnPK(CCObject*, CCControlEvent)
 
 void CRoomLayer::OnGiveUp(CCObject*, CCControlEvent)
 {
-
+    stMsgRoomReady msg ;
+    CClientApp::SharedClientApp()->SendMsg(&msg, sizeof(msg)) ;
 }
 
 void CRoomLayer::OnBuy(CCObject*, CCControlEvent)
@@ -263,7 +268,13 @@ void CRoomLayer::OnSay(CCObject*, CCControlEvent)
 
 void CRoomLayer::OnReady(CCObject*, CCControlEvent)
 {
-
+    m_pbtnReady->setEnabled(false) ;
+    CCFadeOut* pfade = CCFadeOut::create(0.26);
+    CCEaseOut* ccer = CCEaseOut::create(pfade, 0.7);
+    m_pbtnReady->runAction(ccer) ;
+    
+    stMsgRoomReady msg ;
+    CClientApp::SharedClientApp()->SendMsg(&msg, sizeof(msg)) ;
 }
 
 void CRoomLayer::StartDistributeCard()
@@ -344,6 +355,7 @@ void CRoomLayer::ResetRoomState()
         m_pLook[i]->setVisible(false) ;
         m_pGive[i]->setVisible(false) ;
         m_pFail[i]->setVisible(false) ;
+        m_pPKIcon[i]->setVisible(false) ;
     }
     // disable buttons ;
     m_pbtnAdd->setEnabled(false) ;
@@ -354,6 +366,8 @@ void CRoomLayer::ResetRoomState()
     m_pbtnReady->setVisible(true) ;
     m_pbtnReady->setEnabled(true) ;
     m_pbtnReady->setOpacity(255) ;
+    
+    m_pSelectAddBetCoin->setVisible(false) ;
 }
 
 void CRoomLayer::RunPKIconAnimationByPlayerIdx(char nIdx )
@@ -504,7 +518,7 @@ void CRoomLayer::OnRefreshRoomInfo(CRoomData*proomdata)
     sprintf(pBuffer, "%d",proomdata->m_nRound ) ;
     m_pRound->setString(pBuffer) ;
     
-    for ( int i = 0 ; i < MAX_ROOM_PEER ; ++i )
+    for ( int i = 0 ; i < MAX_ROOM_PEER - 1 ; ++i )
     {
         stRoomPeerData* pRoomPeerdata = proomdata->GetRoomPeerDataByClientIdx(i) ;
         if ( pRoomPeerdata)
@@ -525,6 +539,7 @@ void CRoomLayer::OnUpdatePlayerState(char nIdx , eRoomPeerState ePeerState )
     m_pLook[nIdx]->setVisible(ePeerState == eRoomPeer_Look) ;
     m_pGive[nIdx]->setVisible(ePeerState == eRoomPeer_GiveUp) ;
     m_pFail[nIdx]->setVisible(ePeerState == eRoomPeer_Failed) ;
+    m_pReadyIcon[nIdx]->setVisible(ePeerState == eRoomPeer_Ready) ;
 }
 
 void CRoomLayer::OnDistributeCard()

@@ -80,8 +80,11 @@ protected:
 	bool OnLostServer( CNetMessageDelegate* pDeleate,void* pData );
 	bool OnReciveLogicMessage( CNetMessageDelegate* pDeleate,void* pData );
 	bool OnConnectSateChanged( CNetMessageDelegate* pDeleate,void* pData );
+    void ProcessDelegateAddRemove();
 protected:
     LIST_DELEGATE m_vAllDelegate;
+    LIST_DELEGATE m_vWillAddDelegate;
+    LIST_DELEGATE m_vWillRemoveDelegate ;
     RakNet::RakPeerInterface* m_pNetPeer;
     RakNet::RakNetGUID m_nCurrentServer ;  // the newest accepted Server ; 
 	short m_nConnectedTo ;

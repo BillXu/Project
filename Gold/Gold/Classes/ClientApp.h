@@ -27,8 +27,9 @@ public:
     void update(float dt) ;
     unsigned int GetSessionID();
     CPlayerData* GetPlayerData(){ return &m_PlayerData ; }
+    void AddNetMsgDelegate(CNetMessageDelegate* pdelgate){m_pNetWorkMgr->AddMessageDelegate(pdelgate);};
+    void RemoveMsgDelegate(CNetMessageDelegate* pdelegate ){ m_pNetWorkMgr->RemoveMessageDelegate(pdelegate) ;}
 protected:
-    static CClientApp* s_pClient ;
     CNetWorkMgr* m_pNetWorkMgr ;
     bool m_bConnected ;
     CPlayerData m_PlayerData ;

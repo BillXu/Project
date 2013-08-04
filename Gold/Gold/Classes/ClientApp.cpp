@@ -9,10 +9,13 @@
 #include "ClientApp.h"
 #include "CommonDefine.h"
 #include "MessageDefine.h"
-CClientApp* CClientApp::s_pClient = NULL ;
+#include "RoomLayer.h"
+#include "HelloWorldScene.h"
+#include "RoomData.h"
 CClientApp* CClientApp::SharedClientApp()
 {
-    return s_pClient ;
+    static CClientApp theApp ;
+    return &theApp ;
 }
 
 CClientApp::~CClientApp()
@@ -27,7 +30,7 @@ void CClientApp::StartApp()
     // set up net work 
     m_pNetWorkMgr = new CNetWorkMgr ;
     m_pNetWorkMgr->SetupNetwork();
-    m_pNetWorkMgr->ConnectToServer("", GATE_SERVER_PORT ) ;
+    m_pNetWorkMgr->ConnectToServer("192.168.18.107", GATE_SERVER_PORT ) ;
     m_pNetWorkMgr->AddMessageDelegate(this) ;
     
     // meber var
@@ -39,6 +42,9 @@ void CClientApp::StartApp()
     
     // player data ;
     m_PlayerData.Init() ;
+    
+    CCScene* psecen = HelloWorld::scene() ;
+    CCDirector::sharedDirector()->runWithScene(psecen) ;
 }
 
 void CClientApp::SendMsg(stMsg *pmsg, short nLen)
@@ -91,9 +97,44 @@ bool CClientApp::OnConnectStateChanged( eConnectState eSate, RakNet::Packet* pMs
     return true ;
 }
 
+unsigned int CClientApp::GetSessionID()
+{
+    return GetPlayerData()->GetBaseData()->nSessionID ;
+}
+
 bool CClientApp::OnMessage( RakNet::Packet* pRakMsg )
 {
     stMsg* pMsg = (stMsg*)pRakMsg->data ;
+    if ( ID_MSG_VERIFY == pMsg->cSysIdentifer )
+    {
+        // send enter game ;
+        stMsgPlayerEnterGame msgEntergame ;
+        msgEntergame.nUserUID = 100 ;
+        SendMsg(&msgEntergame, sizeof(msgEntergame)) ;
+        return true ;
+    }
+    if ( MSG_PLAYER_BASE_DATA == pMsg->usMsgType )
+    {
+        stMsgRoomEnter msgTengr ;
+        msgTengr.nRoomLevel = 0 ;
+        msgTengr.nRoomType = 0 ;
+        SendMsg(&msgTengr, sizeof(msgTengr)) ;
+    }
+    
+    if ( MSG_ROOM_CURRENT_INFO == pMsg->usMsgType )
+    {
+        // enter Room scene ;
+        CCScene *pScene = CRoomLayer::RoomScene();
+        // run
+        CCDirector::sharedDirector()->replaceScene(pScene);
+        CRoomLayer* pRL = (CRoomLayer*)pScene->getChildByTag(0) ;
+        CRoomData* pRd = new CRoomData ;
+        pRd->Init(pRL) ;
+        pRL->SetRoomData(pRd) ;
+        pRd->OnMessage(pRakMsg) ;
+        AddNetMsgDelegate(pRd) ;
+    }
+    
     if ( m_PlayerData.OnMessage(pMsg) )
     {
         return true ;

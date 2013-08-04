@@ -19,7 +19,7 @@ class CPlayerBaseData
 public:
     bool OnMessage( stMsg* pMessage );
 protected:
-    
+    unsigned int nRoomID ;
 };
 
 #endif /* defined(__Gold__PlayerBaseData__) */

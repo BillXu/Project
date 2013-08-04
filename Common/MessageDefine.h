@@ -76,6 +76,7 @@ struct stMsgRoomEnterRet
 	stMsgRoomEnterRet(){ cSysIdentifer = ID_MSG_C2GAME ; usMsgType = MSG_ROOM_ENTER ; }
 	unsigned char nRet ; // 0 success ; other value failed ;
     unsigned int nRoomID ;  // used it to get curRoomInfo ;
+    char nIdx ; // server roomidx ;
 };
 
 struct stRoomPeerBrifInfo

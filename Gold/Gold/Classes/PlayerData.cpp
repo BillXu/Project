@@ -76,7 +76,7 @@ bool CPlayerData::OnMessage( stMsg* pMessage )
 {
     for ( int i = IPlayerDataBase::ePlayerData_None ; i < IPlayerDataBase::ePlayerData_Max ; ++i )
     {
-        if ( m_vPlayerData[i]->OnMessage(pMessage) )
+        if ( m_vPlayerData[i] && m_vPlayerData[i]->OnMessage(pMessage) )
         {
             return true ;
         }
