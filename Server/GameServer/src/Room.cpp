@@ -9,7 +9,7 @@ unsigned int CRoom::s_RoomID = 0 ;
 
 CRoom::CRoom()
 {
-
+	m_eRoomType = eRoom_Gold ;
 }
 
 CRoom::~CRoom()

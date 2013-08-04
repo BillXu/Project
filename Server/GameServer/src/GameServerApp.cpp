@@ -75,7 +75,7 @@ void CGameServerApp::Init()
 	//printf( "A1 win %d , A2 win %d \n" ,A1Win,A2Win);
 	// test end ;
 	m_strDBIP = "" ;
-	m_strGateIP = "";
+	m_strGateIP = "192.168.18.108";
 	m_pNetWork = new CNetWorkMgr ;
 	m_pNetWork->SetupNetwork(2);
 	m_pNetWork->AddMessageDelegate(this);
@@ -88,6 +88,27 @@ void CGameServerApp::Init()
 
 bool CGameServerApp::OnMessage( RakNet::Packet* pMsg )
 {
+	stMsg* MsgVer = (stMsg*)pMsg->data;
+	if ( MsgVer->cSysIdentifer == ID_MSG_VERIFY )
+	{
+		// send back 
+		stMsg msg ;
+		msg.cSysIdentifer = ID_MSG_VERIFY ;
+		msg.usMsgType = MSG_VERIFY_GAME ;
+		m_pNetWork->SendMsg((char*)&msg,sizeof( msg),pMsg->guid ) ;
+
+		// check idenditfy ;
+		if ( MSG_VERIFY_GATE == MsgVer->usMsgType )
+		{
+			m_nGateServerNetUID = pMsg->guid ;
+			return true ;
+		}
+		else if ( MSG_VERIFY_DB == MsgVer->usMsgType )
+		{
+			m_nDBServerNetUID = pMsg->guid ;
+			return true ;
+		}
+	}
 	return m_pPlayerManager->OnMessage(pMsg) ;
 }
 
@@ -123,6 +144,7 @@ bool CGameServerApp::Run()
 	{
 		m_pNetWork->ReciveMessage() ;
 		m_pTimerMgr->Update() ;
+		Sleep(6);
 	}
 	ShutDown() ;
 	return true ;
@@ -173,7 +195,7 @@ void CGameServerApp::ConnectToOtherServer()
 		m_pNetWork->ConnectToServer(m_strGateIP.c_str(),GATE_SERVER_PORT) ; // gate server ;
 	}
 	
-	if ( !m_bDBserverConnected )
+	if ( !m_bDBserverConnected && m_strDBIP.empty() == false)
 	{
 		CLogMgr::SharedLogMgr()->PrintLog("connecting to DBServer ") ;
 		m_pNetWork->ConnectToServer(m_strDBIP.c_str(),DB_PORT) ; // DB server ;

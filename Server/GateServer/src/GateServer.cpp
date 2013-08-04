@@ -61,6 +61,7 @@ void CGateServer::RunLoop()
 		{
 			m_pTimerManager->Update();
 		}
+		Sleep(2);
 	}
 
 	m_pNetWork->ShutDown() ;
