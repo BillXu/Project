@@ -25,6 +25,7 @@ protected:
 	char GetReadyPeerCount();
 	bool CheckFinish();  // when finished return true ;
 	void DebugRoomInfo();  // print room id player count , total bet coin , room state , single bet coin , round , current idx , main idx .
+	void DecideMainPeerIdx();
 public:
 	static unsigned int s_RoomID ;
 protected:

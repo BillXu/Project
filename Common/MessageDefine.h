@@ -138,6 +138,7 @@ struct stMsgDistributeCard
 :public stMsg
 {
     stMsgDistributeCard(){ cSysIdentifer = ID_MSG_GAME2C ; usMsgType = MSG_ROOM_DISTRIBUTE_CARD ; }
+	char nCurMainIdx ;
 } ;
 
 struct stMsgRoomWaitPlayerAction

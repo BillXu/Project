@@ -204,7 +204,10 @@ void CRoom::SwitchToRoomSate( eRoomState eFrom, eRoomState eToDest )
 					m_vRoomPeer[i]->m_eState = eRoomPeer_Unlook ;
 				}
 			}
+			// decised new main idx ;
+			DecideMainPeerIdx();
 			stMsgDistributeCard msg ;
+			msg.nCurMainIdx = m_nCurMainPeerIdx ;
 			SendMsgRoomPeers(&msg,sizeof(msg)) ;
 		}
 		break;
@@ -217,7 +220,7 @@ void CRoom::SwitchToRoomSate( eRoomState eFrom, eRoomState eToDest )
 			}
 			else if ( eRoomState_DistributeCard == eFrom )
 			{
-				--m_nCurMainPeerIdx ;
+				m_nCurWaitPeerIdx = m_nCurMainPeerIdx - 1 ;
 				NextPlayerAction() ;
 			}
 			else
@@ -252,7 +255,7 @@ void CRoom::NextPlayerAction()
 	for ( int i = m_nCurWaitPeerIdx + 1 ; 1 ;++i )
 	{
 		int nIdx = i ;
-		if ( nIdx >= GetMaxSeat() - 1 )
+		if ( nIdx > GetMaxSeat() - 1 )
 		{
 			nIdx -= GetMaxSeat() ;
 		}
@@ -272,6 +275,22 @@ void CRoom::NextPlayerAction()
 	msg.nRound = m_nRound ;
 	msg.nSessionID = m_vRoomPeer[m_nCurWaitPeerIdx]->GetSessionID() ;
 	SendMsgRoomPeers(&msg,sizeof(msg)) ;
+}
+
+void CRoom::DecideMainPeerIdx()
+{
+	for ( m_nCurMainPeerIdx ; 1 ;++m_nCurMainPeerIdx )
+	{
+		if ( m_nCurMainPeerIdx > GetMaxSeat() - 1 )
+		{
+			m_nCurMainPeerIdx -= GetMaxSeat() ;
+		}
+
+		if ( m_vRoomPeer[m_nCurMainPeerIdx] && m_vRoomPeer[m_nCurMainPeerIdx]->IsActive() )
+		{
+			break; 
+		}
+	}
 }
 
 char CRoom::GetReadyPeerCount()
@@ -409,6 +428,11 @@ bool CRoom::OnPeerMsg(CRoomPeer* pPeer, stMsg* pmsg )
 		return true; 
 	case MSG_ROOM_FOLLOW:
 		{
+			if ( pPeer->m_nPeerIdx != m_nCurWaitPeerIdx )
+			{
+				CLogMgr::SharedLogMgr()->PrintLog("it is not your turn , omit the action ") ;
+				return  false ;
+			}
 			if ( eRoomState_WaitPeerAction != GetRoomState() )
 			{
 				stMsgRoomRet msgRet ;
@@ -430,6 +454,11 @@ bool CRoom::OnPeerMsg(CRoomPeer* pPeer, stMsg* pmsg )
 		return true; 
 	case MSG_ROOM_ADD:
 		{
+			if ( pPeer->m_nPeerIdx != m_nCurWaitPeerIdx )
+			{
+				CLogMgr::SharedLogMgr()->PrintLog("it is not your turn , omit the action ") ;
+				return  false ;
+			}
 			if ( eRoomState_WaitPeerAction != GetRoomState() )
 			{
 				stMsgRoomRet msgRet ;
@@ -472,6 +501,11 @@ bool CRoom::OnPeerMsg(CRoomPeer* pPeer, stMsg* pmsg )
 		return true;
 	case MSG_ROOM_PK:
 		{
+			if ( pPeer->m_nPeerIdx != m_nCurWaitPeerIdx )
+			{
+				CLogMgr::SharedLogMgr()->PrintLog("it is not your turn , omit the action ") ;
+				return  false ;
+			}
 			if ( eRoomState_WaitPeerAction != GetRoomState() )
 			{
 				stMsgRoomRet msgRet ;
