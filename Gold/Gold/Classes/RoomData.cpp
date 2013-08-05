@@ -114,6 +114,7 @@ bool CRoomData::OnMessage( RakNet::Packet* pRakMsg )
         case MSG_ROOM_WAIT_PLAYER_ACTION:
         {
             m_eRoomSate = eRoomState_WaitPeerAction ;
+            m_pRoomLayer->StopMyClock() ;
             stMsgRoomWaitPlayerAction* pRet = (stMsgRoomWaitPlayerAction*)pMsg ;
             m_nRound = pRet->nRound ;
             stRoomPeerData* pdata = GetRoomPeerDataBySessionID(pRet->nSessionID) ;
@@ -135,8 +136,6 @@ bool CRoomData::OnMessage( RakNet::Packet* pRakMsg )
             stMsgRoomPlayerFollow* pRet = (stMsgRoomPlayerFollow*)pMsg ;
             if ( CClientApp::SharedClientApp()->GetSessionID() == pRet->nSessionID )
             {
-                // self
-                m_pRoomLayer->StopMyClock() ;
                 int nBetCoin = m_nSingleBetCoin ;
                 if ( CClientApp::SharedClientApp()->GetPlayerData()->GetBaseData()->ePeerState == eRoomPeer_Look )
                 {

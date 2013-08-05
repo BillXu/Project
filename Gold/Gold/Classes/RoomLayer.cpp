@@ -402,7 +402,6 @@ void CRoomLayer::StartDistributeCard()
 void CRoomLayer::ResetRoomState()
 {
     unscheduleAllSelectors() ;
-    m_bSelectingPKTarget = false ;
     m_pClock->setVisible(false) ;
     for ( int i = 0 ; i < 5 ; ++i )
     {
@@ -443,6 +442,7 @@ void CRoomLayer::ResetRoomState()
             m_pLookShowCard[i] = NULL ;
         }
     }
+    StopPkIconAnimation();
 }
 
 void CRoomLayer::RunPKIconAnimationByPlayerIdx(char nIdx )
@@ -572,7 +572,6 @@ void CRoomLayer::OnClickRoomPlayerInfo(CRoomPlayerInfor* pPlayerInfo )
     {
         return  ;
     }
-    m_bSelectingPKTarget = false ;
     if ( m_bSelectingPKTarget )
     {
         stMsgRoomPK pkMsg ;
@@ -580,11 +579,7 @@ void CRoomLayer::OnClickRoomPlayerInfo(CRoomPlayerInfor* pPlayerInfo )
         CClientApp::SharedClientApp()->SendMsg(&pkMsg, sizeof(pkMsg)) ;
         
         // stop pkicon animation
-        for ( int i = 0 ; i < MAX_ROOM_PEER -1 ; ++i )
-        {
-            m_pPKIcon[i]->stopAllActions();
-            m_pPKIcon[i]->setVisible(false) ;
-        }
+        StopPkIconAnimation();
     }
     else
     {
@@ -759,6 +754,7 @@ void CRoomLayer::OnWaitPlayerAction(char nIdx )
         m_pPlayer[nIdx]->StartTiming() ;
     }
     UpdateButton(nIdx == 4 );
+    StopPkIconAnimation();   // when time out ;
 }
 
 void CRoomLayer::OnPlayerFollow(char nIdx , int nFollowedCoin )
@@ -855,4 +851,21 @@ void CRoomLayer::UpdateButton(bool bMyTurn )
     m_pbtnReady->setVisible(bShowReady) ;
     m_pbtnReady->setEnabled(bShowReady) ;
     m_pbtnReady->setOpacity(255*bShowReady) ;
+}
+
+void CRoomLayer::StopPkIconAnimation()
+{
+    if ( !m_bSelectingPKTarget )
+    {
+        return ;
+    }
+    m_bSelectingPKTarget = false ;
+    for ( int i = 0 ; i < 4 ; ++i )
+    {
+         if ( m_pPKIcon[i] )
+         {
+             m_pPKIcon[i]->stopAllActions() ;
+             m_pPKIcon[i]->setVisible(false) ;
+         }
+    }
 }
