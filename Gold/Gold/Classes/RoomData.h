@@ -15,6 +15,10 @@
 struct stRoomPeerData
 :public stRoomPeerBrifInfo
 {
+public:
+    std::string strTitle ;
+public:
+    stRoomPeerData(){strTitle="default";}
     bool bRecievedUserDefinePhoto ;
     bool IsActive();
 };
@@ -24,7 +28,7 @@ class CRoomData
 :public CNetMessageDelegate
 {
 public:
-    void Init(CRoomLayer* player );
+    void Init(CRoomLayer* player , int nBaseSingle );
     bool OnMessage( RakNet::Packet* pMsg );
     stRoomPeerData* GetRoomPeerDataBySessionID( unsigned int nSessionID ) ;
     char GetPlayerCount();
@@ -38,6 +42,7 @@ protected:
 protected:
     CRoomLayer* m_pRoomLayer ;
     stRoomPeerData m_vRoomPeers[MAX_ROOM_PEER] ;  // server idx ;
+    int m_nBaseSingle;
     int m_nSingleBetCoin;
     int m_nTotalBetCoin;
     unsigned short m_nRound ;

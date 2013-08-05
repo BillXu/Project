@@ -4,10 +4,10 @@ class CCard
 public:
 	enum eCardType
 	{
-		eCard_Heart, // ºìÌÒ 
+        eCard_Club, // ²İ»¨
+		eCard_Heart, // ºìÌÒ
+        eCard_Diamond, // ·½¿é
 		eCard_Sword, // ºÚÌÒ 
-		eCard_Club, // ²İ»¨
-		eCard_Diamond, // ·½¿é
 		eCard_Max,
 	};
 public:

@@ -19,6 +19,7 @@
 USING_NS_CC ;
 USING_NS_CC_EXT ;
 struct stRoomPeerData ;
+class CCard;
 class CRoomData ;
 class CRoomPlayerInfor ;
 class CRoomLayer
@@ -30,8 +31,10 @@ class CRoomLayer
 ,public CSelectAddBetCoinDelegate
 {
 public:
-    static CCScene* RoomScene();
-    virtual bool init();
+    typedef std::list<CCSprite*> LIST_SPRITE ;
+public:
+    static CCScene* RoomScene(int a , int b , int c , int d ,int e );
+    virtual bool init(int a , int b , int c , int d ,int e );
     void SetRoomData(CRoomData* pdata ){ m_pRoomData = pdata ;}
     // delete gate ;
     SEL_MenuHandler onResolveCCBCCMenuItemSelector(CCObject * pTarget, const char* pSelectorName){ return NULL ;}
@@ -74,6 +77,10 @@ protected:
     void ResetRoomState();
     void RunPKIconAnimationByPlayerIdx(char nIdx );
     void StartPushCoinAnimation( char nIdx , unsigned int nCoin );
+    void ClearShowingChouMa();
+    void UpdateMyCoin();
+    CCSprite* GetAutoSpriteByCard(CCard* pcard);
+    void UpdateButton(bool bMyTurn = false );
 protected:
     CCLabelTTF* m_pMyCoin ,*m_pMyDiamen,*m_pMyName, *m_pMyTitle,*m_pMyBetCoin, *m_pRound, *m_pTotalBet,*m_pSingleBet, *m_pTime;
     CCSprite* m_pTable,*m_pClock ;
@@ -83,8 +90,8 @@ protected:
     CCSprite* m_pDefault[5];
     CCSprite* m_pLook[4] ;
     CCSprite* m_pPKIcon[4] ;
-    CCSprite* m_pGive[4];
-    CCSprite* m_pFail[4] ;
+    CCSprite* m_pGive[5];
+    CCSprite* m_pFail[5] ;
     CCSprite* m_pReadyIcon[5] ;
     CCSprite* m_pCardSender ;
     CCSprite* m_pDistributeCard[15] ;
@@ -92,6 +99,12 @@ protected:
     CSelectAddBetCoin* m_pSelectAddBetCoin ;
     float m_fMyTimerCount ;  // for clock display ;
     CRoomData* m_pRoomData ;
+    int m_vCoin[5] ; // chou ma ji bie ;
+    LIST_SPRITE m_vShowingChouMa ;
+    CCSprite* m_pLookShowCard[3] ;
+    CCSprite* m_pMyGiveupIcon ;
+    CCSprite* m_pMyFailedIcon ;
+    bool m_bSelectingPKTarget ;
 };
 
 #endif /* defined(__Gold__RoomLayer__) */

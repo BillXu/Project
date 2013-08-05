@@ -124,12 +124,12 @@ bool CClientApp::OnMessage( RakNet::Packet* pRakMsg )
     if ( MSG_ROOM_CURRENT_INFO == pMsg->usMsgType )
     {
         // enter Room scene ;
-        CCScene *pScene = CRoomLayer::RoomScene();
+        CCScene *pScene = CRoomLayer::RoomScene(10,20,50,200,500);
         // run
         CCDirector::sharedDirector()->replaceScene(pScene);
         CRoomLayer* pRL = (CRoomLayer*)pScene->getChildByTag(0) ;
         CRoomData* pRd = new CRoomData ;
-        pRd->Init(pRL) ;
+        pRd->Init(pRL,10) ;
         pRL->SetRoomData(pRd) ;
         pRd->OnMessage(pRakMsg) ;
         AddNetMsgDelegate(pRd) ;

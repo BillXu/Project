@@ -26,6 +26,7 @@ public:
 	ePeerCardType GetType(){ return m_eCardType ;}
 	void LogInfo();
 	void Reset();
+    CCard* GetCardByIdx( char idx ){ return m_vCard[idx] ;}
 	void GetCompositeCardRepresent(char* vCard ); // 3 vector must ;
 protected:
 	void ArrangeCard();

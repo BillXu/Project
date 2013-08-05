@@ -12,14 +12,16 @@
 #include <iostream>
 #include "IPlayerData.h"
 #include "MessageDefine.h"
+#include "RoomData.h"
 class CPlayerBaseData
 :public IPlayerDataBase
-,public stRoomPeerBrifInfo
+,public stRoomPeerData
 {
 public:
     bool OnMessage( stMsg* pMessage );
-protected:
+public:
     unsigned int nRoomID ;
+    char vCard[3] ;
 };
 
 #endif /* defined(__Gold__PlayerBaseData__) */
