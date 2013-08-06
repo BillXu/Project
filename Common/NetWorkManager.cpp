@@ -312,16 +312,22 @@ void CNetWorkMgr::ProcessDelegateAddRemove()
             pDelegate->SetNetWorkMgr(this) ;
             LIST_DELEGATE::iterator iter = m_vAllDelegate.begin();
             CNetMessageDelegate* pDelegateIter = NULL ;
+            bool bInsert = false ;
             for ( ; iter != m_vAllDelegate.end(); ++iter)
             {
                 pDelegateIter = *iter ;
                 if ( pDelegateIter->GetPriority() <= pDelegate->GetPriority() )
                 {
                     m_vAllDelegate.insert(iter,pDelegate);
-                    continue ;
+                    bInsert = true ;
+                    break ;
                 }
             }
-            m_vAllDelegate.push_back(pDelegate) ;
+            
+            if ( bInsert == false )
+            {
+                m_vAllDelegate.push_back(pDelegate) ;
+            }
         }
         m_vWillAddDelegate.clear();
     }

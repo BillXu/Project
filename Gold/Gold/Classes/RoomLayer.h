@@ -65,7 +65,8 @@ public:
     void OnClocked(float fTime );
     void StopMyClock();
     
-    // logic invoke 
+    // logic invoke
+    void OnStopTiming();
     void OnPlayerLeave( char nIdx );
     void OnPlayerEnter( char nIdx , stRoomPeerData* pPlayerData );
     void OnRefreshRoomInfo(CRoomData*proomdata);

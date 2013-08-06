@@ -111,8 +111,6 @@ bool CRoomLayer::init(int a , int b , int c , int d ,int e )
     m_pSelectAddBetCoin->InitSelectedMoney(a, b, c, d, e) ;
     m_pSelectAddBetCoin->SetMinEnable(a, true) ;
     
-    ResetRoomState();
-    
     // self info
     CPlayerBaseData* pmybasedata = CClientApp::SharedClientApp()->GetPlayerData()->GetBaseData() ;
     m_pMyName->setString(pmybasedata->pName) ;
@@ -128,6 +126,8 @@ bool CRoomLayer::init(int a , int b , int c , int d ,int e )
     m_pMyFailedIcon->setPosition(m_pDefault[0]->getPosition());
     m_pMyFailedIcon->setVisible(false) ;
     m_pMyGiveupIcon->setVisible(false) ;
+    
+    ResetRoomState();
     return true ;
 }
 
@@ -244,7 +244,7 @@ void CRoomLayer::completedAnimationSequenceNamed(const char *name)
      }
      else if ( strcmp(name, "GoBack") == 0 )
      {
-
+         UpdateButton();
      }
 }
 
@@ -507,7 +507,7 @@ void CRoomLayer::StartPushCoinAnimation( char nIdx , unsigned int nCoin )
     char pBuffer[120] = { 0 } ;
     while ( nCoin > 0 )
     {
-        for ( int i = 4 ; i > 0 ; --i )
+        for ( int i = 4 ; i >= 0 ; --i )
         {
             if ( m_vCoin[i] <= nCoin )
             {
@@ -565,6 +565,16 @@ void CRoomLayer::StopMyClock()
 {
     unschedule(schedule_selector(CRoomLayer::OnClocked)) ;
     m_pClock->setVisible(false) ;
+}
+
+void CRoomLayer::OnStopTiming()
+{
+    StopMyClock();
+    
+    for ( int i = 0 ; i < 4 ; ++i )
+    {
+        m_pPlayer[i]->StopTiming() ;
+    }
 }
 
 void CRoomLayer::OnClickRoomPlayerInfo(CRoomPlayerInfor* pPlayerInfo )
@@ -748,7 +758,6 @@ void CRoomLayer::OnDistributeCard()
         m_pReadyIcon[i]->setVisible(false) ;
     }
     animationManager->runAnimationsForSequenceNamed("ComeIn") ;
-    UpdateButton();
 }
 
 void CRoomLayer::OnWaitPlayerAction(char nIdx )

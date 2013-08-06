@@ -13,6 +13,8 @@ bool CPlayerBaseData::OnMessage(stMsg *pMessage)
     {
         stMsgPlayerBaseData* pbase = (stMsgPlayerBaseData*)pMessage ;
         nSessionID = pbase->nSessionID ;
+        nCoin = 193980;
+        sprintf(pName, "MyName") ;
     }
     else if ( MSG_ROOM_ENTER == pMessage->usMsgType )
     {
