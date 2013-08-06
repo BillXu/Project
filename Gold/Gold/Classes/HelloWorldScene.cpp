@@ -3,7 +3,7 @@
 
 using namespace cocos2d;
 using namespace CocosDenshion;
-
+#include "PKDlg.h"
 CCScene* HelloWorld::scene()
 {
     // 'scene' is an autorelease object
@@ -76,9 +76,13 @@ bool HelloWorld::init()
 
 void HelloWorld::menuCloseCallback(CCObject* pSender)
 {
-    CCDirector::sharedDirector()->end();
+    CPKDlg* pdlg = new CPKDlg;
+    pdlg->init() ;
+    addChild(pdlg) ;
+    pdlg->ShowDlg("ccbResources/1.png", "ccbResources/2.png", true) ;
+    //CCDirector::sharedDirector()->end();
 
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
-    exit(0);
+   // exit(0);
 #endif
 }

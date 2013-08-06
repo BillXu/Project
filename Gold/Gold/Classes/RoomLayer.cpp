@@ -829,6 +829,8 @@ void CRoomLayer::OnPlayerPK(char nIdxInvoke , char nIdxWith , bool bWin )
     char pBufferTarget[100] = { 0 };
     stRoomPeerData* pInvoke = m_pRoomData->GetRoomPeerDataByClientIdx(nIdxInvoke ) ;
     stRoomPeerData* pTarget = m_pRoomData->GetRoomPeerDataByClientIdx(nIdxWith ) ;
+    pInvoke->nDefaulPhotoID = 1 ;
+    pTarget->nDefaulPhotoID = 1 ;
     sprintf(pBufferInvoke, "ccbResources/%d.png",pInvoke->nDefaulPhotoID);
     sprintf(pBufferTarget, "ccbResources/%d.png",pTarget->nDefaulPhotoID);
     if ( bWin )
@@ -876,8 +878,8 @@ void CRoomLayer::UpdateMyCoin()
 
 CCSprite* CRoomLayer::GetAutoSpriteByCard(CCard* pcard)
 {
-    float fW = 99.2 ;
-    float fH = 129.3 ;
+    float fW = 100 ;
+    float fH = 131 ;
     int nLineIdx = ( pcard->GetCardFaceNum() - 1 ) * 4 + pcard->GetType() ;
     int nRow = nLineIdx / 10 ;
     int nCol = nLineIdx % 10 ;
