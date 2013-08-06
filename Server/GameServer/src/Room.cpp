@@ -213,7 +213,7 @@ void CRoom::SwitchToRoomSate( eRoomState eFrom, eRoomState eToDest )
 		break;
 	case eRoomState_WaitPeerAction:
 		{
-			m_fRoomSateTick[eToDest] = TIME_ROOM_WAIT_PEER_ACTION ;
+			m_fRoomSateTick[eRoomState_WaitPeerAction] = TIME_ROOM_WAIT_PEER_ACTION ;
 			if ( eRoomState_PKing == eFrom )
 			{
 				NextPlayerAction();
@@ -275,6 +275,7 @@ void CRoom::NextPlayerAction()
 	msg.nRound = m_nRound ;
 	msg.nSessionID = m_vRoomPeer[m_nCurWaitPeerIdx]->GetSessionID() ;
 	SendMsgRoomPeers(&msg,sizeof(msg)) ;
+	m_fRoomSateTick[eRoomState_WaitPeerAction] = TIME_ROOM_WAIT_PEER_ACTION ;
 }
 
 void CRoom::DecideMainPeerIdx()
@@ -549,7 +550,7 @@ bool CRoom::OnPeerMsg(CRoomPeer* pPeer, stMsg* pmsg )
 		return true ;
 	case MSG_ROOM_LOOK:
 		{
-			if ( eRoomState_WaitPeerAction != GetRoomState() && eRoomPeer_Unlook == pPeer->GetState() )
+			if ( eRoomPeer_Unlook == pPeer->GetState() )
 			{
 				stMsgRoomRet msgRet ;
 				msgRet.nRet = 1 ; // room state not fitable ;
