@@ -16,6 +16,7 @@
 #include "SelectAddBetCoin.h"
 #include "SelectAddBetCoinLoader.h"
 #include "CommonDefine.h"
+#include "PKDlg.h"
 USING_NS_CC ;
 USING_NS_CC_EXT ;
 struct stRoomPeerData ;
@@ -29,6 +30,7 @@ class CRoomLayer
 ,public CCBAnimationManagerDelegate
 ,public CRoomPlayerInforDelegate
 ,public CSelectAddBetCoinDelegate
+,public CDlgDelegate
 {
 public:
     typedef std::list<CCSprite*> LIST_SPRITE ;
@@ -43,6 +45,7 @@ public:
     void completedAnimationSequenceNamed(const char *name);
     void OnClickRoomPlayerInfo(CRoomPlayerInfor* pPlayerInfo );
     void OnSelectedAddBetCoin(CSelectAddBetCoin* pBtn , int nCoin );
+    void OnDlgEnd(CPKDlg* pDlg) ;
 
     // btn event
     void OnFollow(CCObject*, CCControlEvent);
@@ -62,7 +65,8 @@ public:
     void OnClocked(float fTime );
     void StopMyClock();
     
-    // logic invoke 
+    // logic invoke
+    void OnStopTiming();
     void OnPlayerLeave( char nIdx );
     void OnPlayerEnter( char nIdx , stRoomPeerData* pPlayerData );
     void OnRefreshRoomInfo(CRoomData*proomdata);

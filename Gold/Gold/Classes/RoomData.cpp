@@ -114,7 +114,7 @@ bool CRoomData::OnMessage( RakNet::Packet* pRakMsg )
         case MSG_ROOM_WAIT_PLAYER_ACTION:
         {
             m_eRoomSate = eRoomState_WaitPeerAction ;
-            m_pRoomLayer->StopMyClock() ;
+            m_pRoomLayer->OnStopTiming() ;
             stMsgRoomWaitPlayerAction* pRet = (stMsgRoomWaitPlayerAction*)pMsg ;
             m_nRound = pRet->nRound ;
             stRoomPeerData* pdata = GetRoomPeerDataBySessionID(pRet->nSessionID) ;

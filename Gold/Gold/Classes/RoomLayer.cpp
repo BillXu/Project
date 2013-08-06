@@ -48,6 +48,7 @@ bool CRoomLayer::init(int a , int b , int c , int d ,int e )
     animationManager = pReader->getAnimationManager();
     animationManager->setDelegate(this) ;
     addChild(pRoot) ;
+    pReader->autorelease() ;
     
     // set up showcards and ready icon 
     for ( int i = 0 ; i < 5 ; ++i )
@@ -110,8 +111,6 @@ bool CRoomLayer::init(int a , int b , int c , int d ,int e )
     m_pSelectAddBetCoin->InitSelectedMoney(a, b, c, d, e) ;
     m_pSelectAddBetCoin->SetMinEnable(a, true) ;
     
-    ResetRoomState();
-    
     // self info
     CPlayerBaseData* pmybasedata = CClientApp::SharedClientApp()->GetPlayerData()->GetBaseData() ;
     m_pMyName->setString(pmybasedata->pName) ;
@@ -127,6 +126,8 @@ bool CRoomLayer::init(int a , int b , int c , int d ,int e )
     m_pMyFailedIcon->setPosition(m_pDefault[0]->getPosition());
     m_pMyFailedIcon->setVisible(false) ;
     m_pMyGiveupIcon->setVisible(false) ;
+    
+    ResetRoomState();
     return true ;
 }
 
@@ -243,7 +244,7 @@ void CRoomLayer::completedAnimationSequenceNamed(const char *name)
      }
      else if ( strcmp(name, "GoBack") == 0 )
      {
-
+         UpdateButton();
      }
 }
 
@@ -506,7 +507,7 @@ void CRoomLayer::StartPushCoinAnimation( char nIdx , unsigned int nCoin )
     char pBuffer[120] = { 0 } ;
     while ( nCoin > 0 )
     {
-        for ( int i = 4 ; i > 0 ; --i )
+        for ( int i = 4 ; i >= 0 ; --i )
         {
             if ( m_vCoin[i] <= nCoin )
             {
@@ -566,6 +567,16 @@ void CRoomLayer::StopMyClock()
     m_pClock->setVisible(false) ;
 }
 
+void CRoomLayer::OnStopTiming()
+{
+    StopMyClock();
+    
+    for ( int i = 0 ; i < 4 ; ++i )
+    {
+        m_pPlayer[i]->StopTiming() ;
+    }
+}
+
 void CRoomLayer::OnClickRoomPlayerInfo(CRoomPlayerInfor* pPlayerInfo )
 {
     if (pPlayerInfo->isVisible() == false )
@@ -593,6 +604,16 @@ void CRoomLayer::OnSelectedAddBetCoin(CSelectAddBetCoin* pBtn , int nCoin )
     msg.nAddMoney = nCoin ;
     CClientApp::SharedClientApp()->SendMsg(&msg, sizeof(msg)) ;
     m_pSelectAddBetCoin->setVisible(false) ;
+}
+
+void CRoomLayer::OnDlgEnd(CPKDlg* pDlg)
+{
+    char* pIdx = pDlg->GetPkIdx() ;
+    stRoomPeerData* pdata1 = m_pRoomData->GetRoomPeerDataByClientIdx(pIdx[0]) ;
+    stRoomPeerData* pdata2 = m_pRoomData->GetRoomPeerDataByClientIdx(pIdx[1]) ;
+    OnUpdatePlayerState(pdata1->nIdx, (eRoomPeerState)pdata1->ePeerState ) ;
+    OnUpdatePlayerState(pdata2->nIdx, (eRoomPeerState)pdata2->ePeerState ) ;
+    pDlg->removeFromParent() ;
 }
 
 // logic invoke
@@ -737,7 +758,6 @@ void CRoomLayer::OnDistributeCard()
         m_pReadyIcon[i]->setVisible(false) ;
     }
     animationManager->runAnimationsForSequenceNamed("ComeIn") ;
-    UpdateButton();
 }
 
 void CRoomLayer::OnWaitPlayerAction(char nIdx )
@@ -797,7 +817,34 @@ void CRoomLayer::OnPlayerAdd(char nIdx , int nOffsetCoin )
 
 void CRoomLayer::OnPlayerPK(char nIdxInvoke , char nIdxWith , bool bWin )
 {
+    CPKDlg* pdlg = new CPKDlg ;
+    pdlg->init() ;
+    pdlg->SetDelegate(this) ;
+    char vPKIdx[]={nIdxInvoke,nIdxWith };
+    pdlg->SetPkIdx(vPKIdx) ;
+    addChild(pdlg) ;
+    bool LeftWin = false;
+    char* pLeft, * pRight ;
+    char pBufferInvoke[100] = {0};
+    char pBufferTarget[100] = { 0 };
+    stRoomPeerData* pInvoke = m_pRoomData->GetRoomPeerDataByClientIdx(nIdxInvoke ) ;
+    stRoomPeerData* pTarget = m_pRoomData->GetRoomPeerDataByClientIdx(nIdxWith ) ;
+    sprintf(pBufferInvoke, "ccbResources/%d.png",pInvoke->nDefaulPhotoID);
+    sprintf(pBufferTarget, "ccbResources/%d.png",pTarget->nDefaulPhotoID);
+    if ( bWin )
+    {
+        LeftWin = nIdxInvoke < nIdxWith ;
+        pLeft = pBufferInvoke ;
+        pRight = pBufferTarget ;
+    }
+    else
+    {
+        LeftWin = nIdxInvoke > nIdxWith ;
+        pRight = pBufferInvoke ;
+        pLeft = pBufferTarget ;
+    }
     
+    pdlg->ShowDlg(pLeft, pRight, LeftWin) ;
 }
 
 void CRoomLayer::ClearShowingChouMa()

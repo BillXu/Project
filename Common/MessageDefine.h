@@ -182,7 +182,7 @@ struct stMsgRoomPlayerAdd
 struct stMsgRoomLook
 :public stMsg
 {
-    stMsgRoomLook(){ cSysIdentifer = ID_MSG_GAME2C ; usMsgType = MSG_ROOM_LOOK ; }
+    stMsgRoomLook(){ cSysIdentifer = ID_MSG_C2GAME ; usMsgType = MSG_ROOM_LOOK ; }
 } ;
 
 struct stMsgRoomPlayerLook
