@@ -113,7 +113,15 @@ void CRoom::Update(float fTimeElpas, unsigned int nTimerID )
 			m_fRoomSateTick[eState]-= fTimeElpas ;
 			if ( m_fRoomSateTick[eState] <= 0 )
 			{
-				m_vRoomPeer[m_nCurWaitPeerIdx]->OnWaitTimeOut();
+				if ( m_vRoomPeer[m_nCurWaitPeerIdx] )
+				{
+					m_vRoomPeer[m_nCurWaitPeerIdx]->OnWaitTimeOut();
+				}
+				else
+				{
+					CLogMgr::SharedLogMgr()->ErrorLog("waiting action player is null") ;
+				}
+				
 			}
 		}
 		break;
@@ -550,7 +558,7 @@ bool CRoom::OnPeerMsg(CRoomPeer* pPeer, stMsg* pmsg )
 		return true ;
 	case MSG_ROOM_LOOK:
 		{
-			if ( eRoomPeer_Unlook == pPeer->GetState() )
+			if ( eRoomPeer_Unlook != pPeer->GetState() )
 			{
 				stMsgRoomRet msgRet ;
 				msgRet.nRet = 1 ; // room state not fitable ;
