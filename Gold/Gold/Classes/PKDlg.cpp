@@ -19,6 +19,7 @@ bool CPKDlg::init()
     pnode->setPosition(ccpMult(ccpFromSize(getContentSize()), 0.5)) ;
     addChild(pnode) ;
     m_pAnimate = pReader->getAnimationManager() ;
+    m_pAnimate->setDelegate(this);
     pReader->autorelease() ;
     return true ;
 }
@@ -49,9 +50,9 @@ void CPKDlg::ShowDlg(const char* pLeft, const char* pRight, bool bLeftWin )
     m_pLeft->addChild(m_pLeftPhoto) ;
     m_pLeftPhoto->setPosition(ccpMult(ccpFromSize(m_pLeft->getContentSize()), 0.5)) ;
     
-    m_pRightPhoto = CCSprite::create(pLeft) ;
+    m_pRightPhoto = CCSprite::create(pRight) ;
     m_pRight->addChild(m_pRightPhoto) ;
-    m_pRight->setPosition(ccpMult(ccpFromSize(m_pRight->getContentSize()), 0.5)) ;
+    m_pRightPhoto->setPosition(ccpMult(ccpFromSize(m_pRight->getContentSize()), 0.5)) ;
     
     m_pAnimate->runAnimationsForSequenceNamed("Default") ;
 }

@@ -406,6 +406,7 @@
 		9A6BC23F17AF7F1A005F0C45 /* PeerCard.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A6BC23E17AF7F1A005F0C45 /* PeerCard.cpp */; };
 		9A6BC24217AF7F4D005F0C45 /* CardPoker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A6BC24117AF7F4D005F0C45 /* CardPoker.cpp */; };
 		9A6BC25717B0DF26005F0C45 /* PKDlg.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A6BC25517B0DF24005F0C45 /* PKDlg.cpp */; };
+		9A6BC25A17B391BC005F0C45 /* ResultDlg.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A6BC25817B391BC005F0C45 /* ResultDlg.cpp */; };
 		9A7C59CF17AE25AC009D6D4E /* LoginScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A7C59CD17AE25AC009D6D4E /* LoginScene.cpp */; };
 /* End PBXBuildFile section */
 
@@ -1295,6 +1296,8 @@
 		9A6BC24117AF7F4D005F0C45 /* CardPoker.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CardPoker.cpp; path = ../../Common/CardPoker.cpp; sourceTree = "<group>"; };
 		9A6BC25517B0DF24005F0C45 /* PKDlg.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PKDlg.cpp; path = Classes/PKDlg.cpp; sourceTree = "<group>"; };
 		9A6BC25617B0DF26005F0C45 /* PKDlg.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PKDlg.h; path = Classes/PKDlg.h; sourceTree = "<group>"; };
+		9A6BC25817B391BC005F0C45 /* ResultDlg.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ResultDlg.cpp; path = Classes/ResultDlg.cpp; sourceTree = "<group>"; };
+		9A6BC25917B391BC005F0C45 /* ResultDlg.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ResultDlg.h; path = Classes/ResultDlg.h; sourceTree = "<group>"; };
 		9A7C59CD17AE25AC009D6D4E /* LoginScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = LoginScene.cpp; path = Classes/LoginScene.cpp; sourceTree = "<group>"; };
 		9A7C59CE17AE25AC009D6D4E /* LoginScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LoginScene.h; path = Classes/LoginScene.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -1338,6 +1341,8 @@
 				9A52B70317AA3E74009CD567 /* RoomData.h */,
 				9A6BC25517B0DF24005F0C45 /* PKDlg.cpp */,
 				9A6BC25617B0DF26005F0C45 /* PKDlg.h */,
+				9A6BC25817B391BC005F0C45 /* ResultDlg.cpp */,
+				9A6BC25917B391BC005F0C45 /* ResultDlg.h */,
 			);
 			name = RoomScene;
 			sourceTree = "<group>";
@@ -3312,6 +3317,7 @@
 				9A6BC23F17AF7F1A005F0C45 /* PeerCard.cpp in Sources */,
 				9A6BC24217AF7F4D005F0C45 /* CardPoker.cpp in Sources */,
 				9A6BC25717B0DF26005F0C45 /* PKDlg.cpp in Sources */,
+				9A6BC25A17B391BC005F0C45 /* ResultDlg.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
