@@ -23,10 +23,10 @@ enum eRoomState
 	eRoomState_Max,
 };
 // ROOM TIME BY SECOND 
-#define TIME_ROOM_WAIT_READY 8
+#define TIME_ROOM_WAIT_READY 5
 #define TIME_ROOM_DISTRIBUTE 5
 #define TIME_ROOM_WAIT_PEER_ACTION 30
-#define TIME_ROOM_PK_DURATION 10
+#define TIME_ROOM_PK_DURATION 5
 #define TIME_ROOM_SHOW_RESULT 5
 
 // player State 

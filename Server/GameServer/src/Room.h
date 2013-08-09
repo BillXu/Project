@@ -19,6 +19,7 @@ public:
 	virtual bool OnPeerMsg(CRoomPeer* pPeer, stMsg* pmsg );
 	void Rest();
 	void SendCurRoomToPeer(CRoomPeer* peer );
+	virtual void OnPeerLeave( CRoomPeer* peer );
 protected:
 	void SwitchToRoomSate( eRoomState eFrom, eRoomState eToDest );
 	void NextPlayerAction();

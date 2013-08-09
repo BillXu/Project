@@ -19,7 +19,7 @@ public:
 	virtual void Init( unsigned int nRoomID , unsigned char nMaxSeat );
 	void SendMsgRoomPeers(stMsg*pMsg ,unsigned short nLen );
 	CRoomPeer* GetRoomPeerBySessionID( unsigned int nSessionID );
-	void OnPeerLeave( CRoomPeer* peer );
+	virtual void OnPeerLeave( CRoomPeer* peer );
 	int GetRoomPeerCount();
 	unsigned char GetEmptySeatCount(){ return m_nMaxSeat - GetRoomPeerCount() ; }
 	unsigned char GetMaxSeat(){ return m_nMaxSeat ; }

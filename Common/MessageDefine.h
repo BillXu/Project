@@ -189,7 +189,7 @@ struct stMsgRoomPlayerLook
 :public stMsg
 {
     stMsgRoomPlayerLook(){ cSysIdentifer = ID_MSG_GAME2C ; usMsgType = MSG_ROOM_PLAYER_LOOK ; }
-    char nSessionID ;
+    unsigned int nSessionID ;
 	char vCard[3] ;
 };
 

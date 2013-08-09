@@ -32,6 +32,13 @@ void CRoom::Rest()
 	m_nSingleBetCoin = 10 ;
 	m_nTotalBetCoin = 0 ;
 	m_nRound = 0;
+	for ( int i = 0 ; i < MAX_ROOM_PEER ; ++i )
+	{
+		if ( m_vRoomPeer[i] )
+		{
+			m_vRoomPeer[i]->m_eState = eRoomPeer_None ;
+		}
+	}
 }
 
 unsigned char CRoom::GetEmptySeatCount()
@@ -95,7 +102,21 @@ void CRoom::Update(float fTimeElpas, unsigned int nTimerID )
 			m_fRoomSateTick[eState]-= fTimeElpas ;
 			if ( m_fRoomSateTick[eState] <= 0 || GetReadyPeerCount() == GetMaxSeat() )
 			{
-				SwitchToRoomSate(eState,eRoomState_DistributeCard) ;
+				if ( GetReadyPeerCount() >= 2 )
+				{
+					SwitchToRoomSate(eState,eRoomState_DistributeCard) ;
+				}
+				else
+				{
+					if ( GetRoomPeerCount() < 2 )
+					{
+						SwitchToRoomSate(GetRoomState(),eRoomState_WaitPeerToJoin ) ;
+					}
+					else
+					{
+						SwitchToRoomSate(GetRoomState(),eRoomState_WaitPeerToGetReady ) ;
+					}
+				}
 			}
 		}
 		break;
@@ -183,6 +204,26 @@ void CRoom::SendCurRoomToPeer(CRoomPeer* peer )
 		nOffset += sizeof(stRoomPeerBrifInfo);
 	}
 	peer->SendMsgToClient(pBuffer,nAllLen) ;
+}
+
+void CRoom::OnPeerLeave( CRoomPeer* peer )
+{
+	CRoomBase::OnPeerLeave(peer) ;
+	if ( eRoomState_WaitPeerToGetReady == GetRoomState() )
+	{
+		if (  GetRoomPeerCount() < 2 )
+		{
+			SwitchToRoomSate(GetRoomState(),eRoomState_WaitPeerToJoin) ;
+			return ;
+		}
+
+		if ( GetReadyPeerCount() < 2 )
+		{
+			SwitchToRoomSate(GetRoomState(),eRoomState_WaitPeerToGetReady) ;
+			return ;
+		}
+
+	}
 }
 
 void CRoom::SwitchToRoomSate( eRoomState eFrom, eRoomState eToDest )
@@ -553,6 +594,7 @@ bool CRoom::OnPeerMsg(CRoomPeer* pPeer, stMsg* pmsg )
 			msgplayerpk.nPKInvokeSessionID = pPeer->GetSessionID() ;
 			msgplayerpk.nPKWithSessionID = PKpeer->GetSessionID() ;
 			SendMsgRoomPeers(&msgplayerpk,sizeof(msgplayerpk)) ;
+			SwitchToRoomSate(GetRoomState(),eRoomState_PKing) ;
 			DebugRoomInfo() ;
 		}
 		return true ;
@@ -575,7 +617,7 @@ bool CRoom::OnPeerMsg(CRoomPeer* pPeer, stMsg* pmsg )
 		return true;
 	case MSG_ROOM_GIVEUP:
 		{
-			if ( eRoomState_WaitPeerAction != GetRoomState() )
+			if ( pPeer->IsActive() == false )
 			{
 				stMsgRoomRet msgRet ;
 				msgRet.nRet = 1 ; // room state not fitable ;
@@ -590,6 +632,13 @@ bool CRoom::OnPeerMsg(CRoomPeer* pPeer, stMsg* pmsg )
 			if ( CheckFinish() )
 			{
 				SwitchToRoomSate(GetRoomState(),eRoomState_ShowingResult) ;
+			}
+			else
+			{
+				if ( m_nCurWaitPeerIdx == pPeer->m_nPeerIdx )
+				{
+					NextPlayerAction();
+				}
 			}
 		}
 		return true; 

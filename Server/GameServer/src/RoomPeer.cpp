@@ -73,6 +73,8 @@ void CRoomPeer::LeaveRoom()
 {
 	if ( m_pRoom )
 	{
+		stMsgRoomGiveUp msg ;
+		m_pRoom->OnPeerMsg(this,&msg) ;
 		m_pRoom->OnPeerLeave(this);
 		m_pRoom = NULL ;
 	}
