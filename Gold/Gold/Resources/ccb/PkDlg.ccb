@@ -7,7 +7,7 @@
 	<key>currentResolution</key>
 	<integer>0</integer>
 	<key>currentSequenceId</key>
-	<integer>0</integer>
+	<integer>2</integer>
 	<key>fileType</key>
 	<string>CocosBuilder</string>
 	<key>fileVersion</key>
@@ -421,8 +421,6 @@
 						</array>
 					</dict>
 				</array>
-				<key>selected</key>
-				<true/>
 				<key>seqExpanded</key>
 				<true/>
 			</dict>
@@ -1016,8 +1014,8 @@
 						<string>Position</string>
 						<key>value</key>
 						<array>
-							<real>131</real>
-							<real>115</real>
+							<real>149</real>
+							<real>271</real>
 							<integer>0</integer>
 						</array>
 					</dict>
@@ -1254,7 +1252,7 @@
 						<key>type</key>
 						<string>Check</string>
 						<key>value</key>
-						<false/>
+						<true/>
 					</dict>
 					<dict>
 						<key>baseValue</key>
@@ -1324,7 +1322,7 @@
 						<key>type</key>
 						<string>Byte</string>
 						<key>value</key>
-						<integer>255</integer>
+						<integer>0</integer>
 					</dict>
 				</array>
 				<key>seqExpanded</key>
@@ -1454,7 +1452,7 @@
 			<key>chainedSequenceId</key>
 			<integer>-1</integer>
 			<key>length</key>
-			<real>0.83333331346511841</real>
+			<real>2.8333332538604736</real>
 			<key>name</key>
 			<string>LeftWin</string>
 			<key>offset</key>
@@ -1488,7 +1486,7 @@
 			<key>chainedSequenceId</key>
 			<integer>-1</integer>
 			<key>length</key>
-			<real>0.73333334922790527</real>
+			<real>2.7333333492279053</real>
 			<key>name</key>
 			<string>RightWin</string>
 			<key>offset</key>

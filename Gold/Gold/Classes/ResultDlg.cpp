@@ -86,5 +86,19 @@ void CResultDlg::ShowDlg(std::list<stResultData*>& pst , CRoomData* pdata)
     {
         m_vInfos[i].Hide() ;
     }
-    // show 
+    
+    std::list<stResultData*>::iterator iter = pst.begin() ;
+    stResultData* prd = NULL ;
+    for ( int i = 0  ; iter != pst.end() ; ++iter )
+    {
+        prd = *iter ;
+        stRoomPeerData* ppeerdata = pdata->GetRoomPeerDataByServerIdx(prd->idx);
+        if ( !ppeerdata )
+        {
+            continue ;
+        }
+        
+        m_vInfos[i].SetInfo(ppeerdata->pName, prd->nResultCoin > 0 , prd->nResultCoin) ;
+        ++i ;
+    }
 }

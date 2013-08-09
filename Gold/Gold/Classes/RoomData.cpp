@@ -10,6 +10,7 @@
 #include "RoomLayer.h"
 #include "ClientApp.h"
 #include "PlayerBaseData.h"
+#include "ResultDlg.h"
 bool stRoomPeerData::IsActive()
 {
     return (ePeerState == eRoomPeer_Look || ePeerState == eRoomPeer_Unlook );
@@ -22,6 +23,7 @@ void CRoomData::Init(CRoomLayer* pLayer, int nBaseSingle )
     m_nSingleBetCoin = 0 ;
     m_nTotalBetCoin = 0 ;
     m_nRound = 0 ;
+    m_nWaitSessionID = 0 ;
     m_eRoomSate = eRoomState_None ;
     m_nBaseSingle  = nBaseSingle ; 
 }
@@ -117,6 +119,7 @@ bool CRoomData::OnMessage( RakNet::Packet* pRakMsg )
             m_pRoomLayer->OnStopTiming() ;
             stMsgRoomWaitPlayerAction* pRet = (stMsgRoomWaitPlayerAction*)pMsg ;
             m_nRound = pRet->nRound ;
+            m_nWaitSessionID = pRet->nSessionID ;
             stRoomPeerData* pdata = GetRoomPeerDataBySessionID(pRet->nSessionID) ;
             if ( pdata )
             {
@@ -267,18 +270,39 @@ bool CRoomData::OnMessage( RakNet::Packet* pRakMsg )
                 }
                 pBuffer += sizeof(stResultData) ;
             }
-            m_nSingleBetCoin = m_nBaseSingle ;
-            m_nTotalBetCoin = 0 ;
-            m_nRound = 0 ;
-            m_eRoomSate = eRoomState_WaitPeerToJoin ;
-            m_pRoomLayer->OnRefreshRoomInfo(this);
+            RestState();
             // show result dlg ; vListData pass to it ;
-        }
+            CResultDlg* pdlg = new CResultDlg ;
+            pdlg->init() ;
+            m_pRoomLayer->addChild(pdlg) ;
+            pdlg->autorelease() ;
+            pdlg->ShowDlg(vListData, this) ;
+         }
             break ;
         default:
             break;
     }
     return false ;
+}
+
+void CRoomData::RestState()
+{
+    m_nSingleBetCoin = m_nBaseSingle ;
+    m_nTotalBetCoin = 0 ;
+    m_nRound = 0 ;
+    m_eRoomSate = eRoomState_WaitPeerToJoin ;
+    m_nWaitSessionID = 0 ;
+    stRoomPeerData* pdata = NULL ;
+    for ( int i = 0 ; i < MAX_ROOM_PEER ; ++i )
+    {
+        pdata = GetRoomPeerDataByClientIdx(i) ;
+        if (pdata )
+        {
+            pdata->ePeerState = eRoomPeer_None ;
+            pdata->nBetCoin = 0 ;
+        }
+    }
+    m_pRoomLayer->OnRefreshRoomInfo(this);
 }
 
 stRoomPeerData* CRoomData::GetRoomPeerDataBySessionID( unsigned int nSessionID )
@@ -313,6 +337,11 @@ stRoomPeerData* CRoomData::GetRoomPeerDataByClientIdx( char nClientIdx )
     if ( m_vRoomPeers[nServerIdx].nSessionID )
         return &m_vRoomPeers[nServerIdx] ;
     return NULL ;
+}
+
+bool CRoomData::IsWaitMyTurn()
+{
+    return CClientApp::SharedClientApp()->GetPlayerData()->GetBaseData()->nSessionID == m_nWaitSessionID ;
 }
 
 char CRoomData::ConvertoServerIdx(char nClientIdx)
