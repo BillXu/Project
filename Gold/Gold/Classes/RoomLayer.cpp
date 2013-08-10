@@ -403,47 +403,11 @@ void CRoomLayer::StartDistributeCard()
 void CRoomLayer::ResetRoomState()
 {
     unscheduleAllSelectors() ;
-    StopMyClock();
-    for ( int i = 0 ; i < 5 ; ++i )
-    {
-        m_pDefault[i]->setVisible(false) ;
-        m_pReadyIcon[i]->setVisible(false) ;
-        m_pGive[i]->setVisible(false) ;
-        m_pFail[i]->setVisible(false) ;
-        if ( i >= 4 )
-        {
-            break ;
-        }
-        m_pLook[i]->setVisible(false) ;
-        m_pPKIcon[i]->setVisible(false) ;
-        m_pPlayer[i]->StopTiming();
-    }
-    // disable buttons ;
-    m_pbtnAdd->setEnabled(false) ;
-    m_pbtnFollow->setEnabled(false) ;
-    m_pbtnLook->setEnabled(false) ;
-    m_pbtnPK->setEnabled(false) ;
-    m_pbtnGiveUp->setEnabled(false) ;
-    m_pbtnReady->setVisible(false) ;
-    m_pbtnReady->setEnabled(false) ;
-    m_pbtnReady->setOpacity(255) ;
     
     m_pSelectAddBetCoin->setVisible(false) ;
     
-    m_pMyFailedIcon->setVisible(false) ;
-    m_pMyGiveupIcon->setVisible(false) ;
-    
     ClearShowingChouMa();
     
-    // show card clearn
-    for ( int i = 0 ; i < 3 ; ++i )
-    {
-        if ( m_pLookShowCard[i] )
-        {
-            m_pLookShowCard[i]->removeFromParent() ;
-            m_pLookShowCard[i] = NULL ;
-        }
-    }
     StopPkIconAnimation();
 }
 
@@ -554,6 +518,7 @@ void CRoomLayer::StartMyClock()
     schedule(schedule_selector(CRoomLayer::OnClocked), 1 , 30, 0) ;
     m_pClock->setVisible(true) ;
     m_fMyTimerCount = 30 ;
+    OnClocked(0);
 }
 
 void CRoomLayer::OnClocked(float fTime )
@@ -673,7 +638,6 @@ void CRoomLayer::OnRefreshRoomInfo(CRoomData*proomdata)
     sprintf(pBuffer, "%d",proomdata->m_nRound ) ;
     m_pRound->setString(pBuffer) ;
     
-    UpdateMyCoin(); 
     for ( int i = 0 ; i < MAX_ROOM_PEER; ++i )
     {
         stRoomPeerData* pRoomPeerdata = proomdata->GetRoomPeerDataByClientIdx(i) ;
@@ -687,25 +651,14 @@ void CRoomLayer::OnRefreshRoomInfo(CRoomData*proomdata)
             OnPlayerLeave(i) ;
         }
     }
-    
-    // update btn
-    if ( m_pRoomData->m_eRoomSate == eRoomState_WaitPeerToGetReady || eRoomState_WaitPeerToJoin == m_pRoomData->m_eRoomSate )
-    {
-        m_pbtnReady->setVisible(true) ;
-        m_pbtnReady->setEnabled(true) ;
-        m_pbtnReady->setOpacity(255) ;
-    }
-    else
-    {
-    
-    }
-    UpdateButton();
 }
 
 void CRoomLayer::OnUpdatePlayerState(char nIdx , eRoomPeerState ePeerState )
 {
-    if ( nIdx == 4 )
+    if ( nIdx == 4 )  // self state ;
     {
+        UpdateMyCoin();
+        UpdateButton();
         switch (ePeerState )
         {
             case eRoomPeer_Look:
@@ -717,6 +670,10 @@ void CRoomLayer::OnUpdatePlayerState(char nIdx , eRoomPeerState ePeerState )
                 CCPoint ptDefault = m_pDefault[4]->getPosition();
                 for ( int i = 0 ; i < 3 ; ++i )
                 {
+                    if ( m_pLookShowCard[i] )
+                    {
+                        break ;
+                    }
                     m_pLookShowCard[i] = GetAutoSpriteByCard(peerCard.GetCardByIdx(i));
                     m_pTable->addChild(m_pLookShowCard[i]) ;
                     m_pLookShowCard[i]->setPosition(ccp(ptDefault.x + ( m_pLookShowCard[i]->getContentSize().width * 1.1 ) * ( i - 1 ),ptDefault.y * 1.3));
@@ -756,7 +713,22 @@ void CRoomLayer::OnUpdatePlayerState(char nIdx , eRoomPeerState ePeerState )
                 break;
             case eRoomPeer_None:
             {
-
+                m_pDefault[4]->setVisible(false) ;
+                m_pGive[4]->setVisible(false);
+                m_pFail[4]->setVisible(false) ;
+                m_pReadyIcon[5]->setVisible(false) ;
+                m_pSelectAddBetCoin->setVisible(false) ;
+                StopMyClock();
+                m_pMyGiveupIcon->setVisible(false) ;
+                m_pMyFailedIcon->setVisible(false) ;
+                for ( int i = 0 ; i < 3 ; ++i )
+                {
+                    if ( m_pLookShowCard[i] )
+                    {
+                        m_pLookShowCard[i]->removeFromParent();
+                        m_pLookShowCard[i] = NULL ;
+                    }
+                }
             }
                 break;
             default:
@@ -769,10 +741,19 @@ void CRoomLayer::OnUpdatePlayerState(char nIdx , eRoomPeerState ePeerState )
         m_pLook[nIdx]->setVisible(ePeerState == eRoomPeer_Look) ;
         m_pGive[nIdx]->setVisible(ePeerState == eRoomPeer_GiveUp) ;
         m_pFail[nIdx]->setVisible(ePeerState == eRoomPeer_Failed) ;
+        m_pPKIcon[nIdx]->setVisible(m_bSelectingPKTarget && (ePeerState == eRoomPeer_Look || ePeerState == eRoomPeer_Unlook )) ;
+        if ( ePeerState == eRoomPeer_None )
+        {
+            m_pPlayer[nIdx]->StopTiming();
+        }
+        
+        stRoomPeerData* pdata = m_pRoomData->GetRoomPeerDataByClientIdx(nIdx) ;
+        if ( pdata )
+        {
+            m_pPlayer[nIdx]->UpdateCoinInfo(pdata->nBetCoin,pdata->nCoin);
+        }
     }
-
     m_pReadyIcon[nIdx]->setVisible(ePeerState == eRoomPeer_Ready) ;
-    UpdateButton();
 }
 
 void CRoomLayer::OnDistributeCard()

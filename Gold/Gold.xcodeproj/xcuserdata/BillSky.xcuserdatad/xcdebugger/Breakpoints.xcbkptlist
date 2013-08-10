@@ -14,5 +14,44 @@
          startingLineNumber = "1106"
          endingLineNumber = "1106">
       </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "Yes"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         filePath = "Gold/Classes/RoomData.cpp"
+         timestampString = "397736554.939452"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "290"
+         endingLineNumber = "290"
+         landmarkName = "CRoomData::RestState()"
+         landmarkType = "5">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "Yes"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         filePath = "Gold/Classes/RoomData.cpp"
+         timestampString = "397737201.549029"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "250"
+         endingLineNumber = "250"
+         landmarkName = "CRoomData::OnMessage( RakNet::Packet* pRakMsg )"
+         landmarkType = "5">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "Yes"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         filePath = "Gold/Classes/RoomData.cpp"
+         timestampString = "397737351.121376"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "279"
+         endingLineNumber = "279"
+         landmarkName = "CRoomData::OnMessage( RakNet::Packet* pRakMsg )"
+         landmarkType = "5">
+      </FileBreakpoint>
    </FileBreakpoints>
 </Bucket>
