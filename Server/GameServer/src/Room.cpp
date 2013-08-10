@@ -425,7 +425,7 @@ bool CRoom::CheckFinish()
 	for (std::list<stResultData*>::iterator iter = vRData.begin() ; iter != vRData.end(); ++iter  )
 	{
 		stResultData* pData = *iter ;
-		memcpy(pbuffer+nOffset,&pData,sizeof(stResultData));
+		memcpy(pbuffer+nOffset,pData,sizeof(stResultData));
 		nOffset += sizeof(stResultData) ;
 		delete pData ; // delete because have copyed to buffer ;
 		pData = NULL ;
