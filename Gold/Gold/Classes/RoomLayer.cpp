@@ -890,7 +890,7 @@ CCSprite* CRoomLayer::GetAutoSpriteByCard(CCard* pcard)
     int nRow = nLineIdx / 10 ;
     int nCol = nLineIdx % 10 ;
     CCRect ptRct = CCRectMake(fW * nCol, nRow * fH, fW, fH) ;
-    CCSprite* sprite = CCSprite::create("ccbResources/gold_poker.png", ptRct) ;
+    CCSprite* sprite = CCSprite::create("ccbResources/gold_poker.png", CC_RECT_PIXELS_TO_POINTS(ptRct)) ;
     return sprite ;
 }
 
