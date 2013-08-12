@@ -4,6 +4,7 @@
 #endif 
 #include "MySqlData.h"
 #include <vector>
+#include <list>
 #include "mutex.h"
 enum eDBRequestType
 {
@@ -16,13 +17,13 @@ enum eDBRequestType
 struct stDBRequest
 {
 	eDBRequestType eType ;
-	unsigned int nRequestUID ;
-	unsigned int nRequestFlag ; // 一般是msg,主要用来表示请求，用于对请求结果的处理. just ;
+	unsigned int nRequestUID ;  // maybe msg id  ;
+	char cOrder ;              // big order processed first ;  then first come , first out ;
 	char pSqlBuffer[Max_Sql_String];
 	int nSqlBufferLen ;
 	void* pUserData ;
 protected:
-	stDBRequest(){}
+	stDBRequest(){ cOrder = 0 ;}
 	friend class CDBRequestQueue;
 };
 
@@ -32,7 +33,6 @@ public:
 	typedef std::vector<CMysqlRow*> VEC_MYSQLROW ;
 	~stDBResult();
 public:
-	unsigned int nRequestFlag ;
 	unsigned int nRequestUID ;
 	VEC_MYSQLROW vResultRows ;  
 	unsigned int nAffectRow ;
@@ -42,8 +42,8 @@ public:
 class CDBRequestQueue
 {
 public:
-	typedef std::vector<stDBRequest*> VEC_DBREQUEST ;
-	typedef std::vector<stDBResult*> VEC_DBRESULT ;
+	typedef std::list<stDBRequest*> VEC_DBREQUEST ;
+	typedef std::list<stDBResult*> VEC_DBRESULT ;
 public:
 	static CDBRequestQueue* SharedDBRequestQueue();
 	CDBRequestQueue();

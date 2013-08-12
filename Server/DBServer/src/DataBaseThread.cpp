@@ -75,12 +75,11 @@ bool CDataBaseThread::ProcessRequest()
 		pRequest = *iter ;
 		pResult = new stDBResult;  // will be deleted after processed in the main thread .
 		vProcessedResult.push_back(pResult);
-		pResult->nRequestFlag = pRequest->nRequestFlag ;
 		pResult->nRequestUID = pRequest->nRequestUID ;
 		pResult->pUserData = pRequest->pUserData ;
 		if ( mysql_real_query(m_pMySql,pRequest->pSqlBuffer,pRequest->nSqlBufferLen) )
 		{
-			CLogMgr::SharedLogMgr()->ErrorLog("query DB Error Info , Operate Flag = %d : %s \n", pRequest->nRequestFlag, mysql_error(m_pMySql));
+			CLogMgr::SharedLogMgr()->ErrorLog("query DB Error Info , Operate UID = %d : %s \n", pRequest->nRequestUID, mysql_error(m_pMySql));
 			pResult->nAffectRow = 0 ;
 			continue; 
 		}
@@ -186,7 +185,7 @@ bool CDataBaseThread::ProcessRequest()
 			break; 
 		default:
 			{
-				CLogMgr::SharedLogMgr()->ErrorLog("error DB request type, DB request Flag = %d , Type = %d",pRequest->nRequestFlag,pRequest->eType) ;
+				CLogMgr::SharedLogMgr()->ErrorLog("error DB request type, DB request UID = %d , Type = %d",pRequest->nRequestUID,pRequest->eType) ;
 				continue; ;
 			}
 		}

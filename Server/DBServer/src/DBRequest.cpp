@@ -35,7 +35,22 @@ void CDBRequestQueue::PushRequest(stDBRequest* request )
 {
 	assert(request->nRequestUID && "this can not be zero ,assign it with msg id" );
 	mRequestLock.Lock();
-	m_vAllRequest.push_back(request) ;
+	bool bInsert = false ;
+	VEC_DBREQUEST::iterator iter = m_vAllRequest.begin() ;
+	for ( ; iter != m_vAllRequest.end(); ++iter )
+	{
+		 if ( (*iter)->cOrder < request->cOrder )
+		 {
+			 m_vAllRequest.insert(iter,request) ;
+			 bInsert = true ;
+			 break; 
+		 }
+	}
+
+	if ( !bInsert )
+	{
+		m_vAllRequest.push_back(request) ;
+	}
 	mRequestLock.Unlock() ;
 }
 
