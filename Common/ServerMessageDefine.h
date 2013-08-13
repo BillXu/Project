@@ -46,6 +46,53 @@
 //	
 //};
 
+struct stMsgLoginRegister
+	:public stMsg
+{
+	stMsgLoginRegister(){ cSysIdentifer = ID_MSG_LOGIN2DB; usMsgType = MSG_PLAYER_REGISTER ; }
+	unsigned int nSessionID ;
+	bool bAutoRegister ;
+	unsigned char cSex ;
+	char* pAccound ;
+	unsigned char pAcoundLen ;
+	char* pPassword ;
+	unsigned char ppPasswordLen ;
+	char* pcharactername ;
+	unsigned char ncharNameLen ;
+};
+
+struct stMsgLoginRegisterRet
+	:public stMsg 
+{
+	stMsgLoginRegisterRet(){ cSysIdentifer = ID_MSG_DB2LOGIN ; usMsgType = MSG_PLAYER_REGISTER ; }
+	unsigned char nRet ;  // 0 means ok ;
+	unsigned int nSessionID ;
+	bool bAuto ;
+	unsigned int nUserID ;
+};
+
+
+struct stMsgLoginAccountCheck
+	:public stMsg
+{
+public:
+	stMsgLoginAccountCheck(){ cSysIdentifer = ID_MSG_LOGIN2DB ; usMsgType = MSG_PLAYER_CHECK_ACCOUNT ; }
+	unsigned int nSessionID ;
+	char* pAccount ;
+	unsigned char nAccountLen ;
+	char * pPassword ;
+	unsigned char nPasswordLen ;
+};
+
+struct stMsgLoginAccountCheckRet
+	:public stMsg
+{
+public:
+	stMsgLoginAccountCheckRet(){ cSysIdentifer = ID_MSG_DB2LOGIN ; usMsgType = MSG_PLAYER_CHECK_ACCOUNT ; }
+	unsigned char nRet ;  // 0 means ok 
+	unsigned int nSessionID ;
+	unsigned int nUserID ;
+};
 struct stMsgClientDisconnect
 	:public stMsg
 {

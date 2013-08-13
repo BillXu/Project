@@ -21,13 +21,13 @@ CLoginApp::~CLoginApp()
 
 	if ( m_pReconnectDB )
 	{
-		CTimerManager::SharedTimerManager()->RemoveTimer(m_pReconnectDB) ;
+		m_pTimerMgr->RemoveTimer(m_pReconnectDB) ;
 		m_pReconnectDB = NULL ;
 	}
 
 	if ( m_pReconnctGate )
 	{
-		CTimerManager::SharedTimerManager()->RemoveTimer(m_pReconnctGate) ;
+		m_pTimerMgr->RemoveTimer(m_pReconnctGate) ;
 		m_pReconnctGate = NULL ;
 	}
 
@@ -40,6 +40,7 @@ CLoginApp::~CLoginApp()
 
 void CLoginApp::Init()
 {
+	m_pTimerMgr = new CTimerManager ;
 	m_pNetWork = new CNetWorkMgr ;
 	m_pNetWork->SetupNetwork(2);
 	m_pNetWork->AddMessageDelegate(this);
@@ -69,7 +70,7 @@ void CLoginApp::MainLoop()
 		{
 			m_pNetWork->ReciveMessage() ;
 		}
-		CTimerManager::SharedTimerManager()->Update();
+		m_pTimerMgr->Update();
 		Sleep(1);
 	}
 }
@@ -78,7 +79,7 @@ bool CLoginApp::OnMessage( RakNet::Packet* pMsg )
 {
 	CHECK_MSG_SIZE(stMsg,pMsg->length) ;
 	stMsg* pmsg = (stMsg*)pMsg->data ;
-	if ( pmsg->cSysIdentifer == ID_MSG_VERIFY && MSG_VERIFY_GA == pmsg->usMsgType )
+	if ( pmsg->cSysIdentifer == ID_MSG_VERIFY && MSG_VERIFY_GATE == pmsg->usMsgType )
 	{
 		m_stGateServer.m_bConnected = true ;
 		m_stGateServer.m_nServerNetID = pMsg->guid ;
@@ -197,7 +198,7 @@ void CLoginApp::TryConnect(bool bGate )
 	{
 		if ( m_pReconnectDB == NULL )
 		{
-			m_pReconnectDB = CTimerManager::SharedTimerManager()->AddTimer(this,(CTimerDelegate::lpTimerSelector)&CLoginApp::ReconnectDB);
+			m_pReconnectDB = m_pTimerMgr->AddTimer(this,(CTimerDelegate::lpTimerSelector)&CLoginApp::ReconnectDB);
 			m_pReconnectDB->SetDelayTime(5);
 		}
 		m_pReconnectDB->Reset();
@@ -207,7 +208,7 @@ void CLoginApp::TryConnect(bool bGate )
 
 	if ( m_pReconnctGate == NULL )
 	{
-		m_pReconnctGate = CTimerManager::SharedTimerManager()->AddTimer(this,(CTimerDelegate::lpTimerSelector)&CLoginApp::ReconnectGate);
+		m_pReconnctGate = m_pTimerMgr->AddTimer(this,(CTimerDelegate::lpTimerSelector)&CLoginApp::ReconnectGate);
 		m_pReconnctGate->SetDelayTime(5);
 	}
 	m_pReconnctGate->Reset();

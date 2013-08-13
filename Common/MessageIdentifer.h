@@ -8,6 +8,8 @@ enum
 	ID_MSG_GATE2C,
 	ID_MSG_C2GAME,
 	ID_MSG_LOGIN2C,
+	ID_MSG_LOGIN2DB,
+	ID_MSG_DB2LOGIN,
 	ID_MSG_GAME2C,
 	ID_MSG_GM2GA,  // GM = game server , GA = gate server ;
 	ID_MSG_GA2GM,
@@ -33,7 +35,9 @@ enum eMsgType
 	MSG_RECONNECT,   // client with gate 
 
 	// login 
-	MSG_PLAYER_ENTER_GAME,
+	MSG_PLAYER_REGISTER,     // register an account ;
+	MSG_PLAYER_CHECK_ACCOUNT,  // check an account is valid ;
+	MSG_PLAYER_ENTER_GAME,    // after check , enter game 
 	// player base Data 
 	MSG_PLAYER_BASE_DATA,
 	// all room msg here ;

@@ -3,6 +3,7 @@
 #include "ServerMessageDefine.h"
 #include <list>
 #include <map>
+#include <assert.h>
 struct stDBResult ;
 class CDBServerApp ;
 class CDBManager
@@ -14,8 +15,9 @@ public:
 		unsigned int nSessionID ; // always , refer to client session with serveper , used in GameServer and LoginServer , to rresent a Player ;
 		int nExtenArg1 ; // reserver argument , for later use ;
 		int nExtenArg2 ; // reserver argument , for later use ;
-		stArgData(){ nSessionID = 0 ; nExtenArg2 = nExtenArg1 = 0 ;}
-		void Reset(){nSessionID = 0 ; nExtenArg2 = nExtenArg1 = 0 ;}
+		void* pUserData ;   // maybe need data ;
+		stArgData(){ nSessionID = 0 ; nExtenArg2 = nExtenArg1 = 0 ; pUserData = NULL ;}
+		void Reset(){nSessionID = 0 ; nExtenArg2 = nExtenArg1 = 0 ; assert(pUserData==NULL);}
 	};
 	typedef std::list<stArgData*> LIST_ARG_DATA ;
 public:

@@ -15,6 +15,8 @@ public:
 	void OnMessage( RakNet::Packet* pMsg ) ;
 	CLoginPeer* GetPeerBySessionID(unsigned int nSessionID );
 	CLoginPeer* GetReserverPeer();
+	void OnGateMessage(stMsg* pmsg ,unsigned int nSessionID );
+	void OnDBMessage(stMsg* pmsg);
 	bool SendMsgToDB(const char* pBuffer , int nLen );
 	bool SendMsgToGate(const char* pBuffer , int nLen );
 protected:
@@ -23,4 +25,5 @@ protected:
 	MAP_LOGIN_PEER m_vAllPeers ;
 	LIST_LOGIN_PEER m_vReseverLoginPeers ; 
 	CLoginApp* m_pApp ;
+	char m_pMaxBuffer[1024];
 };

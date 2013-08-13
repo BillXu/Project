@@ -13,6 +13,52 @@ public:
 	stMsg():cSysIdentifer( ID_MSG_C2S  ),usMsgType(MSG_NONE){}
 };
 
+// register an login ;
+struct stMsgRegister
+	:public stMsg
+{
+	stMsgRegister(){cSysIdentifer = ID_MSG_C2LOGIN ; usMsgType = MSG_PLAYER_REGISTER ; }
+	bool bAutoQuickEnter ; 
+	char* paccount ;
+	unsigned char nAccLen ;
+	char* pPassword ;
+	unsigned char nPasswordLen ;
+	unsigned char bSex ; // 0 male , 1 female ;
+	char* pcharactername ;
+	unsigned char ncharNameLen ;
+};
+
+struct stMsgRegisterRet
+	:public stMsg
+{
+	stMsgRegisterRet()
+	{
+		cSysIdentifer = ID_MSG_LOGIN2C ;
+		usMsgType = MSG_PLAYER_REGISTER ;
+	}
+	char nRet ; // 0 success ;  1 . account have exsit ;
+	bool bAutoReigster; 
+	unsigned int nUserID ;
+};
+
+struct stMsgCheckAccount
+	:public stMsg 
+{
+	stMsgCheckAccount(){ cSysIdentifer = ID_MSG_C2LOGIN ; usMsgType = MSG_PLAYER_CHECK_ACCOUNT ; }
+	char*pAccount ;
+	unsigned char nAccountLen ;
+	char *pPassword ;
+	unsigned char nPasswordlen ;
+};
+
+struct stMsgCheckAccountRet
+	:public stMsg 
+{
+	stMsgCheckAccountRet(){ cSysIdentifer = ID_MSG_LOGIN2C; usMsgType = MSG_PLAYER_CHECK_ACCOUNT ; }
+	unsigned char nRet ; // 0 ; success ; 1 account error , 2 password error ;
+	unsigned int nUserID ;
+};
+
 // client reconnect ;
 struct stMsgReconnect
 	:public stMsg

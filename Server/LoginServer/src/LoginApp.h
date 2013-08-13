@@ -26,6 +26,7 @@ public:
 	bool SendMsg( const char* pBuffer , unsigned int nLen , bool bGate );
 	void ReconnectDB(float fTimeElaps,unsigned int nTimerID );
 	void ReconnectGate(float fTimeElaps,unsigned int nTimerID );
+	CTimerManager* GetTimerMgr(){ return m_pTimerMgr ;}
 protected:
 	bool SendMsgToGate(const char* pBuffer , unsigned int nLen);
 	bool SendMsgToDB(const char* pBuffer , unsigned int nLen);
@@ -41,4 +42,6 @@ protected:
 
 	CTimer* m_pReconnctGate ;
 	CTimer* m_pReconnectDB ;
+
+	CTimerManager* m_pTimerMgr;
 };

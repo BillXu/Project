@@ -20,36 +20,150 @@ void CLoginPeerMgr::OnMessage(RakNet::Packet* pMsg )
 	CHECK_MSG_SIZE_VOID(stMsg,pMsg->length);
 	
 	stMsg* pRet = (stMsg*)pMsg->data;
-	if ( pRet->usMsgType = MSG_DISCONNECT ) // a peer disconnected ;
-	{
-		CHECK_MSG_SIZE_VOID(stMsgPeerDisconnect,pMsg->length);
-		stMsgPeerDisconnect* pReal = (stMsgPeerDisconnect*)pRet ;
-		MAP_LOGIN_PEER::iterator iter = m_vAllPeers.find(pReal->nSessionID) ;
-		if ( iter != m_vAllPeers.end() )
-		{
-			m_vReseverLoginPeers.push_back(iter->second) ;
-		}
-		CLogMgr::SharedLogMgr()->PrintLog("A peer disconnected !") ;
-		return ;
-	}
-
 	if ( pRet->usMsgType == MSG_TRANSER_DATA )
 	{
 		CHECK_MSG_SIZE_VOID(stMsgTransferData,pMsg->length);
 		stMsgTransferData* pReal = (stMsgTransferData*)pRet ;
-		CLoginPeer* pPeer = GetPeerBySessionID(pReal->nSessionID);
-		if ( !pPeer )
+		char* pbuffer = (char*)pReal ;
+		pbuffer += sizeof(stMsgTransferData) ;
+		OnGateMessage((stMsg*)pbuffer,pReal->nSessionID ) ;
+		return ;
+	}
+
+	if ( pRet->cSysIdentifer == ID_MSG_DB2LOGIN )
+	{
+		OnDBMessage(pRet) ;
+		return ;
+	}
+
+	CLogMgr::SharedLogMgr()->PrintLog("unprocessed msg type = %d",pRet->usMsgType ) ;
+	return ;
+}
+
+void CLoginPeerMgr::OnGateMessage(stMsg* pmsg ,unsigned int nSessionID )
+{
+	switch ( pmsg->usMsgType )
+	{
+	case MSG_PLAYER_REGISTER:
 		{
-			pPeer = GetReserverPeer();
-			if ( !pPeer )
-			{
-				pPeer = new CLoginPeer(this) ;
-				pPeer->Reset(pReal->nSessionID) ;
-				m_vAllPeers[pReal->nSessionID] = pPeer ;
-			}
-			pPeer->Reset(pReal->nSessionID) ;
+			stMsgRegister* pMsg = (stMsgRegister*)pmsg ;
+
+			stMsgLoginRegister msgRegister ;
+			int nLen = sizeof(msgRegister) + pMsg->nAccLen + pMsg->nPasswordLen;
+			msgRegister.bAutoRegister = pMsg->bAutoQuickEnter ;
+			msgRegister.cSex = pMsg->bSex ;
+			msgRegister.pAcoundLen = pMsg->nAccLen ;
+			msgRegister.ppPasswordLen = pMsg->nPasswordLen ;
+			msgRegister.nSessionID = nSessionID ;
+			msgRegister.ncharNameLen = pMsg->ncharNameLen ;
+			
+			int nOffset = 0 ;
+			memcpy(m_pMaxBuffer + nOffset , &msgRegister, sizeof(msgRegister) );
+			nOffset += sizeof(msgRegister);
+
+			char* pbuffer = (char*)pmsg ;
+			pbuffer += sizeof(stMsgRegister);
+
+			memcpy(m_pMaxBuffer + nOffset , pbuffer, msgRegister.pAcoundLen) ;
+			nOffset += msgRegister.pAcoundLen ;
+			pbuffer += msgRegister.pAcoundLen ;
+
+			memcpy(m_pMaxBuffer + nOffset , pbuffer, msgRegister.ppPasswordLen) ;
+			nOffset += msgRegister.ppPasswordLen ;
+			pbuffer += msgRegister.ppPasswordLen ;
+
+			memcpy(m_pMaxBuffer + nOffset , pbuffer, msgRegister.ncharNameLen) ;
+			nOffset += msgRegister.ncharNameLen ;
+			pbuffer += msgRegister.ncharNameLen ;
+
+			SendMsgToDB(m_pMaxBuffer, nOffset ) ;
 		}
-		pPeer->OnMessage(pMsg) ;
+		break;
+	case MSG_PLAYER_CHECK_ACCOUNT:
+		{
+			stMsgCheckAccount* pMsgCheck = (stMsgCheckAccount*)pmsg ;
+			stMsgLoginAccountCheck msg ;
+			msg.nSessionID = nSessionID ;
+			msg.nAccountLen = pMsgCheck->nAccountLen ;
+			msg.nPasswordLen = pMsgCheck->nPasswordlen ;
+			char* pbuffer = (char*)pmsg ;
+			pbuffer += sizeof(stMsgCheckAccount);
+			int nOffset = 0 ;
+			memcpy(m_pMaxBuffer + nOffset ,pbuffer, pMsgCheck->nAccountLen );
+			nOffset += pMsgCheck->nAccountLen ;
+			pbuffer += pMsgCheck->nAccountLen ;
+
+			memcpy(m_pMaxBuffer + nOffset ,pbuffer, pMsgCheck->nPasswordlen );
+			nOffset += pMsgCheck->nPasswordlen ;
+			pbuffer += pMsgCheck->nPasswordlen ;
+			SendMsgToDB(m_pMaxBuffer,nOffset) ;
+		}
+		break;
+	default:
+		{
+			CLogMgr::SharedLogMgr()->ErrorLog("Unknown message from gate type = %d",pmsg->usMsgType );
+			return ;
+		}	   
+
+	}
+}
+
+void CLoginPeerMgr::OnDBMessage(stMsg* pmsg )
+{
+	switch ( pmsg->usMsgType )
+	{
+	case MSG_PLAYER_REGISTER:
+		{
+			stMsgLoginRegisterRet* pMsgRet = (stMsgLoginRegisterRet*)pmsg ;
+			stMsgTransferData msgData ;
+			msgData.bBroadCast = false ;
+			msgData.cSysIdentifer = ID_MSG_LOGIN2C ;
+			msgData.nSessionID = pMsgRet->nSessionID ;
+			
+			stMsgRegisterRet msgclientRet ;
+			msgclientRet.bAutoReigster = pMsgRet->bAuto;
+			msgclientRet.nRet = pMsgRet->nRet ;
+			msgclientRet.nUserID = pMsgRet->nUserID ;
+		
+			int nOffset = 0 ;
+			memcpy(m_pMaxBuffer+ nOffset , &msgData, sizeof( msgData ) );
+			nOffset += sizeof(msgData);
+			
+			memcpy(m_pMaxBuffer + nOffset, &msgclientRet , sizeof(msgclientRet) );
+			nOffset += sizeof(msgclientRet);
+			
+			SendMsgToGate(m_pMaxBuffer, nOffset );
+		}
+		break;
+	case MSG_PLAYER_CHECK_ACCOUNT:
+		{
+			stMsgLoginAccountCheckRet* pLoginCheckRet = (stMsgLoginAccountCheckRet*)pmsg ;
+			
+				
+			stMsgCheckAccountRet msgcheckret ;
+			msgcheckret.nRet = pLoginCheckRet->nRet ;
+			msgcheckret.nUserID = pLoginCheckRet->nUserID ;
+			
+			stMsgTransferData msgData ;
+			msgData.bBroadCast = false ;
+			msgData.nSessionID = pLoginCheckRet->nSessionID ;
+			msgData.cSysIdentifer = ID_MSG_LOGIN2C ;
+			
+			int nOffset = 0 ;
+			memcpy(m_pMaxBuffer, &msgData, sizeof(msgData));
+			nOffset += sizeof(msgData);
+
+			memcpy(m_pMaxBuffer+ nOffset , &msgcheckret,sizeof(msgcheckret));
+			nOffset += sizeof(msgcheckret) ;
+			SendMsgToGate(m_pMaxBuffer, nOffset) ;
+		}
+		break;
+	default:
+		{
+			CLogMgr::SharedLogMgr()->ErrorLog("Unknown message from DB type = %d",pmsg->usMsgType );
+			return ;
+		}	   
+
 	}
 }
 
