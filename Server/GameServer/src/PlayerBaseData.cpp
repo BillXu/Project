@@ -1,6 +1,7 @@
 #include "PlayerBaseData.h"
 #include <string>
 #include "MessageDefine.h"
+#include "ServerMessageDefine.h"
 #include "Player.h"
 CPlayerBaseData::CPlayerBaseData(CPlayer* player )
 	:IPlayerComponent(player)
@@ -37,7 +38,28 @@ bool CPlayerBaseData::OnMessage(stMsg* pMsg )
 	{
 	case MSG_PLAYER_BASE_DATA:   // from db server ;
 		{
+			stMsgGameServerGetBaseDataRet* pBaseData = (stMsgGameServerGetBaseDataRet*)pMsg ;
+			nCoin = pBaseData->nCoin;
+			nDefaulPhotoID = pBaseData->nDefaulPhotoID;
+			nDiamoned = pBaseData->nDiamoned;
+			nLoseTimes = pBaseData->nLoseTimes ;
+			nQQNumber = pBaseData->nQQNumber ;
+			nSex = pBaseData->nSex ;
+			nSingleWinMost = pBaseData->nSingleWinMost ;
+			nTitle = pBaseData->nTitle ;
+			nUserDefinePhotoID = pBaseData->nUserDefinePhotoID;
+			nVipLevel = pBaseData->nVipLevel ;
+			nWinTimes = pBaseData->nWinTimes ; 
+			nYeastodayWinCoin = pBaseData->nYeastodayWinCoin ;
+			char *pBuffer = (char*)pMsg ;
+			pBuffer += sizeof(stMsgGameServerGetBaseDataRet);
+			memset(strName,0,sizeof(strName));
+			memcpy(strName,pBuffer,pBaseData->nNameLen );
+			pBuffer += pBaseData->nNameLen ;
 
+			strSigure = std::string(pBuffer,pBaseData->nSigureLen);
+
+			return true ;
 		}
 		break;
 	default:

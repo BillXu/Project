@@ -159,10 +159,10 @@ void CDBManager::OnDBResult(stDBResult* pResult)
 			{
 				CMysqlRow* pRow = pResult->vResultRows.front() ;
 				// check password 
-				if ( strcmp((char*)pdata->pUserData,pRow->GetFiledByName("Password")->Value.pBuffer) == 0 )
+				if ( strcmp((char*)pdata->pUserData,pRow->GetFiledByName("Password")->BufferData()) == 0 )
 				{
 					msgRet.nRet = 0 ;
-					msgRet.nUserID = pRow->GetFiledByName("UserUID")->Value.iValue ;
+					msgRet.nUserID = pRow->GetFiledByName("UserUID")->IntValue() ;
 					CLogMgr::SharedLogMgr()->PrintLog("check account success") ;
 				}
 				else
@@ -210,20 +210,33 @@ void CDBManager::OnDBResult(stDBResult* pResult)
 			else
 			{
 				CMysqlRow& pRow = *pResult->vResultRows.front(); 
-				msg.nCoin = pRow["nCoin"]->Value.iValue;
-				msg.nDefaulPhotoID = pRow["nDefaulPhotoID"]->Value.sValue;
-				msg.nDiamoned = pRow["nDiamoned"]->Value.iValue;
-				msg.nLoseTimes = pRow["nLoseTimes"]->Value.iValue;
-				msg.nNameLen = pRow["nNameLen"]->Value.iValue;
-				msg.nQQNumber = pRow["nQQNumber"]->Value.iValue;
-				msg.nSex = pRow["nSex"]->Value.iValue;
-				msg.nSigureLen = pRow["nSigureLen"]->Value.iValue;
-				msg.nSingleWinMost = pRow["nSingleWinMost"]->Value.iValue;
-				msg.nTitle = pRow["nTitle"]->Value.iValue;
-				msg.nUserDefinePhotoID = pRow["nUserDefinePhotoID"]->Value.iValue;
-				msg.nVipLevel = pRow["nVipLevel"]->Value.iValue;
-				msg.nWinTimes = pRow["nWinTimes"]->Value.iValue;
-				msg.nYeastodayWinCoin = pRow["nYeastodayWinCoin"]->Value.iValue;
+				msg.nCoin = pRow["nCoin"]->IntValue();
+				msg.nDefaulPhotoID = pRow["nDefaulPhotoID"]->IntValue();
+				msg.nDiamoned = pRow["nDiamoned"]->IntValue();
+				msg.nLoseTimes = pRow["nLoseTimes"]->IntValue();
+				msg.nNameLen = strlen(pRow["CharacterName"]->CStringValue());
+				msg.nQQNumber = pRow["nQQNumber"]->IntValue();
+				msg.nSex = pRow["nSex"]->IntValue();;
+				msg.nSigureLen = strlen(pRow["strSigure"]->CStringValue());
+				msg.nSingleWinMost = pRow["nSingleWinMost"]->IntValue();
+				msg.nTitle = pRow["nTitle"]->IntValue();
+				msg.nUserDefinePhotoID = pRow["nUserDefinePhotoID"]->IntValue();
+				msg.nVipLevel = pRow["nVipLevel"]->IntValue();
+				msg.nWinTimes = pRow["nWinTimes"]->IntValue();
+				msg.nYeastodayWinCoin = pRow["nYeastodayWinCoin"]->IntValue();
+				
+				int nAllLen = sizeof(msg) + msg.nNameLen + msg.nSigureLen ;
+				char* pBuffer = new char[nAllLen] ;
+				int nOffset = 0 ;
+				memcpy(pBuffer,(char*)&msg,sizeof(msg));
+				nOffset += sizeof(msg);
+
+				memcpy(pBuffer+nOffset,pRow["CharacterName"]->CStringValue(),msg.nNameLen);
+				nOffset += msg.nNameLen ;
+
+				memcpy(pBuffer+nOffset,pRow["strSigure"]->CStringValue(),msg.nSigureLen);
+				nOffset += msg.nSigureLen ;
+				m_pTheApp->SendMsg(pBuffer,nOffset,pdata->m_nReqrestFromAdd) ;
 			}
 		}
 		break;

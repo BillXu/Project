@@ -17,21 +17,16 @@ enum eValueType
 struct stMysqlField
 {
 	std::string strFieldName ;
-	eValueType eType ;
-	union 
-	{
-		float fValue ;
-		int iValue ;
-		long long llValue ; // 64 int ;
-		double dfValue;
-		long lValue ;
-		char* pBuffer;
-		char cValue;
-		short sValue ;
-	} Value ;
+	char* pBuffer ;
 	int nBufferLen ;
 public:
-	stMysqlField(const char* pName,int nLen):strFieldName(pName,nLen){Value.pBuffer = NULL ;}
+	stMysqlField(const char* pName,int nLen):strFieldName(pName,nLen){ pBuffer = NULL ;}
+	unsigned int IntValue();
+	unsigned __int64 IntValue64();
+	float FloatValue();
+	double DoubleValue();
+	const char* BufferData();
+	const char* CStringValue(){ return BufferData() ;}
 	~stMysqlField();
 };
 

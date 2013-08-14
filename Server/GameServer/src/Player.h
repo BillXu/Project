@@ -21,4 +21,4 @@ protected:
 	unsigned int m_nUserUID ;
 	unsigned int m_nSessionID ;  // comunicate with the client ;
 	IPlayerComponent* m_vAllComponents[ePlayerComponent_Max] ;
-};
+}; 

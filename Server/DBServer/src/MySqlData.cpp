@@ -1,10 +1,33 @@
 #include "MySqlData.h"
+
+unsigned int stMysqlField::IntValue()
+{ 
+	return strtol(pBuffer,(char**)NULL,10) ; 
+}
+
+unsigned __int64 stMysqlField::IntValue64()
+{ 
+	return _atoi64(pBuffer); 
+}
+
+float stMysqlField::FloatValue()
+{
+	return atof(pBuffer);  
+}
+
+double stMysqlField::DoubleValue()
+{ 
+	return atof(pBuffer);
+}
+
+const char* stMysqlField::BufferData()
+{
+	return pBuffer ; 
+}
+
 stMysqlField::~stMysqlField()
 {
-	if ( eType == eValue_Binary || eValue_String == eType )
-	{
-		delete[] Value.pBuffer ;
-	}
+	delete[] pBuffer;
 }
 
 // row 

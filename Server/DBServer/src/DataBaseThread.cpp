@@ -88,24 +88,24 @@ bool CDataBaseThread::ProcessRequest()
 		switch ( pRequest->eType )
 		{
 		case eRequestType_Add:
-			{
-				pResult->nAffectRow = mysql_affected_rows(m_pMySql);
-			}
-			break; 
+			//{
+			//	pResult->nAffectRow = mysql_affected_rows(m_pMySql);
+			//}
+			//break; 
 		case eRequestType_Delete:
-			{
-				pResult->nAffectRow = mysql_affected_rows(m_pMySql);
-			}
-			break;
+			//{
+			//	pResult->nAffectRow = mysql_affected_rows(m_pMySql);
+			//}
+			//break;
 		case eRequestType_Update:
 			{
-				pResult->nAffectRow = mysql_affected_rows(m_pMySql);
+				pResult->nAffectRow = (unsigned int)mysql_affected_rows(m_pMySql);
 			}
 			break;
 		case eRequestType_Select:
 			{
 				msqlResult = mysql_store_result(m_pMySql);
-				pResult->nAffectRow = mysql_num_rows(msqlResult);
+				pResult->nAffectRow = (unsigned int)mysql_num_rows(msqlResult);
 				// process row ;
 				int nNumFiled = mysql_num_fields(msqlResult);
 				while ( msqlrow = mysql_fetch_row(msqlResult))
@@ -117,64 +117,67 @@ bool CDataBaseThread::ProcessRequest()
 						msqlfield = mysql_fetch_field(msqlResult);
 						stMysqlField* pField = new stMysqlField(msqlfield->name,msqlfield->name_length) ;
 						pField->nBufferLen = pLengths[i] ;
+						bool bValide = true ;
 						switch (msqlfield->type)
 						{
 						case MYSQL_TYPE_TINY: // char
 							{
-								pField->eType = eValue_Char ;
-								pField->Value.cValue = strtol(msqlrow[i],(char**)NULL,10);
+								CLogMgr::SharedLogMgr()->PrintLog("DB request field Type : Type = %s : field Name: %s ","MYSQL_TYPE_TINY", pField->strFieldName.c_str()) ;
 							}
 							break;
 						case MYSQL_TYPE_SHORT: // short 
 							{
-								pField->eType = eValue_Short ;
-								pField->Value.sValue = strtol(msqlrow[i],(char**)NULL,10);
+								CLogMgr::SharedLogMgr()->PrintLog("DB request field Type : Type = %s : field Name: %s ","MYSQL_TYPE_SHORT", pField->strFieldName.c_str()) ;
 							}
 							break;
 						case MYSQL_TYPE_LONG: // int
 							{
-								 pField->eType = eValue_Int ;
-								 pField->Value.iValue = strtol(msqlrow[i],(char**)NULL,10);
+								 CLogMgr::SharedLogMgr()->PrintLog("DB request field Type : Type = %s : field Name: %s ","MYSQL_TYPE_LONG", pField->strFieldName.c_str()) ;
 							}
 							break;
 						case MYSQL_TYPE_LONGLONG: // 64 bit int 
 							{
-								pField->eType = eValue_longLong ;
-								pField->Value.llValue = _atoi64(msqlrow[i]);
+								CLogMgr::SharedLogMgr()->PrintLog("DB request field Type : Type = %s : field Name: %s ","MYSQL_TYPE_LONGLONG", pField->strFieldName.c_str()) ;
 							}
 							break;
 						case MYSQL_TYPE_FLOAT: // float 
 							{
-								pField->eType = eValue_Float ;
-								pField->Value.fValue = atof(msqlrow[i]);
+								CLogMgr::SharedLogMgr()->PrintLog("DB request field Type : Type = %s : field Name: %s ","MYSQL_TYPE_FLOAT", pField->strFieldName.c_str()) ;
 							}
 							break; 
 						case MYSQL_TYPE_DOUBLE: // double 
 							{
-								pField->eType = eValue_Double ;
-								pField->Value.dfValue = atof(msqlrow[i]);
+								CLogMgr::SharedLogMgr()->PrintLog("DB request field Type : Type = %s : field Name: %s ","MYSQL_TYPE_DOUBLE", pField->strFieldName.c_str()) ;
 							}
 							break;
 						case MYSQL_TYPE_BLOB: // binary 
 							{
-								pField->eType = eValue_Binary ;
-								pField->Value.pBuffer = new char[pLengths[i]];
-								memcpy(pField->Value.pBuffer,msqlrow[i],pLengths[i]);
+								CLogMgr::SharedLogMgr()->PrintLog("DB request field Type : Type = %s : field Name: %s ","MYSQL_TYPE_BLOB", pField->strFieldName.c_str()) ;
 							}
 							break; 
 						case MYSQL_TYPE_VAR_STRING:  // string 
 							{
-								pField->eType = eValue_String;
-								pField->Value.pBuffer = new char[pLengths[i] + 1 ];
-								memset(pField->Value.pBuffer,0,pLengths[i] + 1 );
-								memcpy(pField->Value.pBuffer,msqlrow[i],pLengths[i]);
+								CLogMgr::SharedLogMgr()->PrintLog("DB request field Type : Type = %s : field Name: %s ","MYSQL_TYPE_VAR_STRING", pField->strFieldName.c_str()) ;
 							}
 							break;
 						default:
 							{
+								bValide = false ;
 								CLogMgr::SharedLogMgr()->ErrorLog("error DB request unsupport field Type : Type = %d : field Name: %s ",msqlfield->type, pField->strFieldName.c_str()) ;
-								pField->eType = eValue_Max ;
 							}
+						}
+
+						if ( bValide )
+						{
+							pField->pBuffer = new char [pField->nBufferLen + 1 ] ;
+							memset(pField->pBuffer,0,pField->nBufferLen + 1 );
+							memcpy(pField->pBuffer,msqlrow[i],pLengths[i]);
+						}
+						else
+						{
+							delete pField ;
+							assert(0&&"why support type not !");
+							continue; 
 						}
 						rowData->PushFiled(pField);
 					}

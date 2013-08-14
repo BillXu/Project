@@ -1,6 +1,7 @@
 #pragma once
 #include "CommonDefine.h"
 #include "IPlayerComponent.h"
+#include <string>
 struct stMsg ;
 class CPlayer ;
 class CPlayerBaseData 

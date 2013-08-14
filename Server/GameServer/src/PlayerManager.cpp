@@ -63,6 +63,19 @@ bool CPlayerManager::OnMessage( RakNet::Packet* pMsg )
 		pPlayer->OnMessage(pRealMsg) ;
 		return true ;
 	}
+	else if ( ID_MSG_DB2GM == pMessage->usMsgType )
+	{
+		stMsgDB2GM* pRet = (stMsgDB2GM*)pMessage ;
+		CPlayer* pPlayer = GetPlayerBySessionID(pRet->nSessionID ) ;
+		if ( pPlayer )
+		{
+			pPlayer->OnMessage(pMessage) ;
+		}
+		else
+		{
+			CLogMgr::SharedLogMgr()->ErrorLog( "can not find player to process DB MG cSysIdentifer = %d ,usMsgType = %d ",pMessage->cSysIdentifer,pMessage->usMsgType ) ;
+		}
+	}
 	else
 	{
 		CLogMgr::SharedLogMgr()->ErrorLog( "Receive Unknown message cSysIdentifer = %d ,usMsgType = %d ",pMessage->cSysIdentifer,pMessage->usMsgType ) ;

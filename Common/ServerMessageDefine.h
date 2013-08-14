@@ -9,20 +9,20 @@
 
 //--------------------------------------------
 // message between DB and Gamesever ;
-//struct stMsgGM2DB
-//:public stMsg
-//{
-//	stMsgGM2DB(){ cSysIdentifer = ID_MSG_GM2DB, usMsgType = MSG_NONE ; }
-//public:
-//	unsigned int nTargetUserUID;
-//};
-//
-//struct stMsgDB2GM
-//:public stMsg
-//{
-//	stMsgDB2GM(){ cSysIdentifer = ID_MSG_DB2GM, usMsgType = MSG_NONE ; }
-//	unsigned int nTargetUserUID;
-//};
+struct stMsgGM2DB
+	:public stMsg
+{
+	stMsgGM2DB(){ cSysIdentifer = ID_MSG_GM2DB, usMsgType = MSG_NONE ; }
+public:
+	unsigned int nSessionID;
+};
+
+struct stMsgDB2GM
+	:public stMsg
+{
+	stMsgDB2GM(){ cSysIdentifer = ID_MSG_DB2GM, usMsgType = MSG_NONE ; }
+	unsigned int nSessionID;
+};
 //
 //struct stMsgPushBaseDataToGameServer
 //	:stMsgDB2GM
@@ -94,18 +94,34 @@ public:
 	unsigned int nUserID ;
 };
 
+// game and db 
 struct stMsgGameServerGetBaseData
-	:public stMsg
+	:public stMsgGM2DB
 {
 	stMsgGameServerGetBaseData(){cSysIdentifer = ID_MSG_GM2DB ; usMsgType = MSG_PLAYER_BASE_DATA ; }
-	unsigned int nSessionID ;
 	unsigned int nUserUID ;
 };
 
 struct stMsgGameServerGetBaseDataRet
-	:public stMsgPlayerBaseData
+	:public stMsgDB2GM
 {
 	stMsgGameServerGetBaseDataRet(){cSysIdentifer = ID_MSG_DB2GM ; usMsgType = MSG_PLAYER_BASE_DATA ; }
+	int nCoin ;
+	unsigned int nDiamoned ;
+	unsigned char nTitle ;
+	unsigned char nVipLevel ; 
+	unsigned char nSex ;
+	unsigned short nDefaulPhotoID ;
+	int nUserDefinePhotoID ;
+	int nYeastodayWinCoin ;
+	int nSingleWinMost;
+	unsigned short nWinTimes;
+	unsigned short nLoseTimes ;
+	int nQQNumber ;
+	char* strName;
+	unsigned char nNameLen ;
+	char* strSigure;
+	unsigned char nSigureLen ;
 };
 
 struct stMsgClientDisconnect
