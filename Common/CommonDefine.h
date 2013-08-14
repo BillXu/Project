@@ -48,6 +48,13 @@ enum eServerType
 	eServer_Login,
 	eServer_Max,
 };
+
+enum eSex
+{
+	eSex_Male,
+	eSex_Female,
+	eSex_Max,
+};
 enum eRoomPeerAction
 {
 	eRoomPeerAction_None,

@@ -93,6 +93,21 @@ public:
 	unsigned int nSessionID ;
 	unsigned int nUserID ;
 };
+
+struct stMsgGameServerGetBaseData
+	:public stMsg
+{
+	stMsgGameServerGetBaseData(){cSysIdentifer = ID_MSG_GM2DB ; usMsgType = MSG_PLAYER_BASE_DATA ; }
+	unsigned int nSessionID ;
+	unsigned int nUserUID ;
+};
+
+struct stMsgGameServerGetBaseDataRet
+	:public stMsgPlayerBaseData
+{
+	stMsgGameServerGetBaseDataRet(){cSysIdentifer = ID_MSG_DB2GM ; usMsgType = MSG_PLAYER_BASE_DATA ; }
+};
+
 struct stMsgClientDisconnect
 	:public stMsg
 {

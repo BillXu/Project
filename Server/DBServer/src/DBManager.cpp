@@ -104,6 +104,21 @@ void CDBManager::OnMessage(RakNet::Packet* packet)
 			CDBRequestQueue::SharedDBRequestQueue()->PushRequest(pRequest) ;
 		}
 		break;
+	case MSG_PLAYER_BASE_DATA:
+		{
+			stMsgGameServerGetBaseData* pbasedata = (stMsgGameServerGetBaseData*)pmsg ;
+			pdata->nSessionID = pbasedata->nSessionID ;
+			pdata->nExtenArg1 = pbasedata->nUserUID ;
+
+			stDBRequest* pRequest = CDBRequestQueue::SharedDBRequestQueue()->GetReserveRequest();
+			pRequest->cOrder = 1 ;
+			pRequest->eType = eRequestType_Select ;
+			pRequest->nRequestUID = pmsg->usMsgType ;
+			pRequest->pUserData = pdata;
+			pRequest->nSqlBufferLen = sprintf_s(pRequest->pSqlBuffer,"SELECT * FROM Account WHERE UserUID = '%d'",pbasedata->nUserUID) ;
+			CDBRequestQueue::SharedDBRequestQueue()->PushRequest(pRequest) ;
+		}
+		break;
 	default:
 		{
 			m_vReserverArgData.push_back(pdata) ;
@@ -166,6 +181,50 @@ void CDBManager::OnDBResult(stDBResult* pResult)
 			m_pTheApp->SendMsg((char*)&msgRet,sizeof(msgRet),pdata->m_nReqrestFromAdd) ;
 			delete [] pdata->pUserData ;
 			pdata->pUserData = NULL ;
+		}
+		break;
+	case MSG_PLAYER_BASE_DATA:
+		{
+			stArgData* pdata = (stArgData*)pResult->pUserData ;
+			stMsgGameServerGetBaseDataRet msg ;
+			msg.nSessionID = pdata->nSessionID ;
+			if ( pResult->nAffectRow < 0 )
+			{
+				CLogMgr::SharedLogMgr()->ErrorLog("can not find base data with userUID = %d " , pdata->nExtenArg1 ) ;
+				msg.nCoin = 0 ;
+				msg.nDefaulPhotoID = 1 ;
+				msg.nDiamoned = 0 ;
+				msg.nLoseTimes = 0 ;
+				msg.nNameLen = 0 ;
+				msg.nQQNumber = 0 ;
+				msg.nSex = 0 ;
+				msg.nSigureLen = 0 ;
+				msg.nSingleWinMost = 0 ;
+				msg.nTitle = 0 ;
+				msg.nUserDefinePhotoID = 0 ;
+				msg.nVipLevel = 0 ;
+				msg.nWinTimes = 0 ;
+				msg.nYeastodayWinCoin = 0 ;
+				m_pTheApp->SendMsg((char*)&msg,sizeof(msg),pdata->m_nReqrestFromAdd) ;
+			}
+			else
+			{
+				CMysqlRow& pRow = *pResult->vResultRows.front(); 
+				msg.nCoin = pRow["nCoin"]->Value.iValue;
+				msg.nDefaulPhotoID = pRow["nDefaulPhotoID"]->Value.sValue;
+				msg.nDiamoned = pRow["nDiamoned"]->Value.iValue;
+				msg.nLoseTimes = pRow["nLoseTimes"]->Value.iValue;
+				msg.nNameLen = pRow["nNameLen"]->Value.iValue;
+				msg.nQQNumber = pRow["nQQNumber"]->Value.iValue;
+				msg.nSex = pRow["nSex"]->Value.iValue;
+				msg.nSigureLen = pRow["nSigureLen"]->Value.iValue;
+				msg.nSingleWinMost = pRow["nSingleWinMost"]->Value.iValue;
+				msg.nTitle = pRow["nTitle"]->Value.iValue;
+				msg.nUserDefinePhotoID = pRow["nUserDefinePhotoID"]->Value.iValue;
+				msg.nVipLevel = pRow["nVipLevel"]->Value.iValue;
+				msg.nWinTimes = pRow["nWinTimes"]->Value.iValue;
+				msg.nYeastodayWinCoin = pRow["nYeastodayWinCoin"]->Value.iValue;
+			}
 		}
 		break;
 	default:

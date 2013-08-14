@@ -23,7 +23,7 @@ struct stMsgRegister
 	unsigned char nAccLen ;
 	char* pPassword ;
 	unsigned char nPasswordLen ;
-	unsigned char bSex ; // 0 male , 1 female ;
+	unsigned char bSex ; // eSex ;
 	char* pcharactername ;
 	unsigned char ncharNameLen ;
 };
@@ -97,7 +97,24 @@ struct stMsgPlayerBaseData
 	:public stMsg
 {
 	stMsgPlayerBaseData(){ cSysIdentifer = ID_MSG_GAME2C; usMsgType = MSG_PLAYER_BASE_DATA ; }
+
 	unsigned int nSessionID ; 
+	int nCoin ;
+	unsigned int nDiamoned ;
+	unsigned char nTitle ;
+	unsigned char nVipLevel ; 
+	unsigned char nSex ;
+	unsigned short nDefaulPhotoID ;
+	int nUserDefinePhotoID ;
+	int nYeastodayWinCoin ;
+	int nSingleWinMost;
+	unsigned short nWinTimes;
+	unsigned short nLoseTimes ;
+	int nQQNumber ;
+	char* strName;
+	unsigned char nNameLen ;
+	char* strSigure;
+	unsigned char nSigureLen ;
 };
 
 struct stMsgRoomPlayerLeave

@@ -17,7 +17,14 @@ public:
 	unsigned int nDiamoned ;
 	unsigned char nTitle ;
 	unsigned char nVipLevel ; // 0 is not vip ;
-	char strName[MAX_LEN_CHARACTER_NAME] ;
-	int nDefaulPhotoID ;
+	unsigned char nSex ;   // eSex ;
+	unsigned short nDefaulPhotoID ;
 	int nUserDefinePhotoID ;
+	int nYeastodayWinCoin ;
+	int nSingleWinMost;
+	unsigned short nWinTimes;
+	unsigned short nLoseTimes ;
+	int nQQNumber ;
+	std::string strSigure;
+	char strName[MAX_LEN_CHARACTER_NAME] ;
 };
