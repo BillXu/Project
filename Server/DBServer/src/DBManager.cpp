@@ -8,6 +8,7 @@ CDBManager::CDBManager(CDBServerApp* theApp )
 {
 	m_vReserverArgData.clear();
 	m_pTheApp = theApp ;
+	nCurUserUID = 0 ;
 }
 
 CDBManager::~CDBManager()
@@ -67,7 +68,7 @@ void CDBManager::OnMessage(RakNet::Packet* packet)
 			// format sql String ;
 			char pAccountEString[MAX_LEN_ACCOUNT * 2 + 1 ] = {0} ;
 			CDataBaseThread::SharedDBThread()->EscapeString(pAccountEString,paccount,pLoginCheck->nAccountLen ) ;
-			pRequest->nSqlBufferLen = sprintf_s(pRequest->pSqlBuffer,"SELECT * FROM Account WHERE Account = '%s'",pAccountEString ) ;
+			pRequest->nSqlBufferLen = sprintf_s(pRequest->pSqlBuffer,"SELECT Password,UserUID FROM Account WHERE Account = '%s'",pAccountEString ) ;
 			CDBRequestQueue::SharedDBRequestQueue()->PushRequest(pRequest) ;
 		}
 		break;
@@ -76,6 +77,7 @@ void CDBManager::OnMessage(RakNet::Packet* packet)
 			stMsgLoginRegister* pLoginRegister = (stMsgLoginRegister*)pmsg ;
 			pdata->nSessionID = pLoginRegister->nSessionID ;
 			pdata->nExtenArg1 = pLoginRegister->bAutoRegister ;
+			pdata->nExtenArg2 = GenerateUserUID();
 
 			char* paccount = NULL , *ppassword = NULL , *pcharaName = NULL;
 			char* pBuffer = (char*)pmsg ;
@@ -98,7 +100,7 @@ void CDBManager::OnMessage(RakNet::Packet* packet)
 			CDataBaseThread::SharedDBThread()->EscapeString(pAccountEString,paccount,pLoginRegister->pAcoundLen ) ;
 			CDataBaseThread::SharedDBThread()->EscapeString(pPasswordEString,ppassword,pLoginRegister->ppPasswordLen ) ;
 			CDataBaseThread::SharedDBThread()->EscapeString(pCharaNameEString,pcharaName,pLoginRegister->ncharNameLen ) ;
-			pRequest->nSqlBufferLen = sprintf_s(pRequest->pSqlBuffer,"INSERT INTO `gamedb`.`account` (`Account`, `Password`, `CharacterName`, `Sex`) VALUES ('%s', '%s', '%s', '%d');",pAccountEString,pPasswordEString,pCharaNameEString,pLoginRegister->cSex ) ;
+			pRequest->nSqlBufferLen = sprintf_s(pRequest->pSqlBuffer,"INSERT INTO `gamedb`.`account` (`Account`, `Password`, `CharacterName`, `Sex`, `UserUID`) VALUES ('%s', '%s', '%s', '%d');",pAccountEString,pPasswordEString,pCharaNameEString,pLoginRegister->cSex ,pdata->nExtenArg2) ;
 			CDBRequestQueue::SharedDBRequestQueue()->PushRequest(pRequest) ;
 		}
 		break;
@@ -113,6 +115,65 @@ void CDBManager::OnMessage(RakNet::Packet* packet)
 void CDBManager::OnDBResult(stDBResult* pResult)
 {
 	// process result 
+	stArgData*pdata = (stArgData*)pResult->pUserData ;
+	switch ( pResult->nRequestUID )
+	{
+	case  MSG_PLAYER_REGISTER:
+		{
+			stMsgLoginRegisterRet msgRet ;
+			msgRet.bAuto = (bool)pdata->nExtenArg1;
+			msgRet.nSessionID = pdata->nSessionID;
+			if ( pResult->nAffectRow > 0 )
+			{
+				msgRet.nRet = 0 ;
+				msgRet.nUserID = pdata->nExtenArg2 ;
+			}
+			else
+			{
+				msgRet.nRet = 1 ;
+				msgRet.nUserID = 0 ;
+			}
+			m_pTheApp->SendMsg((char*)&msgRet,sizeof(msgRet),pdata->m_nReqrestFromAdd) ;
+		}
+		break;
+	case MSG_PLAYER_CHECK_ACCOUNT:
+		{
+			stMsgLoginAccountCheckRet msgRet ;
+			msgRet.nSessionID = pdata->nSessionID ;
+			if ( pResult->nAffectRow > 0 )
+			{
+				CMysqlRow* pRow = pResult->vResultRows.front() ;
+				// check password 
+				if ( strcmp((char*)pdata->pUserData,pRow->GetFiledByName("Password")->Value.pBuffer) == 0 )
+				{
+					msgRet.nRet = 0 ;
+					msgRet.nUserID = pRow->GetFiledByName("UserUID")->Value.iValue ;
+					CLogMgr::SharedLogMgr()->PrintLog("check account success") ;
+				}
+				else
+				{
+					msgRet.nRet = 2 ;  // password error ;
+					msgRet.nUserID = 0 ;
+					CLogMgr::SharedLogMgr()->PrintLog("check account password error") ;
+				}
+			}
+			else
+			{
+				msgRet.nRet = 1 ;  // account error ;   
+				msgRet.nUserID = 0 ;
+				CLogMgr::SharedLogMgr()->PrintLog("check account  account error") ;
+			}
+			m_pTheApp->SendMsg((char*)&msgRet,sizeof(msgRet),pdata->m_nReqrestFromAdd) ;
+			delete [] pdata->pUserData ;
+			pdata->pUserData = NULL ;
+		}
+		break;
+	default:
+		{
+			CLogMgr::SharedLogMgr()->ErrorLog("unprocessed db result msg id = %d ", pResult->nRequestUID );
+		}
+	}
+	m_vReserverArgData.push_back(pdata) ;
 }
 
 CDBManager::stArgData* CDBManager::GetReserverArgData()

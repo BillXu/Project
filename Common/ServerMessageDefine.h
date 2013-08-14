@@ -89,7 +89,7 @@ struct stMsgLoginAccountCheckRet
 {
 public:
 	stMsgLoginAccountCheckRet(){ cSysIdentifer = ID_MSG_DB2LOGIN ; usMsgType = MSG_PLAYER_CHECK_ACCOUNT ; }
-	unsigned char nRet ;  // 0 means ok 
+	unsigned char nRet ;  // 0 means ok  1 .account error , 2 password error ;
 	unsigned int nSessionID ;
 	unsigned int nUserID ;
 };
