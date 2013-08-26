@@ -398,7 +398,6 @@
 		9A52B6FF17AA39C4009CD567 /* VariadicSQLParser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A52B69117AA39C4009CD567 /* VariadicSQLParser.cpp */; };
 		9A52B70017AA39C4009CD567 /* VitaIncludes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A52B69317AA39C4009CD567 /* VitaIncludes.cpp */; };
 		9A52B70117AA39C4009CD567 /* WSAStartupSingleton.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A52B69617AA39C4009CD567 /* WSAStartupSingleton.cpp */; };
-		9A52B70417AA3E75009CD567 /* RoomData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A52B70217AA3E74009CD567 /* RoomData.cpp */; };
 		9A52B70717AB9350009CD567 /* ClientApp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A52B70517AB934F009CD567 /* ClientApp.cpp */; };
 		9A52B70B17ABB1F2009CD567 /* PlayerData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A52B70917ABB1F2009CD567 /* PlayerData.cpp */; };
 		9A52B70E17ABB28F009CD567 /* IPlayerData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A52B70C17ABB28F009CD567 /* IPlayerData.cpp */; };
@@ -408,6 +407,9 @@
 		9A6BC25717B0DF26005F0C45 /* PKDlg.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A6BC25517B0DF24005F0C45 /* PKDlg.cpp */; };
 		9A6BC25A17B391BC005F0C45 /* ResultDlg.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A6BC25817B391BC005F0C45 /* ResultDlg.cpp */; };
 		9A7C59CF17AE25AC009D6D4E /* LoginScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A7C59CD17AE25AC009D6D4E /* LoginScene.cpp */; };
+		9AA5854E17CB570400B186A8 /* EventHandleQueue.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9AA5854C17CB570200B186A8 /* EventHandleQueue.cpp */; };
+		9AA5855417CB771500B186A8 /* GoldRoomPeerData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9AA5855217CB771500B186A8 /* GoldRoomPeerData.cpp */; };
+		9AA5855617CBB4CA00B186A8 /* RoomData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9AA5855517CBB4C900B186A8 /* RoomData.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -1280,7 +1282,6 @@
 		9A52B69617AA39C4009CD567 /* WSAStartupSingleton.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = WSAStartupSingleton.cpp; sourceTree = "<group>"; };
 		9A52B69717AA39C4009CD567 /* WSAStartupSingleton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WSAStartupSingleton.h; sourceTree = "<group>"; };
 		9A52B69817AA39C4009CD567 /* XBox360Includes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XBox360Includes.h; sourceTree = "<group>"; };
-		9A52B70217AA3E74009CD567 /* RoomData.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = RoomData.cpp; path = Classes/RoomData.cpp; sourceTree = "<group>"; };
 		9A52B70317AA3E74009CD567 /* RoomData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RoomData.h; path = Classes/RoomData.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.cpp; };
 		9A52B70517AB934F009CD567 /* ClientApp.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ClientApp.cpp; path = Classes/ClientApp.cpp; sourceTree = "<group>"; };
 		9A52B70617AB9350009CD567 /* ClientApp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ClientApp.h; path = Classes/ClientApp.h; sourceTree = "<group>"; };
@@ -1300,6 +1301,12 @@
 		9A6BC25917B391BC005F0C45 /* ResultDlg.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ResultDlg.h; path = Classes/ResultDlg.h; sourceTree = "<group>"; };
 		9A7C59CD17AE25AC009D6D4E /* LoginScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = LoginScene.cpp; path = Classes/LoginScene.cpp; sourceTree = "<group>"; };
 		9A7C59CE17AE25AC009D6D4E /* LoginScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LoginScene.h; path = Classes/LoginScene.h; sourceTree = "<group>"; };
+		9AA5854B17CB570100B186A8 /* EventDefine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EventDefine.h; path = Classes/EventDefine.h; sourceTree = "<group>"; };
+		9AA5854C17CB570200B186A8 /* EventHandleQueue.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = EventHandleQueue.cpp; path = Classes/EventHandleQueue.cpp; sourceTree = "<group>"; };
+		9AA5854D17CB570300B186A8 /* EventHandleQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EventHandleQueue.h; path = Classes/EventHandleQueue.h; sourceTree = "<group>"; };
+		9AA5855217CB771500B186A8 /* GoldRoomPeerData.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GoldRoomPeerData.cpp; path = Classes/GoldRoomPeerData.cpp; sourceTree = "<group>"; };
+		9AA5855317CB771500B186A8 /* GoldRoomPeerData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GoldRoomPeerData.h; path = Classes/GoldRoomPeerData.h; sourceTree = "<group>"; };
+		9AA5855517CBB4C900B186A8 /* RoomData.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = RoomData.cpp; path = Classes/RoomData.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1337,12 +1344,14 @@
 				9A52B58517AA0028009CD567 /* SelectAddBetCoin.h */,
 				9A52B58717AA0072009CD567 /* SelectAddBetCoinLoader.cpp */,
 				9A52B58817AA0072009CD567 /* SelectAddBetCoinLoader.h */,
-				9A52B70217AA3E74009CD567 /* RoomData.cpp */,
 				9A52B70317AA3E74009CD567 /* RoomData.h */,
+				9AA5855517CBB4C900B186A8 /* RoomData.cpp */,
 				9A6BC25517B0DF24005F0C45 /* PKDlg.cpp */,
 				9A6BC25617B0DF26005F0C45 /* PKDlg.h */,
 				9A6BC25817B391BC005F0C45 /* ResultDlg.cpp */,
 				9A6BC25917B391BC005F0C45 /* ResultDlg.h */,
+				9AA5855217CB771500B186A8 /* GoldRoomPeerData.cpp */,
+				9AA5855317CB771500B186A8 /* GoldRoomPeerData.h */,
 			);
 			name = RoomScene;
 			sourceTree = "<group>";
@@ -2553,6 +2562,9 @@
 				9A0E2C2917A2174E0052B3D0 /* RoomScene */,
 				9A1A2E9817A0CC5D00B99BE0 /* AppDelegate.h */,
 				9A1A2E9917A0CC5D00B99BE0 /* AppDelegate.cpp */,
+				9AA5854B17CB570100B186A8 /* EventDefine.h */,
+				9AA5854D17CB570300B186A8 /* EventHandleQueue.h */,
+				9AA5854C17CB570200B186A8 /* EventHandleQueue.cpp */,
 				9A1A2E9B17A0CC5D00B99BE0 /* HelloWorldScene.h */,
 				9A1A2E9C17A0CC5D00B99BE0 /* HelloWorldScene.cpp */,
 				9A52B70517AB934F009CD567 /* ClientApp.cpp */,
@@ -3308,7 +3320,6 @@
 				9A52B6FF17AA39C4009CD567 /* VariadicSQLParser.cpp in Sources */,
 				9A52B70017AA39C4009CD567 /* VitaIncludes.cpp in Sources */,
 				9A52B70117AA39C4009CD567 /* WSAStartupSingleton.cpp in Sources */,
-				9A52B70417AA3E75009CD567 /* RoomData.cpp in Sources */,
 				9A52B70717AB9350009CD567 /* ClientApp.cpp in Sources */,
 				9A52B70B17ABB1F2009CD567 /* PlayerData.cpp in Sources */,
 				9A52B70E17ABB28F009CD567 /* IPlayerData.cpp in Sources */,
@@ -3318,6 +3329,9 @@
 				9A6BC24217AF7F4D005F0C45 /* CardPoker.cpp in Sources */,
 				9A6BC25717B0DF26005F0C45 /* PKDlg.cpp in Sources */,
 				9A6BC25A17B391BC005F0C45 /* ResultDlg.cpp in Sources */,
+				9AA5854E17CB570400B186A8 /* EventHandleQueue.cpp in Sources */,
+				9AA5855417CB771500B186A8 /* GoldRoomPeerData.cpp in Sources */,
+				9AA5855617CBB4CA00B186A8 /* RoomData.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -18,6 +18,7 @@ public:
     {
         ePlayerData_None,
         ePlayerData_BaseData ,
+        ePlayerData_RoomData,  // player data when in room ;
         ePlayerData_Max,
     } ;
 public:

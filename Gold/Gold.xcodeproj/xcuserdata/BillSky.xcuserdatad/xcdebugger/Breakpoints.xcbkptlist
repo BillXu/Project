@@ -19,13 +19,22 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "Gold/Classes/RoomData.cpp"
-         timestampString = "397737201.549029"
+         timestampString = "399226659.787604"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "250"
-         endingLineNumber = "250"
-         landmarkName = "CRoomData::OnMessage( RakNet::Packet* pRakMsg )"
+         startingLineNumber = "262"
+         endingLineNumber = "262"
+         landmarkName = "CRoomData::RestState()"
          landmarkType = "5">
       </FileBreakpoint>
    </FileBreakpoints>
+   <ExceptionBreakpoints>
+      <ExceptionBreakpoint
+         shouldBeEnabled = "Yes"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         scope = "0"
+         stopOnStyle = "0">
+      </ExceptionBreakpoint>
+   </ExceptionBreakpoints>
 </Bucket>

@@ -17,6 +17,7 @@
 #include "SelectAddBetCoinLoader.h"
 #include "CommonDefine.h"
 #include "PKDlg.h"
+struct stGoldRoomPeerData;
 USING_NS_CC ;
 USING_NS_CC_EXT ;
 struct stRoomPeerData ;
@@ -68,7 +69,7 @@ public:
     // logic invoke
     void OnStopTiming();
     void OnPlayerLeave( char nIdx );
-    void OnPlayerEnter( char nIdx , stRoomPeerData* pPlayerData );
+    void OnPlayerEnter( char nIdx , stGoldRoomPeerData* pPlayerData );
     void OnRefreshRoomInfo(CRoomData*proomdata);
     void OnUpdatePlayerState(char nIdx , eRoomPeerState ePeerState );
     void OnDistributeCard();

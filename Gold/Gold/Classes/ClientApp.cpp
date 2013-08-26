@@ -12,6 +12,7 @@
 #include "RoomLayer.h"
 #include "HelloWorldScene.h"
 #include "RoomData.h"
+#include "LoginScene.h"
 CClientApp* CClientApp::SharedClientApp()
 {
     static CClientApp theApp ;
@@ -43,7 +44,7 @@ void CClientApp::StartApp()
     // player data ;
     m_PlayerData.Init() ;
     
-    CCScene* psecen = HelloWorld::scene() ;
+    CCScene* psecen = CLoginLayer::CreateScene(); //HelloWorld::scene() ;
     CCDirector::sharedDirector()->runWithScene(psecen) ;
 }
 
@@ -99,7 +100,7 @@ bool CClientApp::OnConnectStateChanged( eConnectState eSate, RakNet::Packet* pMs
 
 unsigned int CClientApp::GetSessionID()
 {
-    return GetPlayerData()->GetBaseData()->nSessionID ;
+    return GetPlayerData()->GetBaseData()->getSessionID() ;
 }
 
 bool CClientApp::OnMessage( RakNet::Packet* pRakMsg )
@@ -112,13 +113,6 @@ bool CClientApp::OnMessage( RakNet::Packet* pRakMsg )
         msgEntergame.nUserUID = time(NULL) ;
         SendMsg(&msgEntergame, sizeof(msgEntergame)) ;
         return true ;
-    }
-    if ( MSG_PLAYER_BASE_DATA == pMsg->usMsgType )
-    {
-        stMsgRoomEnter msgTengr ;
-        msgTengr.nRoomLevel = 0 ;
-        msgTengr.nRoomType = 0 ;
-        SendMsg(&msgTengr, sizeof(msgTengr)) ;
     }
     
     if ( MSG_ROOM_CURRENT_INFO == pMsg->usMsgType )

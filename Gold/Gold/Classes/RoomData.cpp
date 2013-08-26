@@ -11,9 +11,16 @@
 #include "ClientApp.h"
 #include "PlayerBaseData.h"
 #include "ResultDlg.h"
-bool stRoomPeerData::IsActive()
+CRoomData::~CRoomData()
 {
-    return (ePeerState == eRoomPeer_Look || ePeerState == eRoomPeer_Unlook );
+    for ( int i = 0 ; i < MAX_ROOM_PEER ; ++i )
+    {
+        if ( m_vRoomPeers[i] )
+        {
+            delete m_vRoomPeers[i] ;
+            m_vRoomPeers[i] = NULL ;
+        }
+    }
 }
 
 void CRoomData::Init(CRoomLayer* pLayer, int nBaseSingle )
@@ -36,18 +43,22 @@ bool CRoomData::OnMessage( RakNet::Packet* pRakMsg )
         case MSG_ROOM_PLAYER_ENTER:
         {
             stMsgRoomPlayerEnter* pRet = (stMsgRoomPlayerEnter*)pMsg ;
-            memcpy(&m_vRoomPeers[pRet->nEnterPlayerInfo.nIdx], &pRet->nEnterPlayerInfo, sizeof(stRoomPeerBrifInfo)) ;
-            m_pRoomLayer->OnPlayerEnter(ConvertToClientIdx(pRet->nEnterPlayerInfo.nIdx), &m_vRoomPeers[pRet->nEnterPlayerInfo.nIdx]) ;
+            if ( NULL == m_vRoomPeers[pRet->nEnterPlayerInfo.nIdx] )
+            {
+                m_vRoomPeers[pRet->nEnterPlayerInfo.nIdx] = new stGoldRoomPeerData ;
+            }
+            m_vRoomPeers[pRet->nEnterPlayerInfo.nIdx]->SetData(&pRet->nEnterPlayerInfo) ;
+            m_pRoomLayer->OnPlayerEnter(ConvertToClientIdx(pRet->nEnterPlayerInfo.nIdx), m_vRoomPeers[pRet->nEnterPlayerInfo.nIdx]) ;
         }
             break;
         case MSG_ROOM_PLAYER_LEAVE:
         {
             stMsgRoomPlayerLeave* pRet = (stMsgRoomPlayerLeave*)pMsg ;
-            stRoomPeerData* pData = GetRoomPeerDataBySessionID(pRet->nSessionID) ;
+            stGoldRoomPeerData* pData = GetRoomPeerDataBySessionID(pRet->nSessionID) ;
             if (pData)
             {
-                m_pRoomLayer->OnPlayerLeave(ConvertToClientIdx(pData->nIdx)) ;
-                pData->nSessionID = 0 ;
+                m_pRoomLayer->OnPlayerLeave(ConvertToClientIdx(pData->getIdx())) ;
+                pData->setSessionID(0);
             }
             else
             {
@@ -61,6 +72,7 @@ bool CRoomData::OnMessage( RakNet::Packet* pRakMsg )
             m_nSingleBetCoin = pRet->nSingleBetCoin ;
             m_nTotalBetCoin = pRet->nTotalBetCoin ;
             m_nRound = pRet->nRound ;
+            m_nRooID = pRet->nRoomID ;
             m_eRoomSate = pRet->eRoomSate ;
             char* pbuffer = (char*)pMsg ;
             pbuffer += sizeof(stMsgRoomCurInfo) ;
@@ -68,29 +80,34 @@ bool CRoomData::OnMessage( RakNet::Packet* pRakMsg )
             for ( int i = 0 ; i < pRet->nPlayerCount ; ++i )
             {
                 pInfos = (stRoomPeerBrifInfo*)pbuffer ;
-                memcpy(&m_vRoomPeers[pInfos->nIdx], pInfos, sizeof(stRoomPeerBrifInfo)) ;
+                if ( NULL == m_vRoomPeers[pInfos->nIdx] )
+                {
+                    m_vRoomPeers[pInfos->nIdx] = new stGoldRoomPeerData ;
+                }
+                m_vRoomPeers[pInfos->nIdx]->SetData(pInfos) ;
                 pbuffer += sizeof(stRoomPeerBrifInfo) ;
             }
-            CClientApp::SharedClientApp()->GetPlayerData()->GetBaseData()->ePeerState = eRoomPeer_None ;
+            // create self ;
+            if ( m_vRoomPeers[pRet->nSelfIdx] == NULL )
+            {
+                m_vRoomPeers[pRet->nSelfIdx] = new stGoldRoomSelfData ;
+            }
+            m_vRoomPeers[pRet->nSelfIdx]->setIdx(pRet->nSelfIdx) ;
             m_pRoomLayer->OnRefreshRoomInfo(this) ;
         }
             break ;
         case MSG_ROOM_PLAYER_READY:
         {
             stMsgRoomPlayerReady* pRet = (stMsgRoomPlayerReady*)pMsg ;
-            stRoomPeerData* pData = GetRoomPeerDataBySessionID(pRet->nReadyPlayerSessionID) ;
+            stGoldRoomPeerData* pData = GetRoomPeerDataBySessionID(pRet->nReadyPlayerSessionID) ;
             if ( pData )
             {
-                pData->ePeerState = eRoomPeer_Ready ;
-                m_pRoomLayer->OnUpdatePlayerState(ConvertToClientIdx(pData->nIdx), eRoomPeer_Ready) ;
+                pData->setPeerState(eRoomPeer_Ready);
+                m_pRoomLayer->OnUpdatePlayerState(ConvertToClientIdx(pData->getIdx()), eRoomPeer_Ready) ;
             }
             else
             {
-                if ( pRet->nReadyPlayerSessionID ==  CClientApp::SharedClientApp()->GetSessionID() )
-                {
-                    CClientApp::SharedClientApp()->GetPlayerData()->GetBaseData()->ePeerState = eRoomPeer_Ready ;
-                    m_pRoomLayer->OnUpdatePlayerState(4, eRoomPeer_Ready) ;
-                }
+                CCMessageBox("MSG_ROOM_PLAYER_READY error", "tip") ;
             }
         }
             break ;
@@ -99,15 +116,10 @@ bool CRoomData::OnMessage( RakNet::Packet* pRakMsg )
             // change ready peer's state to unlook
             for ( int i = 0 ; i < MAX_ROOM_PEER -1 ; ++i )
             {
-                if ( m_vRoomPeers[i].nSessionID && m_vRoomPeers[i].ePeerState == eRoomPeer_Ready )
+                if ( m_vRoomPeers[i]->getSessionID() && m_vRoomPeers[i]->getPeerState() == eRoomPeer_Ready )
                 {
-                    m_vRoomPeers[i].ePeerState = eRoomPeer_Unlook;
+                    m_vRoomPeers[i]->setPeerState(eRoomPeer_Unlook);
                 }
-            }
-            
-            if ( CClientApp::SharedClientApp()->GetPlayerData()->GetBaseData()->ePeerState == eRoomPeer_Ready )
-            {
-                CClientApp::SharedClientApp()->GetPlayerData()->GetBaseData()->ePeerState = eRoomPeer_Unlook ;
             }
             m_eRoomSate = eRoomState_DistributeCard ;
             m_pRoomLayer->OnDistributeCard();
@@ -120,59 +132,36 @@ bool CRoomData::OnMessage( RakNet::Packet* pRakMsg )
             stMsgRoomWaitPlayerAction* pRet = (stMsgRoomWaitPlayerAction*)pMsg ;
             m_nRound = pRet->nRound ;
             m_nWaitSessionID = pRet->nSessionID ;
-            stRoomPeerData* pdata = GetRoomPeerDataBySessionID(pRet->nSessionID) ;
+            stGoldRoomPeerData* pdata = GetRoomPeerDataBySessionID(pRet->nSessionID) ;
             if ( pdata )
             {
-                m_pRoomLayer->OnWaitPlayerAction(ConvertToClientIdx(pdata->nIdx)) ;
+                m_pRoomLayer->OnWaitPlayerAction(ConvertToClientIdx(pdata->getIdx())) ;
             }
             else
             {
-                if ( pRet->nSessionID ==  CClientApp::SharedClientApp()->GetSessionID() )
-                {
-                    m_pRoomLayer->OnWaitPlayerAction(4) ;
-                }
+                CCMessageBox("MSG_ROOM_WAIT_PLAYER_ACTION error", "tip") ;
             }
         }
             break ;
         case MSG_ROOM_PLAYER_FOLLOW:
         {
             stMsgRoomPlayerFollow* pRet = (stMsgRoomPlayerFollow*)pMsg ;
-            if ( CClientApp::SharedClientApp()->GetSessionID() == pRet->nSessionID )
-            {
-                int nBetCoin = m_nSingleBetCoin ;
-                if ( CClientApp::SharedClientApp()->GetPlayerData()->GetBaseData()->ePeerState == eRoomPeer_Look )
-                {
-                    nBetCoin *= 2 ;
-                }
-                
-                if ( CClientApp::SharedClientApp()->GetPlayerData()->GetBaseData()->nCoin < nBetCoin )
-                {
-                    nBetCoin = CClientApp::SharedClientApp()->GetPlayerData()->GetBaseData()->nCoin ;
-                }
-                CClientApp::SharedClientApp()->GetPlayerData()->GetBaseData()->nBetCoin += nBetCoin ;
-                CClientApp::SharedClientApp()->GetPlayerData()->GetBaseData()->nCoin -= nBetCoin ;
-                m_nTotalBetCoin += nBetCoin ;
-                m_pRoomLayer->OnPlayerFollow(4,nBetCoin) ;
-                return true ;
-            }
-            
-            stRoomPeerData* pdata = GetRoomPeerDataBySessionID(pRet->nSessionID) ;
+            stGoldRoomPeerData* pdata = GetRoomPeerDataBySessionID(pRet->nSessionID) ;
             
             int nBetCoin = m_nSingleBetCoin ;
-            if ( pdata->ePeerState == eRoomPeer_Look )
+            if ( pdata->getPeerState() == eRoomPeer_Look )
             {
                 nBetCoin *= 2 ;
             }
             
-            if ( pdata->nCoin < nBetCoin )
+            if ( pdata->getCoin() < nBetCoin )
             {
-                nBetCoin = pdata->nCoin ;
+                nBetCoin = pdata->getCoin() ;
             }
-            pdata->nBetCoin += nBetCoin ;
-            pdata->nCoin -= nBetCoin ;
+            pdata->setBetCoin(pdata->getBetCoin() + nBetCoin ) ;
+            pdata->setCoin(pdata->getCoin() - nBetCoin) ;
             m_nTotalBetCoin += nBetCoin ;
-            
-            m_pRoomLayer->OnPlayerFollow(ConvertToClientIdx(pdata->nIdx),nBetCoin) ;
+            m_pRoomLayer->OnPlayerFollow(ConvertToClientIdx(pdata->getIdx()),nBetCoin) ;
         }
             break ;
         case MSG_ROOM_PLAYER_ADD:
@@ -180,67 +169,50 @@ bool CRoomData::OnMessage( RakNet::Packet* pRakMsg )
             stMsgRoomPlayerAdd* pRet = (stMsgRoomPlayerAdd*)pMsg ;
             m_nSingleBetCoin = pRet->nNewSingle ;
             m_nTotalBetCoin += pRet->nBetCoin ;
-            if ( pRet->nSessionID == CClientApp::SharedClientApp()->GetSessionID() )
-            {
-                // self
-                CPlayerBaseData* pbasedata = CClientApp::SharedClientApp()->GetPlayerData()->GetBaseData() ;
-                pbasedata->nBetCoin += pRet->nBetCoin ;
-                pbasedata->nCoin -= pRet->nBetCoin ;
-                m_pRoomLayer->OnPlayerAdd(4, pRet->nBetCoin) ;
-            }
-            else
-            {
-                stRoomPeerData* pdata = GetRoomPeerDataBySessionID(pRet->nSessionID) ;
-                pdata->nBetCoin += pRet->nBetCoin ;
-                pdata->nCoin -= pRet->nBetCoin ;
-                m_pRoomLayer->OnPlayerAdd(ConvertToClientIdx(pdata->nIdx),pRet->nBetCoin) ;
-            }
-            
+            stGoldRoomPeerData* pdata = GetRoomPeerDataBySessionID(pRet->nSessionID) ;
+            pdata->setBetCoin(pdata->getBetCoin() + pRet->nBetCoin) ;
+            pdata->setCoin(pdata->getCoin() - pRet->nBetCoin) ;
+            m_pRoomLayer->OnPlayerAdd(ConvertToClientIdx(pdata->getIdx()),pRet->nBetCoin) ;
         }
             break ;
         case MSG_ROOM_PLAYER_LOOK:
         {
             stMsgRoomPlayerLook* pRet = (stMsgRoomPlayerLook*)pMsg ;
+            stGoldRoomPeerData* pdata = GetRoomPeerDataBySessionID(pRet->nSessionID) ;
             if ( CClientApp::SharedClientApp()->GetSessionID() == pRet->nSessionID )
             {
-                CClientApp::SharedClientApp()->GetPlayerData()->GetBaseData()->ePeerState = eRoomPeer_Look ;
-                memcpy(CClientApp::SharedClientApp()->GetPlayerData()->GetBaseData()->vCard, pRet->vCard, sizeof(pRet->vCard)) ;
-                m_pRoomLayer->OnUpdatePlayerState(4, eRoomPeer_Look) ;
+                stGoldRoomSelfData* pdataself = (stGoldRoomSelfData*)pdata ;
+                memcpy(pdataself->vCard, pRet->vCard, sizeof(pRet->vCard)) ;
             }
-            else
-            {
-                stRoomPeerData* pdata = GetRoomPeerDataBySessionID(pRet->nSessionID) ;
-                pdata->ePeerState = eRoomPeer_Look ;
-                m_pRoomLayer->OnUpdatePlayerState(ConvertToClientIdx(pdata->nIdx), eRoomPeer_Look) ;
-            }
+            pdata->setPeerState(eRoomPeer_Look);
+            m_pRoomLayer->OnUpdatePlayerState(ConvertToClientIdx(pdata->getIdx()), eRoomPeer_Look) ;
         }
             break ;
         case MSG_ROOM_PLAYER_PK:
         {
             stMsgRoomPlayerPK* pRet = (stMsgRoomPlayerPK*)pMsg ;
-            stRoomPeerData* pdata = GetRoomPeerDataBySessionID(pRet->nPKInvokeSessionID) ;
-            stRoomPeerData* pdata2 = GetRoomPeerDataBySessionID(pRet->nPKWithSessionID) ;
-            pdata->nBetCoin += pRet->nConsumCoin ;
-            pdata->nCoin -= pRet->nConsumCoin ;
+            stGoldRoomPeerData* pdata = GetRoomPeerDataBySessionID(pRet->nPKInvokeSessionID) ;
+            stGoldRoomPeerData* pdata2 = GetRoomPeerDataBySessionID(pRet->nPKWithSessionID) ;
+            pdata->AddBetCoin(pRet->nConsumCoin);
             m_nTotalBetCoin += pRet->nConsumCoin ;
-            m_pRoomLayer->OnPlayerPK(ConvertToClientIdx(pdata->nIdx) , ConvertToClientIdx(pdata2->nIdx), pRet->bWin ) ;
+            m_pRoomLayer->OnPlayerPK(ConvertToClientIdx(pdata->getIdx()) , ConvertToClientIdx(pdata2->getIdx()), pRet->bWin ) ;
             if ( pRet->bWin )
             {
-                pdata2->ePeerState = eRoomPeer_Failed ;
+                pdata2->setPeerState(eRoomPeer_Failed);
             }
             else
             {
-                pdata->ePeerState = eRoomPeer_Failed ;
+                pdata->setPeerState(eRoomPeer_Failed);
             }
         }
             break ;
         case MSG_ROOM_PLAYER_GIVEUP:
         {
             stMsgRoomPlayerGiveUp* pRet = (stMsgRoomPlayerGiveUp*)pMsg ;
-            stRoomPeerData* pdata = GetRoomPeerDataByClientIdx(ConvertToClientIdx(pRet->nIdx)) ;
+            stGoldRoomPeerData* pdata = GetRoomPeerDataByClientIdx(ConvertToClientIdx(pRet->nIdx)) ;
             if ( pdata )
             {
-                pdata->ePeerState = eRoomPeer_GiveUp ;
+                pdata->setPeerState(eRoomPeer_GiveUp) ;
             }
             m_pRoomLayer->OnUpdatePlayerState(ConvertToClientIdx(pRet->nIdx), eRoomPeer_GiveUp) ;
         }
@@ -251,23 +223,14 @@ bool CRoomData::OnMessage( RakNet::Packet* pRakMsg )
             std::list<stResultData*> vListData ;
             char* pBuffer = (char*)pMsg;
             pBuffer += sizeof(stMsgRoomResult) ;
-            CPlayerBaseData* pBaseData = CClientApp::SharedClientApp()->GetPlayerData()->GetBaseData();
             for ( int i = 0 ; i < pRet->nCount ; ++i )
             {
                 stResultData* pdata = (stResultData*)pBuffer ;
                 vListData.push_back(pdata) ;
-                if ( pBaseData->nIdx == pdata->idx )
-                {
-                    pBaseData->nCoin += pdata->nResultCoin ;
-                    pBaseData->nBetCoin = 0 ;
-                    pBaseData->ePeerState = eRoomPeer_None;
-                }
-                else
-                {
-                    m_vRoomPeers[pdata->idx].nBetCoin = 0 ;
-                    m_vRoomPeers[pdata->idx].nCoin += pdata->nResultCoin ;
-                    m_vRoomPeers[pdata->idx].ePeerState = eRoomPeer_None;
-                }
+                m_vRoomPeers[pdata->idx]->setBetCoin(0) ;
+                m_vRoomPeers[pdata->idx]->setCoin(m_vRoomPeers[pdata->idx]->getCoin() + pdata->nResultCoin) ;
+                m_vRoomPeers[pdata->idx]->setPeerState(eRoomPeer_None);
+                
                 pBuffer += sizeof(stResultData) ;
             }
             RestState();
@@ -292,61 +255,52 @@ void CRoomData::RestState()
     m_nRound = 0 ;
     m_eRoomSate = eRoomState_WaitPeerToJoin ;
     m_nWaitSessionID = 0 ;
-    stRoomPeerData* pdata = NULL ;
+    stGoldRoomPeerData* pdata = NULL ;
     for ( int i = 0 ; i < MAX_ROOM_PEER ; ++i )
     {
         pdata = GetRoomPeerDataByClientIdx(i) ;
         if (pdata )
         {
-            pdata->ePeerState = eRoomPeer_None ;
-            pdata->nBetCoin = 0 ;
+            pdata->setPeerState(eRoomPeer_None);
+            pdata->setBetCoin(0);
         }
     }
     m_pRoomLayer->OnRefreshRoomInfo(this);
 }
 
-stRoomPeerData* CRoomData::GetRoomPeerDataBySessionID( unsigned int nSessionID )
+stGoldRoomPeerData* CRoomData::GetRoomPeerDataBySessionID( unsigned int nSessionID )
 {
-    if ( CClientApp::SharedClientApp()->GetSessionID() == nSessionID )
-    {
-        return  CClientApp::SharedClientApp()->GetPlayerData()->GetBaseData() ;
-    }
-    
     for ( int i = 0 ; i < MAX_ROOM_PEER ; ++i )
     {
-        if ( m_vRoomPeers[i].nSessionID == nSessionID )
+        if ( m_vRoomPeers[i]->getSessionID() == nSessionID )
         {
-            return &m_vRoomPeers[i] ;
+            return m_vRoomPeers[i] ;
         }
     }
     return NULL ;
 }
 
-stRoomPeerData* CRoomData::GetRoomPeerDataByClientIdx( char nClientIdx )
-{
-    if ( nClientIdx == 4 ) // self
-    {
-        return  CClientApp::SharedClientApp()->GetPlayerData()->GetBaseData() ;
-    }
-    
+stGoldRoomPeerData* CRoomData::GetRoomPeerDataByClientIdx( char nClientIdx )
+{    
     char nServerIdx = ConvertoServerIdx(nClientIdx) ;
     if ( nServerIdx < 0 || nServerIdx >= MAX_ROOM_PEER )
     {
         return NULL ;
     }
-    if ( m_vRoomPeers[nServerIdx].nSessionID )
-        return &m_vRoomPeers[nServerIdx] ;
+    if ( m_vRoomPeers[nServerIdx]->getSessionID() )
+        return m_vRoomPeers[nServerIdx] ;
     return NULL ;
 }
 
 bool CRoomData::IsWaitMyTurn()
 {
-    return CClientApp::SharedClientApp()->GetPlayerData()->GetBaseData()->nSessionID == m_nWaitSessionID ;
+    return CClientApp::SharedClientApp()->GetSessionID() == m_nWaitSessionID ;
 }
 
 char CRoomData::ConvertoServerIdx(char nClientIdx)
 {
-    int nMyServerIdx = CClientApp::SharedClientApp()->GetPlayerData()->GetBaseData()->nIdx ;
+    stGoldRoomPeerData* pmydata = GetRoomPeerDataBySessionID(CClientApp::SharedClientApp()->GetSessionID()) ;
+    int nMyServerIdx = pmydata->getIdx() ;
     if ( nClientIdx == MAX_ROOM_PEER -1 )
         return nMyServerIdx ;
     char nOffset = MAX_ROOM_PEER -1  - nClientIdx ;
@@ -358,7 +312,8 @@ char CRoomData::ConvertoServerIdx(char nClientIdx)
 
 char CRoomData::ConvertToClientIdx(char nServerIdx )
 {
-    char nMyServerIdx = CClientApp::SharedClientApp()->GetPlayerData()->GetBaseData()->nIdx ;
+    stGoldRoomPeerData* pmydata = GetRoomPeerDataBySessionID(CClientApp::SharedClientApp()->GetSessionID()) ;
+    char nMyServerIdx = pmydata->getIdx();
     char nOffset = nMyServerIdx - nServerIdx ;
     char nClientIdx = MAX_ROOM_PEER - 1 - nOffset  ;
     if ( nClientIdx < 0 )
@@ -373,7 +328,7 @@ char CRoomData::GetPlayerCount()
     int nCount = 0 ;
     for ( int i = 0 ; i < MAX_ROOM_PEER ; ++i )
     {
-        if ( m_vRoomPeers[i].nSessionID )
+        if ( m_vRoomPeers[i]->getSessionID() )
         {
             ++nCount ;
         }
@@ -386,7 +341,7 @@ char CRoomData::GetActiveCount()
     int nCount = 0 ;
     for ( int i = 0 ; i < MAX_ROOM_PEER ; ++i )
     {
-        if ( m_vRoomPeers[i].nSessionID && m_vRoomPeers[i].IsActive() )
+        if ( m_vRoomPeers[i]->getSessionID() && m_vRoomPeers[i]->IsActive() )
         {
             ++nCount ;
         }

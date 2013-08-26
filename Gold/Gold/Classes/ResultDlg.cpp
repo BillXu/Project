@@ -92,13 +92,13 @@ void CResultDlg::ShowDlg(std::list<stResultData*>& pst , CRoomData* pdata)
     for ( int i = 0  ; iter != pst.end() ; ++iter )
     {
         prd = *iter ;
-        stRoomPeerData* ppeerdata = pdata->GetRoomPeerDataByServerIdx(prd->idx);
+        stGoldRoomPeerData* ppeerdata = pdata->GetRoomPeerDataByServerIdx(prd->idx);
         if ( !ppeerdata )
         {
             continue ;
         }
         
-        m_vInfos[i].SetInfo(ppeerdata->pName, prd->nResultCoin > 0 , prd->nResultCoin) ;
+        m_vInfos[i].SetInfo(ppeerdata->getName().c_str(), prd->nResultCoin > 0 , prd->nResultCoin) ;
         ++i ;
     }
 }

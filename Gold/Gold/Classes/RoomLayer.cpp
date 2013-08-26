@@ -113,8 +113,8 @@ bool CRoomLayer::init(int a , int b , int c , int d ,int e )
     
     // self info
     CPlayerBaseData* pmybasedata = CClientApp::SharedClientApp()->GetPlayerData()->GetBaseData() ;
-    m_pMyName->setString(pmybasedata->pName) ;
-    m_pMyTitle->setString(pmybasedata->strTitle.c_str()) ;
+    m_pMyName->setString(pmybasedata->getName().c_str()) ;
+    m_pMyTitle->setString("title str "); ;
     UpdateMyCoin();
     
     // icon fail and give up icon ;
@@ -139,8 +139,8 @@ void CRoomLayer::OnDistributeCardOver(float fTime )
     // clearn distribute elements ;
     for ( int i = 0 ; i < 4 ; ++i )
     {
-        stRoomPeerData* pData = m_pRoomData->GetRoomPeerDataByClientIdx(i) ;
-        if (pData != NULL &&  pData->ePeerState == eRoomPeer_Unlook )
+        stGoldRoomPeerData* pData = m_pRoomData->GetRoomPeerDataByClientIdx(i) ;
+        if (pData != NULL &&  pData->getPeerState() == eRoomPeer_Unlook )
         {
             m_pDefault[i]->setVisible(true) ;
         }
@@ -160,7 +160,8 @@ void CRoomLayer::OnDistributeCardOver(float fTime )
     }
     
     // update my button
-    bool bUnlook = CClientApp::SharedClientApp()->GetPlayerData()->GetBaseData()->ePeerState == eRoomPeer_Unlook ;
+    stGoldRoomPeerData* pmyData = m_pRoomData->GetRoomPeerDataBySessionID(CClientApp::SharedClientApp()->GetPlayerData()->GetBaseData()->getSessionID());
+    bool bUnlook = pmyData->getPeerState() == eRoomPeer_Unlook ;
     m_pbtnReady->setVisible(false) ;
     m_pbtnReady->setEnabled(false) ;
     if ( bUnlook )
@@ -270,11 +271,11 @@ void CRoomLayer::OnPK(CCObject*, CCControlEvent)
 {
     bool bDirectPK = m_pRoomData->GetActiveCount() == 1 ;
     
-    stRoomPeerData* pData = NULL ;
+    stGoldRoomPeerData* pData = NULL ;
     for ( int i = 0 ; i < MAX_ROOM_PEER -1 ; ++i )
     {
         pData = m_pRoomData->GetRoomPeerDataByClientIdx(i) ;
-        if ( !pData || pData->nSessionID == 0  )
+        if ( !pData || pData->getSessionID() == 0  )
         {
             continue ;
         }
@@ -288,7 +289,7 @@ void CRoomLayer::OnPK(CCObject*, CCControlEvent)
         {
             // send pk message ;
             stMsgRoomPK pkMsg ;
-            pkMsg.nPKWithSessionID = pData->nSessionID ;
+            pkMsg.nPKWithSessionID = pData->getSessionID() ;
             CClientApp::SharedClientApp()->SendMsg(&pkMsg, sizeof(pkMsg)) ;
             return ;
         }
@@ -354,13 +355,14 @@ void CRoomLayer::StartDistributeCard()
         {
             idx -= 5 ;
         }
-        stRoomPeerData* pData = m_pRoomData->GetRoomPeerDataByClientIdx(i) ;
-        if ( (pData != NULL && pData->ePeerState != eRoomPeer_Unlook) || ( pData == NULL && i != 4 ) )
+        stGoldRoomPeerData* pData = m_pRoomData->GetRoomPeerDataByClientIdx(i) ;
+        if ( (pData != NULL && pData->getPeerState() != eRoomPeer_Unlook) || ( pData == NULL && i != 4 ) )
         {
             continue ;
         }
         
-        if ( i == 4 && CClientApp::SharedClientApp()->GetPlayerData()->GetBaseData()->ePeerState != eRoomPeer_Unlook )
+        stGoldRoomPeerData* pmydata = m_pRoomData->GetRoomPeerDataBySessionID(CClientApp::SharedClientApp()->GetSessionID());
+        if ( i == 4 && pmydata->getPeerState() != eRoomPeer_Unlook )
         {
             continue ;
         }
@@ -586,10 +588,10 @@ void CRoomLayer::OnSelectedAddBetCoin(CSelectAddBetCoin* pBtn , int nCoin )
 void CRoomLayer::OnDlgEnd(CPKDlg* pDlg)
 {
     char* pIdx = pDlg->GetPkIdx() ;
-    stRoomPeerData* pdata1 = m_pRoomData->GetRoomPeerDataByClientIdx(pIdx[0]) ;
-    stRoomPeerData* pdata2 = m_pRoomData->GetRoomPeerDataByClientIdx(pIdx[1]) ;
-    OnUpdatePlayerState(pIdx[0], (eRoomPeerState)pdata1->ePeerState ) ;
-    OnUpdatePlayerState(pIdx[1], (eRoomPeerState)pdata2->ePeerState ) ;
+    stGoldRoomPeerData* pdata1 = m_pRoomData->GetRoomPeerDataByClientIdx(pIdx[0]) ;
+    stGoldRoomPeerData* pdata2 = m_pRoomData->GetRoomPeerDataByClientIdx(pIdx[1]) ;
+    OnUpdatePlayerState(pIdx[0], pdata1->getPeerState() ) ;
+    OnUpdatePlayerState(pIdx[1], pdata2->getPeerState() ) ;
     pDlg->removeFromParent() ;
 }
 
@@ -611,15 +613,15 @@ void CRoomLayer::OnPlayerLeave( char nIdx )
     m_pReadyIcon[nIdx]->setVisible(false) ;
 }
 
-void CRoomLayer::OnPlayerEnter( char nIdx , stRoomPeerData* pPlayerData )
+void CRoomLayer::OnPlayerEnter( char nIdx , stGoldRoomPeerData* pPlayerData )
 {
     if ( nIdx >= 4 )
     {
         return ;
     }
     m_pPlayer[nIdx]->setVisible(true) ;
-    m_pPlayer[nIdx]->setSessionID(pPlayerData->nSessionID) ;
-    m_pPlayer[nIdx]->SetPlayerInfo(pPlayerData->nSessionID, pPlayerData->pName, "Master", pPlayerData->nCoin,pPlayerData->nBetCoin ) ;
+    m_pPlayer[nIdx]->setSessionID(pPlayerData->getSessionID()) ;
+    m_pPlayer[nIdx]->SetPlayerInfo(pPlayerData->getSessionID(), pPlayerData->getName().c_str(), "Master", pPlayerData->getCoin(),pPlayerData->getBetCoin() ) ;
 }
 
 void CRoomLayer::OnRefreshRoomInfo(CRoomData*proomdata)
@@ -640,11 +642,11 @@ void CRoomLayer::OnRefreshRoomInfo(CRoomData*proomdata)
     
     for ( int i = 0 ; i < MAX_ROOM_PEER; ++i )
     {
-        stRoomPeerData* pRoomPeerdata = proomdata->GetRoomPeerDataByClientIdx(i) ;
+        stGoldRoomPeerData* pRoomPeerdata = proomdata->GetRoomPeerDataByClientIdx(i) ;
         if ( pRoomPeerdata)
         {
             OnPlayerEnter(i, pRoomPeerdata ) ;
-            OnUpdatePlayerState(i, (eRoomPeerState)pRoomPeerdata->ePeerState ) ;
+            OnUpdatePlayerState(i, (eRoomPeerState)pRoomPeerdata->getPeerState()) ;
         }
         else
         {
@@ -664,7 +666,7 @@ void CRoomLayer::OnUpdatePlayerState(char nIdx , eRoomPeerState ePeerState )
             case eRoomPeer_Look:
             {
                 m_pDefault[4]->setVisible(false) ;
-                char* vCard = CClientApp::SharedClientApp()->GetPlayerData()->GetBaseData()->vCard ;
+                char* vCard = ((stGoldRoomSelfData*)m_pRoomData->GetRoomPeerDataByClientIdx(4))->vCard ;
                 CPeerCard peerCard ;
                 peerCard.SetPeerCardByNumber(vCard[0], vCard[1], vCard[2]);
                 CCPoint ptDefault = m_pDefault[4]->getPosition();
@@ -747,10 +749,10 @@ void CRoomLayer::OnUpdatePlayerState(char nIdx , eRoomPeerState ePeerState )
             m_pPlayer[nIdx]->StopTiming();
         }
         
-        stRoomPeerData* pdata = m_pRoomData->GetRoomPeerDataByClientIdx(nIdx) ;
+        stGoldRoomPeerData* pdata = m_pRoomData->GetRoomPeerDataByClientIdx(nIdx) ;
         if ( pdata )
         {
-            m_pPlayer[nIdx]->UpdateCoinInfo(pdata->nBetCoin,pdata->nCoin);
+            m_pPlayer[nIdx]->UpdateCoinInfo(pdata->getBetCoin(),pdata->getCoin());
         }
     }
     m_pReadyIcon[nIdx]->setVisible(ePeerState == eRoomPeer_Ready) ;
@@ -795,8 +797,8 @@ void CRoomLayer::OnPlayerFollow(char nIdx , int nFollowedCoin )
         UpdateMyCoin();
         return ;
     }
-    stRoomPeerData* pData = m_pRoomData->GetRoomPeerDataByClientIdx(nIdx);
-    m_pPlayer[nIdx]->UpdateCoinInfo(pData->nBetCoin, pData->nCoin) ;
+    stGoldRoomPeerData* pData = m_pRoomData->GetRoomPeerDataByClientIdx(nIdx);
+    m_pPlayer[nIdx]->UpdateCoinInfo(pData->getBetCoin(), pData->getCoin()) ;
 }
 
 void CRoomLayer::OnPlayerAdd(char nIdx , int nOffsetCoin )
@@ -816,8 +818,8 @@ void CRoomLayer::OnPlayerAdd(char nIdx , int nOffsetCoin )
     }
     else
     {
-        stRoomPeerData* pData = m_pRoomData->GetRoomPeerDataByClientIdx(nIdx);
-        m_pPlayer[nIdx]->UpdateCoinInfo(pData->nBetCoin, pData->nCoin) ;
+        stGoldRoomPeerData* pData = m_pRoomData->GetRoomPeerDataByClientIdx(nIdx);
+        m_pPlayer[nIdx]->UpdateCoinInfo(pData->getBetCoin(), pData->getCoin()) ;
     }
 }
 
@@ -833,12 +835,12 @@ void CRoomLayer::OnPlayerPK(char nIdxInvoke , char nIdxWith , bool bWin )
     char* pLeft, * pRight ;
     char pBufferInvoke[100] = {0};
     char pBufferTarget[100] = { 0 };
-    stRoomPeerData* pInvoke = m_pRoomData->GetRoomPeerDataByClientIdx(nIdxInvoke ) ;
-    stRoomPeerData* pTarget = m_pRoomData->GetRoomPeerDataByClientIdx(nIdxWith ) ;
-    pInvoke->nDefaulPhotoID = 1 ;
-    pTarget->nDefaulPhotoID = 1 ;
-    sprintf(pBufferInvoke, "ccbResources/%d.png",pInvoke->nDefaulPhotoID);
-    sprintf(pBufferTarget, "ccbResources/%d.png",pTarget->nDefaulPhotoID);
+    stGoldRoomPeerData* pInvoke = m_pRoomData->GetRoomPeerDataByClientIdx(nIdxInvoke ) ;
+    stGoldRoomPeerData* pTarget = m_pRoomData->GetRoomPeerDataByClientIdx(nIdxWith ) ;
+    pInvoke->setDefaulPhotoID(1) ;
+    pTarget->setDefaulPhotoID(1) ;
+    sprintf(pBufferInvoke, "ccbResources/%d.png",pInvoke->getDefaulPhotoID());
+    sprintf(pBufferTarget, "ccbResources/%d.png",pTarget->getDefaulPhotoID());
     if ( bWin )
     {
         LeftWin = nIdxInvoke < nIdxWith ;
@@ -870,15 +872,15 @@ void CRoomLayer::ClearShowingChouMa()
 
 void CRoomLayer::UpdateMyCoin()
 {
-    CPlayerBaseData* pbasedata = CClientApp::SharedClientApp()->GetPlayerData()->GetBaseData() ;
+    stGoldRoomPeerData* pbasedata = m_pRoomData->GetRoomPeerDataByClientIdx(4) ;
     char nBuffer[20]={0} ;
     // bet coin
     memset(nBuffer, 0, sizeof(nBuffer) ) ;
-    sprintf(nBuffer, "%d",pbasedata->nBetCoin) ;
+    sprintf(nBuffer, "%d",pbasedata->getBetCoin()) ;
     m_pMyBetCoin->setString(nBuffer) ;
     // ncoin
     memset(nBuffer, 0, sizeof(nBuffer) ) ;
-    sprintf(nBuffer, "%d",pbasedata->nCoin) ;
+    sprintf(nBuffer, "%d",pbasedata->getCoin()) ;
     m_pMyCoin->setString(nBuffer) ;
 }
 
@@ -897,13 +899,13 @@ CCSprite* CRoomLayer::GetAutoSpriteByCard(CCard* pcard)
 void CRoomLayer::UpdateButton(bool bMyTurn )
 {
     bMyTurn = m_pRoomData->IsWaitMyTurn();
-    CPlayerBaseData* pbasedata = CClientApp::SharedClientApp()->GetPlayerData()->GetBaseData();
+    stGoldRoomPeerData* pbasedata = m_pRoomData->GetRoomPeerDataByClientIdx(4);
     m_pbtnFollow->setEnabled(bMyTurn && pbasedata->IsActive() ) ;
     m_pbtnAdd->setEnabled(bMyTurn && pbasedata->IsActive() );
-    m_pbtnLook->setEnabled(pbasedata->ePeerState == eRoomPeer_Unlook ) ;
+    m_pbtnLook->setEnabled(pbasedata->getPeerState()== eRoomPeer_Unlook ) ;
     m_pbtnGiveUp->setEnabled(pbasedata->IsActive() );
-    m_pbtnPK->setEnabled( bMyTurn && pbasedata->IsActive() && (m_pRoomData->m_nRound >= 2 || pbasedata->nCoin < m_pRoomData->m_nSingleBetCoin ));
-    bool bShowReady = pbasedata->ePeerState == eRoomPeer_None ;
+    m_pbtnPK->setEnabled( bMyTurn && pbasedata->IsActive() && (m_pRoomData->m_nRound >= 2 || pbasedata->getCoin() < m_pRoomData->m_nSingleBetCoin ));
+    bool bShowReady = pbasedata->getPeerState() == eRoomPeer_None ;
     m_pbtnReady->setVisible(bShowReady) ;
     m_pbtnReady->setEnabled(bShowReady) ;
     m_pbtnReady->setOpacity(255*bShowReady) ;
