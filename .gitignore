@@ -50,7 +50,6 @@ local.properties
 *.ilk
 *.meta
 *.obj
-*.pch
 *.pdb
 *.pgc
 *.pgd
@@ -177,8 +176,6 @@ Client/GoldenPoker.xcodeproj/project.xcworkspace/xcuserdata/BillSky.xcuserdatad/
 *.ccbi
 
 *.ccbi
-
-*.plist
 
 Client/GoldenPoker/Resources/fileLookup.plist
 
