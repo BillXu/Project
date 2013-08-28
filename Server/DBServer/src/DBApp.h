@@ -18,6 +18,7 @@ public:
 	bool IsRunning(){ return m_bRunning ;}
 	void Stop(){ m_bRunning = false ;}
 	void OnExit();
+	CDataBaseThread* GetDBThread(){ return m_pDBWorkThread ; }
 protected:
 	CServerNetwork* m_pNetWork ;
 	CDBManager* m_pDBManager ;

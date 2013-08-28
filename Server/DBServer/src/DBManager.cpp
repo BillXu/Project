@@ -8,7 +8,7 @@ CDBManager::CDBManager(CDBServerApp* theApp )
 {
 	m_vReserverArgData.clear();
 	m_pTheApp = theApp ;
-	nCurUserUID = 0 ;
+	nCurUserUID = time(NULL) ;  // temp asign 
 }
 
 CDBManager::~CDBManager()
@@ -67,7 +67,7 @@ void CDBManager::OnMessage(RakNet::Packet* packet)
 			pRequest->pUserData = pdata ;
 			// format sql String ;
 			char pAccountEString[MAX_LEN_ACCOUNT * 2 + 1 ] = {0} ;
-			CDataBaseThread::SharedDBThread()->EscapeString(pAccountEString,paccount,pLoginCheck->nAccountLen ) ;
+			m_pTheApp->GetDBThread()->EscapeString(pAccountEString,paccount,pLoginCheck->nAccountLen ) ;
 			pRequest->nSqlBufferLen = sprintf_s(pRequest->pSqlBuffer,"SELECT Password,UserUID FROM Account WHERE Account = '%s'",pAccountEString ) ;
 			CDBRequestQueue::SharedDBRequestQueue()->PushRequest(pRequest) ;
 		}
@@ -83,7 +83,7 @@ void CDBManager::OnMessage(RakNet::Packet* packet)
 			char* pBuffer = (char*)pmsg ;
 			pBuffer += sizeof(stMsgLoginRegister);
 			paccount = pBuffer ;
-			pBuffer += pLoginRegister->ppPasswordLen ;
+			pBuffer += pLoginRegister->pAcoundLen ;
 			ppassword = pBuffer ;
 			pBuffer += pLoginRegister->ppPasswordLen ;
 			pcharaName = pBuffer ;
@@ -97,10 +97,10 @@ void CDBManager::OnMessage(RakNet::Packet* packet)
 			char pAccountEString[MAX_LEN_ACCOUNT * 2 + 1 ] = {0} ;
 			char pPasswordEString[MAX_LEN_PASSWORD * 2 + 1 ] = {0} ;
 			char pCharaNameEString[MAX_LEN_PASSWORD * 2 + 1 ] = {0} ;
-			CDataBaseThread::SharedDBThread()->EscapeString(pAccountEString,paccount,pLoginRegister->pAcoundLen ) ;
-			CDataBaseThread::SharedDBThread()->EscapeString(pPasswordEString,ppassword,pLoginRegister->ppPasswordLen ) ;
-			CDataBaseThread::SharedDBThread()->EscapeString(pCharaNameEString,pcharaName,pLoginRegister->ncharNameLen ) ;
-			pRequest->nSqlBufferLen = sprintf_s(pRequest->pSqlBuffer,"INSERT INTO `gamedb`.`account` (`Account`, `Password`, `CharacterName`, `Sex`, `UserUID`) VALUES ('%s', '%s', '%s', '%d');",pAccountEString,pPasswordEString,pCharaNameEString,pLoginRegister->cSex ,pdata->nExtenArg2) ;
+			m_pTheApp->GetDBThread()->EscapeString(pAccountEString,paccount,pLoginRegister->pAcoundLen ) ;
+			m_pTheApp->GetDBThread()->EscapeString(pPasswordEString,ppassword,pLoginRegister->ppPasswordLen ) ;
+			m_pTheApp->GetDBThread()->EscapeString(pCharaNameEString,pcharaName,pLoginRegister->ncharNameLen ) ;
+			pRequest->nSqlBufferLen = sprintf_s(pRequest->pSqlBuffer,"INSERT INTO `gamedb`.`account` (`Account`, `Password`, `CharacterName`, `nSex`, `UserUID`) VALUES ('%s', '%s', '%s', '%d', '%d');",pAccountEString,pPasswordEString,pCharaNameEString,pLoginRegister->cSex ,pdata->nExtenArg2) ;
 			CDBRequestQueue::SharedDBRequestQueue()->PushRequest(pRequest) ;
 		}
 		break;

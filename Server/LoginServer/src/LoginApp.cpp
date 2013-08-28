@@ -54,7 +54,7 @@ void CLoginApp::Init()
 	// connected to DB ;
 	m_stDBServer.m_bConnected = false ;
 	m_stDBServer.m_strIPAddress = "127.0.0.1";
-	m_stDBServer.m_nPort = DBServer_PORT;
+	m_stDBServer.m_nPort = DB_PORT;
 	m_pNetWork->ConnectToServer(m_stDBServer.m_strIPAddress.c_str(),m_stDBServer.m_nPort) ;
 
 	// Peer Mgr 

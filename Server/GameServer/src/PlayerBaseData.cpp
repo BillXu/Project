@@ -27,9 +27,15 @@ void CPlayerBaseData::Init()
 	sprintf_s(strName,"%d","default") ;
 	nDefaulPhotoID = 0 ;
 	nUserDefinePhotoID = 0 ;
+	Reset();
+}
 
-	// temp do 
-	SendBaseDatToClient();
+void CPlayerBaseData::Reset()
+{
+	stMsgGameServerGetBaseData msg ;
+	msg.nSessionID = GetPlayer()->GetSessionID();
+	msg.nUserUID = GetPlayer()->GetUserUID() ;
+	SendMsgToDB((char*)&msg,sizeof(msg)) ;
 }
 
 bool CPlayerBaseData::OnMessage(stMsg* pMsg )
@@ -59,6 +65,7 @@ bool CPlayerBaseData::OnMessage(stMsg* pMsg )
 
 			strSigure = std::string(pBuffer,pBaseData->nSigureLen);
 
+			SendBaseDatToClient();
 			return true ;
 		}
 		break;

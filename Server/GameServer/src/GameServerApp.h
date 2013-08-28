@@ -17,7 +17,7 @@ public:
 	void ShutDown();
 
 	void SendMsgToGateServer( unsigned int nSessionID , const char* pBuffer , int nLen, bool bBroadcast = false );
-	void SendMsgToDBServer( unsigned int nSessionID ,const char* pBuffer , int nLen );
+	void SendMsgToDBServer(const char* pBuffer , int nLen );
 	CRoomManager* GetRoomMgr(){ return &m_pRoomMgr;}
 	CTimerManager* GetTimerMgr(){ return m_pTimerMgr ; }
 	CPlayerManager* GetPlayerMgr(){ return m_pPlayerManager ; }

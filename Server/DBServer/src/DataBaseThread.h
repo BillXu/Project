@@ -6,7 +6,7 @@ class CDataBaseThread
 :public  CThreadT
 {
 public:
-	static CDataBaseThread* SharedDBThread();
+	//static CDataBaseThread* SharedDBThread();
 	bool InitDataBase( const char* pIP,unsigned pPort , const char* pUserName,const char* pPassword, const char* pDBName );
 	virtual void __run();
 	void StopWork();

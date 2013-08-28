@@ -2,11 +2,11 @@
 #include "DBRequest.h"
 #include "LogManager.h"
 
-CDataBaseThread* CDataBaseThread::SharedDBThread()
-{
-	static CDataBaseThread g_sDBThread ;
-	return &g_sDBThread;
-}
+//CDataBaseThread* CDataBaseThread::SharedDBThread()
+//{
+//	static CDataBaseThread g_sDBThread ;
+//	return &g_sDBThread;
+//}
 
 bool CDataBaseThread::InitDataBase( const char* pIP,unsigned pPort , const char* pUserName,const char* pPassword, const char* pDBName )
 {

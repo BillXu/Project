@@ -36,7 +36,7 @@ void CDBServerApp::Init()
 	m_bRunning = true ;
 	// setup net work 
 	m_pNetWork = new CServerNetwork ;
-	m_pNetWork->StartupNetwork(DBServer_PORT,4) ;
+	m_pNetWork->StartupNetwork(DB_PORT,4) ;
 	m_pNetWork->AddDelegate(this);
 
 	// set up data base thread 

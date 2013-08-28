@@ -182,6 +182,8 @@ void CRoom::Update(float fTimeElpas, unsigned int nTimerID )
 void CRoom::SendCurRoomToPeer(CRoomPeer* peer )
 {
 	stMsgRoomCurInfo msgRoomInfo ;
+	msgRoomInfo.nRoomID = GetRoomID();
+	msgRoomInfo.nSelfIdx = peer->GetPeerIdxInRoom();
 	msgRoomInfo.eRoomSate = GetRoomState() ;
 	msgRoomInfo.nPlayerCount = GetMaxSeat() - GetEmptySeatCount() -1 ; // -1 self ;
 	msgRoomInfo.nRound = m_nRound ;

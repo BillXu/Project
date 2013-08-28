@@ -86,9 +86,14 @@ void CLoginPeerMgr::OnGateMessage(stMsg* pmsg ,unsigned int nSessionID )
 			msg.nSessionID = nSessionID ;
 			msg.nAccountLen = pMsgCheck->nAccountLen ;
 			msg.nPasswordLen = pMsgCheck->nPasswordlen ;
+
+			int nOffset = 0 ;
+			memcpy(m_pMaxBuffer + nOffset ,&msg, sizeof(msg) );
+			nOffset += sizeof(msg);
+
 			char* pbuffer = (char*)pmsg ;
 			pbuffer += sizeof(stMsgCheckAccount);
-			int nOffset = 0 ;
+
 			memcpy(m_pMaxBuffer + nOffset ,pbuffer, pMsgCheck->nAccountLen );
 			nOffset += pMsgCheck->nAccountLen ;
 			pbuffer += pMsgCheck->nAccountLen ;

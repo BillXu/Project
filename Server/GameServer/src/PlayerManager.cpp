@@ -63,7 +63,7 @@ bool CPlayerManager::OnMessage( RakNet::Packet* pMsg )
 		pPlayer->OnMessage(pRealMsg) ;
 		return true ;
 	}
-	else if ( ID_MSG_DB2GM == pMessage->usMsgType )
+	else if ( ID_MSG_DB2GM == pMessage->cSysIdentifer )
 	{
 		stMsgDB2GM* pRet = (stMsgDB2GM*)pMessage ;
 		CPlayer* pPlayer = GetPlayerBySessionID(pRet->nSessionID ) ;

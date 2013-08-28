@@ -12,7 +12,7 @@ public:
 	void Init();
 	bool OnMessage(stMsg* pMsg );
 	void SendBaseDatToClient();
-	void Reset(){SendBaseDatToClient();}
+	void CPlayerBaseData::Reset();
 public:
 	int nCoin ;
 	unsigned int nDiamoned ;

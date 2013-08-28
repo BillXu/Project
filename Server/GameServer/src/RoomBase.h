@@ -32,7 +32,7 @@ public:
 	virtual void AddPeer(CRoomPeer* peer ) = 0 ;
 	virtual void Update(float fTimeElpas, unsigned int nTimerID );
 	virtual bool OnPeerMsg(CRoomPeer* pPeer, stMsg* pmsg );
-	
+
 protected:
 	char GetRoomPeerIdx(CRoomPeer* pPeer );
 protected:

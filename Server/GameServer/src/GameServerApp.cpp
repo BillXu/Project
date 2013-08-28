@@ -74,7 +74,7 @@ void CGameServerApp::Init()
 	//}
 	//printf( "A1 win %d , A2 win %d \n" ,A1Win,A2Win);
 	// test end ;
-	m_strDBIP = "" ;
+	m_strDBIP = "127.0.0.1" ;
 	m_strGateIP = "127.0.0.1";
 	m_pNetWork = new CNetWorkMgr ;
 	m_pNetWork->SetupNetwork(2);
@@ -175,20 +175,14 @@ void CGameServerApp::SendMsgToGateServer( unsigned int nSessionID , const char* 
 	m_pNetWork->SendMsg(s_pBuffer,nLen + sizeof(stMsgTransferData),m_nGateServerNetUID) ;
 }
 
-void CGameServerApp::SendMsgToDBServer( unsigned int nSessionID , const char* pBuffer , int nLen )
+void CGameServerApp::SendMsgToDBServer(const char* pBuffer , int nLen )
 {
 	if ( m_bDBserverConnected == false )
 	{
 		CLogMgr::SharedLogMgr()->ErrorLog("can not send msg to gate , because DBServer is not connecting !") ;
 		return ;
 	}
-	stMsgTransferData msg ;
-	msg.cSysIdentifer = ID_MSG_GM2DB ;
-	msg.bBroadCast = false ;
-	msg.nSessionID = nSessionID ;
-	memcpy(s_pBuffer,&msg,sizeof(stMsgTransferData));
-	memcpy((void*)(s_pBuffer + sizeof(stMsgTransferData)),pBuffer,nLen);
-	m_pNetWork->SendMsg(s_pBuffer,nLen + sizeof(stMsgTransferData),m_nDBServerNetUID) ;
+	m_pNetWork->SendMsg(pBuffer,nLen,m_nDBServerNetUID) ;
 }
 
 void CGameServerApp::ConnectToOtherServer()

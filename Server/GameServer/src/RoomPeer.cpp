@@ -31,8 +31,6 @@ bool CRoomPeer::OnMessage(stMsg* pMsg )
 
 			stMsgRoomEnterRet msgRet ;
 			msgRet.nRet = 0 ;
-			msgRet.nRoomID = pRoom->GetRoomID();
-			msgRet.nIdx = m_nPeerIdx ;
 			SendMsgToClient((char*)&msgRet,sizeof(msgRet)) ;
 			pRoom->SendCurRoomToPeer(this);
 		}

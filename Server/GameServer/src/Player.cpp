@@ -95,5 +95,5 @@ void CPlayer::SendMsgToClient(const char* pBuffer, unsigned short nLen,bool bBro
 
 void CPlayer::SendMsgToDBServer( const char* pBuffer, unsigned short nLen )
 {
-	CGameServerApp::SharedGameServerApp()->SendMsgToDBServer(GetSessionID(),pBuffer,nLen) ;
+	CGameServerApp::SharedGameServerApp()->SendMsgToDBServer(pBuffer,nLen) ;
 }
