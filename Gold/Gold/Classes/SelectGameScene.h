@@ -35,6 +35,8 @@ public:
     
     void OnPaijiuDown(CCObject*, CCControlEvent);
     void OnBack(CCObject*, CCControlEvent);
+    void OnPlayPoker(CCObject*, CCControlEvent);
+    
     
 };
 

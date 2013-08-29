@@ -39,16 +39,16 @@ bool SelectGameScene::init()
     
     return true ;
 }
-void SelectGameScene::onExit()
+void SelectGameScene::onEnter()
 {
-    CCLayer::onExit();
+    CCLayer::onEnter();
     CClientApp::SharedClientApp()->AddNetMsgDelegate(this) ;
     CEventHandleQueue::SharedEventHandleQueue()->RegisterEventHandle(eEvent_RecieveBaseData, this, ccevent_selector(SelectGameScene::OnEvent)) ;
 }
 
-void SelectGameScene::onEnter()
+void SelectGameScene::onExit()
 {
-    CCLayer::onEnter();
+    CCLayer::onExit();
     CClientApp::SharedClientApp()->RemoveMsgDelegate(this) ;
     CEventHandleQueue::SharedEventHandleQueue()->RemoveEventHandle(eEvent_RecieveBaseData, this) ;
 }
@@ -62,6 +62,7 @@ SEL_CCControlHandler SelectGameScene::onResolveCCBCCControlSelector(CCObject * p
 {
     CCB_SELECTORRESOLVER_CCCONTROL_GLUE(this, "OnPaijiuDown", SelectGameScene::OnPaijiuDown) ;
     CCB_SELECTORRESOLVER_CCCONTROL_GLUE(this, "OnBack", SelectGameScene::OnBack) ;
+    CCB_SELECTORRESOLVER_CCCONTROL_GLUE(this, "OnPlayPoker", SelectGameScene::OnPlayPoker) ;
     return NULL ;
 }
 
@@ -77,8 +78,19 @@ bool SelectGameScene::OnMessage( RakNet::Packet* pMsg )
         {
         }
             break ;
+            
         case MSG_ROOM_CURRENT_INFO:
         {
+            // enter Room scene ;
+            CCScene *pScene = CRoomLayer::RoomScene(10,20,50,200,500);
+            // run
+            CCDirector::sharedDirector()->replaceScene(pScene);
+            CRoomLayer* pRL = (CRoomLayer*)pScene->getChildByTag(0) ;
+            CRoomData* pRd = new CRoomData ;
+            pRd->Init(pRL,10) ;
+            pRL->SetRoomData(pRd) ;
+            pRd->OnMessage(pMsg) ;
+            CClientApp::SharedClientApp()->AddNetMsgDelegate(pRd) ;
         }
             break;
         default:
@@ -102,5 +114,12 @@ void SelectGameScene::OnBack(CCObject* pobj , CCControlEvent event )
 {
     CCScene* psecen = CLobbyScene::CreateScene(); //HelloWorld::scene() ;
     CCDirector::sharedDirector()->replaceScene(psecen) ;
+}
+void SelectGameScene::OnPlayPoker(CCObject*, CCControlEvent)
+{
+    stMsgRoomEnter msgTengr ;
+    msgTengr.nRoomLevel = 0 ;
+    msgTengr.nRoomType = 0 ;
+    CClientApp::SharedClientApp()->SendMsg(&msgTengr, sizeof(msgTengr)) ;
 }
 

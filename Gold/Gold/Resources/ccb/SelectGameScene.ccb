@@ -116,7 +116,7 @@
 						<string>Position</string>
 						<key>value</key>
 						<array>
-							<real>18.75</real>
+							<real>18.541666030883789</real>
 							<real>66.5625</real>
 							<integer>4</integer>
 						</array>
@@ -368,8 +368,8 @@
 						<string>BlockCCControl</string>
 						<key>value</key>
 						<array>
-							<string></string>
-							<integer>0</integer>
+							<string>OnPlayPoker</string>
+							<integer>2</integer>
 							<integer>32</integer>
 						</array>
 					</dict>
@@ -509,6 +509,8 @@
 						</array>
 					</dict>
 				</array>
+				<key>selected</key>
+				<true/>
 			</dict>
 			<dict>
 				<key>baseClass</key>

@@ -37,16 +37,16 @@ bool SelectRoomLayer::init()
     
     return true ;
 }
-void SelectRoomLayer::onExit()
+void SelectRoomLayer::onEnter()
 {
-    CCLayer::onExit();
+    CCLayer::onEnter();
     CClientApp::SharedClientApp()->AddNetMsgDelegate(this) ;
     CEventHandleQueue::SharedEventHandleQueue()->RegisterEventHandle(eEvent_RecieveBaseData, this, ccevent_selector(SelectRoomLayer::OnEvent)) ;
 }
 
-void SelectRoomLayer::onEnter()
+void SelectRoomLayer::onExit()
 {
-    CCLayer::onEnter();
+    CCLayer::onExit();
     CClientApp::SharedClientApp()->RemoveMsgDelegate(this) ;
     CEventHandleQueue::SharedEventHandleQueue()->RemoveEventHandle(eEvent_RecieveBaseData, this) ;
 }

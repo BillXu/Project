@@ -427,7 +427,7 @@
 								<string>Position</string>
 								<key>value</key>
 								<array>
-									<real>17.30769157409668</real>
+									<real>17.021976470947266</real>
 									<real>64.361701965332031</real>
 									<integer>4</integer>
 								</array>
@@ -573,7 +573,7 @@
 								<key>value</key>
 								<array>
 									<string></string>
-									<string>ccbResources/lobby_mainbutton.png</string>
+									<string>ccbResources/lobby_roomselecbutton.png</string>
 								</array>
 							</dict>
 							<dict>
@@ -781,7 +781,7 @@
 								<key>value</key>
 								<array>
 									<string></string>
-									<string>ccbResources/lobby_mainbutton.png</string>
+									<string>ccbResources/lobby_roomselecbutton.png</string>
 								</array>
 							</dict>
 							<dict>
@@ -989,7 +989,7 @@
 								<key>value</key>
 								<array>
 									<string></string>
-									<string>ccbResources/lobby_mainbutton.png</string>
+									<string>ccbResources/lobby_roomselecbutton.png</string>
 								</array>
 							</dict>
 							<dict>
@@ -1197,7 +1197,7 @@
 								<key>value</key>
 								<array>
 									<string></string>
-									<string>ccbResources/lobby_mainbutton.png</string>
+									<string>ccbResources/lobby_roomselecbutton.png</string>
 								</array>
 							</dict>
 							<dict>
@@ -1405,7 +1405,7 @@
 								<key>value</key>
 								<array>
 									<string></string>
-									<string>ccbResources/lobby_mainbutton.png</string>
+									<string>ccbResources/lobby_roomselecbutton.png</string>
 								</array>
 							</dict>
 							<dict>
@@ -1613,7 +1613,7 @@
 								<key>value</key>
 								<array>
 									<string></string>
-									<string>ccbResources/lobby_mainbutton.png</string>
+									<string>ccbResources/lobby_roomselecbutton.png</string>
 								</array>
 							</dict>
 							<dict>

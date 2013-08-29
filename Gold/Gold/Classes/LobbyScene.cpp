@@ -38,16 +38,16 @@ bool CLobbyScene::init()
     addChild(pRoot) ;
     return true ;
 }
-void CLobbyScene::onExit()
+void CLobbyScene::onEnter()
 {
-    CCLayer::onExit();
+    CCLayer::onEnter();
     CClientApp::SharedClientApp()->AddNetMsgDelegate(this) ;
     CEventHandleQueue::SharedEventHandleQueue()->RegisterEventHandle(eEvent_RecieveBaseData, this, ccevent_selector(CLobbyScene::OnEvent)) ;
 }
 
-void CLobbyScene::onEnter()
+void CLobbyScene::onExit()
 {
-    CCLayer::onEnter();
+    CCLayer::onExit();
     CClientApp::SharedClientApp()->RemoveMsgDelegate(this) ;
     CEventHandleQueue::SharedEventHandleQueue()->RemoveEventHandle(eEvent_RecieveBaseData, this) ;
 }

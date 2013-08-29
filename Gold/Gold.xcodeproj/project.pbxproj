@@ -2579,8 +2579,8 @@
 				9AA5854C17CB570200B186A8 /* EventHandleQueue.cpp */,
 				9A1A2E9B17A0CC5D00B99BE0 /* HelloWorldScene.h */,
 				9A1A2E9C17A0CC5D00B99BE0 /* HelloWorldScene.cpp */,
-				9A52B70517AB934F009CD567 /* ClientApp.cpp */,
 				9A52B70617AB9350009CD567 /* ClientApp.h */,
+				9A52B70517AB934F009CD567 /* ClientApp.cpp */,
 			);
 			name = Classes;
 			sourceTree = "<group>";

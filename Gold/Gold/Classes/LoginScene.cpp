@@ -11,6 +11,8 @@
 #include "ClientApp.h"
 #include "CommonDefine.h"
 #include "RoomLayer.h"
+#include "LobbyScene.h"
+
 CCScene* CLoginLayer::CreateScene()
 {
     CCScene* pscene = CCScene::create() ;
@@ -228,9 +230,11 @@ void CLoginLayer::OnEvent(stEventArg* arg )
     {
         // enter to main scene ;
         // temp direct enter room ;
-        stMsgRoomEnter msgTengr ;
-        msgTengr.nRoomLevel = 0 ;
-        msgTengr.nRoomType = 0 ;
-        CClientApp::SharedClientApp()->SendMsg(&msgTengr, sizeof(msgTengr)) ;
+//        stMsgRoomEnter msgTengr ;
+//        msgTengr.nRoomLevel = 0 ;
+//        msgTengr.nRoomType = 0 ;
+//        CClientApp::SharedClientApp()->SendMsg(&msgTengr, sizeof(msgTengr)) ;
+        CCScene *pScene = CLobbyScene::CreateScene();
+        CCDirector::sharedDirector()->replaceScene(pScene);
     }
 }

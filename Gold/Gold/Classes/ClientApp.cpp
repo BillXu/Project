@@ -31,7 +31,7 @@ void CClientApp::StartApp()
     // set up net work 
     m_pNetWorkMgr = new CNetWorkMgr ;
     m_pNetWorkMgr->SetupNetwork();
-    m_pNetWorkMgr->ConnectToServer("192.168.1.115", GATE_SERVER_PORT ) ;
+    m_pNetWorkMgr->ConnectToServer("192.168.2.15", GATE_SERVER_PORT ) ;
     m_pNetWorkMgr->AddMessageDelegate(this) ;
     
     // meber var
