@@ -116,7 +116,7 @@ bool CRoomData::OnMessage( RakNet::Packet* pRakMsg )
             // change ready peer's state to unlook
             for ( int i = 0 ; i < MAX_ROOM_PEER -1 ; ++i )
             {
-                if ( m_vRoomPeers[i]->getSessionID() && m_vRoomPeers[i]->getPeerState() == eRoomPeer_Ready )
+                if ( m_vRoomPeers[i] && m_vRoomPeers[i]->getSessionID() && m_vRoomPeers[i]->getPeerState() == eRoomPeer_Ready )
                 {
                     m_vRoomPeers[i]->setPeerState(eRoomPeer_Unlook);
                 }
@@ -272,7 +272,7 @@ stGoldRoomPeerData* CRoomData::GetRoomPeerDataBySessionID( unsigned int nSession
 {
     for ( int i = 0 ; i < MAX_ROOM_PEER ; ++i )
     {
-        if ( m_vRoomPeers[i]->getSessionID() == nSessionID )
+        if ( m_vRoomPeers[i] && m_vRoomPeers[i]->getSessionID() == nSessionID )
         {
             return m_vRoomPeers[i] ;
         }
@@ -287,7 +287,7 @@ stGoldRoomPeerData* CRoomData::GetRoomPeerDataByClientIdx( char nClientIdx )
     {
         return NULL ;
     }
-    if ( m_vRoomPeers[nServerIdx]->getSessionID() )
+    if ( m_vRoomPeers[nServerIdx] && m_vRoomPeers[nServerIdx]->getSessionID() )
         return m_vRoomPeers[nServerIdx] ;
     return NULL ;
 }
@@ -328,7 +328,7 @@ char CRoomData::GetPlayerCount()
     int nCount = 0 ;
     for ( int i = 0 ; i < MAX_ROOM_PEER ; ++i )
     {
-        if ( m_vRoomPeers[i]->getSessionID() )
+        if ( m_vRoomPeers[i] && m_vRoomPeers[i]->getSessionID() )
         {
             ++nCount ;
         }
@@ -341,7 +341,7 @@ char CRoomData::GetActiveCount()
     int nCount = 0 ;
     for ( int i = 0 ; i < MAX_ROOM_PEER ; ++i )
     {
-        if ( m_vRoomPeers[i]->getSessionID() && m_vRoomPeers[i]->IsActive() )
+        if ( m_vRoomPeers[i] && m_vRoomPeers[i]->getSessionID() && m_vRoomPeers[i]->IsActive() )
         {
             ++nCount ;
         }

@@ -872,6 +872,10 @@ void CRoomLayer::ClearShowingChouMa()
 
 void CRoomLayer::UpdateMyCoin()
 {
+    if ( !m_pRoomData )
+    {
+        return ;
+    }
     stGoldRoomPeerData* pbasedata = m_pRoomData->GetRoomPeerDataByClientIdx(4) ;
     char nBuffer[20]={0} ;
     // bet coin

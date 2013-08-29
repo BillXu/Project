@@ -39,15 +39,15 @@ bool CLoginLayer::init()
 void CLoginLayer::onExit()
 {
     CCLayer::onExit();
-    CClientApp::SharedClientApp()->AddNetMsgDelegate(this) ;
-    CEventHandleQueue::SharedEventHandleQueue()->RegisterEventHandle(eEvent_RecieveBaseData, this, ccevent_selector(CLoginLayer::OnEvent)) ;
+    CClientApp::SharedClientApp()->RemoveMsgDelegate(this) ;
+    CEventHandleQueue::SharedEventHandleQueue()->RemoveEventHandle(eEvent_RecieveBaseData, this) ;
 }
 
 void CLoginLayer::onEnter()
 {
     CCLayer::onEnter();
-    CClientApp::SharedClientApp()->RemoveMsgDelegate(this) ;
-    CEventHandleQueue::SharedEventHandleQueue()->RemoveEventHandle(eEvent_RecieveBaseData, this) ;
+    CClientApp::SharedClientApp()->AddNetMsgDelegate(this) ;
+    CEventHandleQueue::SharedEventHandleQueue()->RegisterEventHandle(eEvent_RecieveBaseData, this, ccevent_selector(CLoginLayer::OnEvent)) ;
 }
 
 bool CLoginLayer::onAssignCCBMemberVariable(cocos2d::CCObject *pTarget, const char *pMemberVariableName, cocos2d::CCNode *pNode)
@@ -91,7 +91,8 @@ void CLoginLayer::OnLogin(CCObject* pobj , CCControlEvent event )
     memcpy(pBuffer + nOffset,pPassword, msg.nPasswordlen) ;
     nOffset += msg.nPasswordlen ;
     
-    CClientApp::SharedClientApp()->SendMsg(&msg, nOffset) ;
+    CClientApp::SharedClientApp()->SendMsg((stMsg*)pBuffer, nOffset) ;
+    delete [] pBuffer;
 }
 
 void CLoginLayer::OnRegister(CCObject* pobj , CCControlEvent event )
@@ -106,10 +107,10 @@ void CLoginLayer::OnRegister(CCObject* pobj , CCControlEvent event )
         CCMessageBox("Can not be null", "tip") ;
         return ;
     }
-    
+    const char*pdefaultName = "default";
     msg.bSex = eSex_Female ;
     msg.bAutoQuickEnter = false ;
-    msg.ncharNameLen = strlen("default" );
+    msg.ncharNameLen = strlen(pdefaultName);
     
     
     char* pBuffer = new char[sizeof(msg)+msg.nPasswordLen + msg.nAccLen + msg.ncharNameLen];
@@ -124,10 +125,11 @@ void CLoginLayer::OnRegister(CCObject* pobj , CCControlEvent event )
     memcpy(pBuffer + nOffset, pPassword, msg.nPasswordLen) ;
     nOffset += msg.nPasswordLen ;
     
-    sprintf(pBuffer + nOffset , "default") ;
+    memcpy(pBuffer + nOffset , pdefaultName,msg.ncharNameLen) ;
     nOffset += msg.ncharNameLen ;
     
-    CClientApp::SharedClientApp()->SendMsg(&msg, nOffset) ;
+    CClientApp::SharedClientApp()->SendMsg((stMsg*)pBuffer, nOffset) ;
+    delete [] pBuffer ;
 }
 
 void CLoginLayer::OnQuickEnter(CCObject* pobj , CCControlEvent event )

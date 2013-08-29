@@ -35,7 +35,7 @@ public:
 	CPoker();
 	~CPoker();
 	unsigned char GetCardWithCompositeNum();
-	void ComfirmKeepCard( unsigned char nCardLeft = 3 * 5 ); // 开局发牌之前，一定要确认牌堆里是否有足够的牌。 .
+	void ComfirmKeepCard( unsigned char nCardLeft = 3 * 5 ); // 开局发牌之前，一定要确认牌堆里是否有足够的牌。
 protected:
 	void RestAllPoker();
 	void ClipCards();

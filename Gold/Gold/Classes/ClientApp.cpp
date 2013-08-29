@@ -31,7 +31,7 @@ void CClientApp::StartApp()
     // set up net work 
     m_pNetWorkMgr = new CNetWorkMgr ;
     m_pNetWorkMgr->SetupNetwork();
-    m_pNetWorkMgr->ConnectToServer("192.168.18.101", GATE_SERVER_PORT ) ;
+    m_pNetWorkMgr->ConnectToServer("192.168.1.115", GATE_SERVER_PORT ) ;
     m_pNetWorkMgr->AddMessageDelegate(this) ;
     
     // meber var
@@ -109,24 +109,7 @@ bool CClientApp::OnMessage( RakNet::Packet* pRakMsg )
     if ( ID_MSG_VERIFY == pMsg->cSysIdentifer )
     {
         // send enter game ;
-        stMsgPlayerEnterGame msgEntergame ;
-        msgEntergame.nUserUID = time(NULL) ;
-        SendMsg(&msgEntergame, sizeof(msgEntergame)) ;
         return true ;
-    }
-    
-    if ( MSG_ROOM_CURRENT_INFO == pMsg->usMsgType )
-    {
-        // enter Room scene ;
-        CCScene *pScene = CRoomLayer::RoomScene(10,20,50,200,500);
-        // run
-        CCDirector::sharedDirector()->replaceScene(pScene);
-        CRoomLayer* pRL = (CRoomLayer*)pScene->getChildByTag(0) ;
-        CRoomData* pRd = new CRoomData ;
-        pRd->Init(pRL,10) ;
-        pRL->SetRoomData(pRd) ;
-        pRd->OnMessage(pRakMsg) ;
-        AddNetMsgDelegate(pRd) ;
     }
     
     if ( m_PlayerData.OnMessage(pMsg) )
