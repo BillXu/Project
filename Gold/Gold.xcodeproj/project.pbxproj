@@ -410,6 +410,9 @@
 		9AA5854E17CB570400B186A8 /* EventHandleQueue.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9AA5854C17CB570200B186A8 /* EventHandleQueue.cpp */; };
 		9AA5855417CB771500B186A8 /* GoldRoomPeerData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9AA5855217CB771500B186A8 /* GoldRoomPeerData.cpp */; };
 		9AA5855617CBB4CA00B186A8 /* RoomData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9AA5855517CBB4C900B186A8 /* RoomData.cpp */; };
+		CE09084D17CDB25F006C0873 /* SelectRoomLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE09084B17CDB25F006C0873 /* SelectRoomLayer.cpp */; };
+		CE3B75BF17CCD21000A0D48F /* LobbyScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE3B75BD17CCD21000A0D48F /* LobbyScene.cpp */; };
+		CE3B75C317CCDF9C00A0D48F /* SelectGameScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE3B75C117CCDF9C00A0D48F /* SelectGameScene.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -434,7 +437,7 @@
 		9A1A2B1617A0CC5500B99BE0 /* Icon-Small@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon-Small@2x.png"; path = "Resources/Icon-Small@2x.png"; sourceTree = "<group>"; };
 		9A1A2B1817A0CC5500B99BE0 /* Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Icon.png; path = Resources/Icon.png; sourceTree = "<group>"; };
 		9A1A2B1A17A0CC5500B99BE0 /* Icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon@2x.png"; path = "Resources/Icon@2x.png"; sourceTree = "<group>"; };
-		9A1A2B1C17A0CC5500B99BE0 /* iTunesArtwork */ = {isa = PBXFileReference; lastKnownFileType = file; name = iTunesArtwork; path = Resources/iTunesArtwork; sourceTree = "<group>"; };
+		9A1A2B1C17A0CC5500B99BE0 /* iTunesArtwork */ = {isa = PBXFileReference; lastKnownFileType = text; name = iTunesArtwork; path = Resources/iTunesArtwork; sourceTree = "<group>"; };
 		9A1A2B1E17A0CC5500B99BE0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = Info.plist; path = Resources/Info.plist; sourceTree = "<group>"; };
 		9A1A2B2017A0CC5500B99BE0 /* AppController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = AppController.h; path = ios/AppController.h; sourceTree = "<group>"; };
 		9A1A2B2117A0CC5500B99BE0 /* AppController.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; name = AppController.mm; path = ios/AppController.mm; sourceTree = "<group>"; };
@@ -1307,6 +1310,12 @@
 		9AA5855217CB771500B186A8 /* GoldRoomPeerData.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GoldRoomPeerData.cpp; path = Classes/GoldRoomPeerData.cpp; sourceTree = "<group>"; };
 		9AA5855317CB771500B186A8 /* GoldRoomPeerData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GoldRoomPeerData.h; path = Classes/GoldRoomPeerData.h; sourceTree = "<group>"; };
 		9AA5855517CBB4C900B186A8 /* RoomData.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = RoomData.cpp; path = Classes/RoomData.cpp; sourceTree = "<group>"; };
+		CE09084B17CDB25F006C0873 /* SelectRoomLayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SelectRoomLayer.cpp; path = Classes/SelectRoomLayer.cpp; sourceTree = "<group>"; };
+		CE09084C17CDB25F006C0873 /* SelectRoomLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SelectRoomLayer.h; path = Classes/SelectRoomLayer.h; sourceTree = "<group>"; };
+		CE3B75BD17CCD21000A0D48F /* LobbyScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = LobbyScene.cpp; path = Classes/LobbyScene.cpp; sourceTree = "<group>"; };
+		CE3B75BE17CCD21000A0D48F /* LobbyScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LobbyScene.h; path = Classes/LobbyScene.h; sourceTree = "<group>"; };
+		CE3B75C117CCDF9C00A0D48F /* SelectGameScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SelectGameScene.cpp; path = Classes/SelectGameScene.cpp; sourceTree = "<group>"; };
+		CE3B75C217CCDF9C00A0D48F /* SelectGameScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SelectGameScene.h; path = Classes/SelectGameScene.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -2556,6 +2565,9 @@
 		9A1A2E9717A0CC5D00B99BE0 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				CE09084A17CDB241006C0873 /* SelectRoomLayer */,
+				CE3B75C017CCDF2700A0D48F /* SelectGameScene */,
+				CE3B75BC17CCD1D400A0D48F /* LobbyScene */,
 				9A7C59CC17AE258A009D6D4E /* LoginScene */,
 				9A52B70817ABB1CA009CD567 /* PlayerData */,
 				9A52B58A17AA3899009CD567 /* Common */,
@@ -2874,10 +2886,37 @@
 		9A7C59CC17AE258A009D6D4E /* LoginScene */ = {
 			isa = PBXGroup;
 			children = (
-				9A7C59CD17AE25AC009D6D4E /* LoginScene.cpp */,
 				9A7C59CE17AE25AC009D6D4E /* LoginScene.h */,
+				9A7C59CD17AE25AC009D6D4E /* LoginScene.cpp */,
 			);
 			name = LoginScene;
+			sourceTree = "<group>";
+		};
+		CE09084A17CDB241006C0873 /* SelectRoomLayer */ = {
+			isa = PBXGroup;
+			children = (
+				CE09084C17CDB25F006C0873 /* SelectRoomLayer.h */,
+				CE09084B17CDB25F006C0873 /* SelectRoomLayer.cpp */,
+			);
+			name = SelectRoomLayer;
+			sourceTree = "<group>";
+		};
+		CE3B75BC17CCD1D400A0D48F /* LobbyScene */ = {
+			isa = PBXGroup;
+			children = (
+				CE3B75BE17CCD21000A0D48F /* LobbyScene.h */,
+				CE3B75BD17CCD21000A0D48F /* LobbyScene.cpp */,
+			);
+			name = LobbyScene;
+			sourceTree = "<group>";
+		};
+		CE3B75C017CCDF2700A0D48F /* SelectGameScene */ = {
+			isa = PBXGroup;
+			children = (
+				CE3B75C217CCDF9C00A0D48F /* SelectGameScene.h */,
+				CE3B75C117CCDF9C00A0D48F /* SelectGameScene.cpp */,
+			);
+			name = SelectGameScene;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -3332,6 +3371,9 @@
 				9AA5854E17CB570400B186A8 /* EventHandleQueue.cpp in Sources */,
 				9AA5855417CB771500B186A8 /* GoldRoomPeerData.cpp in Sources */,
 				9AA5855617CBB4CA00B186A8 /* RoomData.cpp in Sources */,
+				CE3B75BF17CCD21000A0D48F /* LobbyScene.cpp in Sources */,
+				CE3B75C317CCDF9C00A0D48F /* SelectGameScene.cpp in Sources */,
+				CE09084D17CDB25F006C0873 /* SelectRoomLayer.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
