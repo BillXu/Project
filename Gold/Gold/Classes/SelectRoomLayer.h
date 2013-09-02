@@ -35,6 +35,9 @@ public:
     
     bool OnMessage( RakNet::Packet* pMsg );
     void OnEvent(stEventArg* arg );
+    
+    void OnRoom1Down(CCObject*, CCControlEvent);
+    
 };
 
 

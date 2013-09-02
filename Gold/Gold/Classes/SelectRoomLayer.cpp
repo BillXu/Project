@@ -11,6 +11,7 @@
 #include "ClientApp.h"
 #include "CommonDefine.h"
 #include "RoomLayer.h"
+#include "PaijiuTable.h"
 
 CCLayer* SelectRoomLayer::CreateLayer()
 {
@@ -59,6 +60,8 @@ bool SelectRoomLayer::onAssignCCBMemberVariable(cocos2d::CCObject *pTarget, cons
 SEL_CCControlHandler SelectRoomLayer::onResolveCCBCCControlSelector(CCObject * pTarget, const char* pSelectorName)
 {
     CCB_SELECTORRESOLVER_CCCONTROL_GLUE(this, "OnClose", SelectRoomLayer::OnClose) ;
+    CCB_SELECTORRESOLVER_CCCONTROL_GLUE(this, "OnRoom1Down", SelectRoomLayer::OnRoom1Down) ;
+    
     return NULL ;
 }
 
@@ -93,5 +96,11 @@ void SelectRoomLayer::OnClose(CCObject* p , CCControlEvent )
 {
     setVisible(false) ;
     removeFromParent() ;
+}
+
+void SelectRoomLayer::OnRoom1Down(CCObject*, CCControlEvent)
+{
+    CCScene *pScene = PaijiuTable::CreateScene();
+    CCDirector::sharedDirector()->replaceScene(pScene);
 }
 

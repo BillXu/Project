@@ -1,20 +1,22 @@
 //
-//  LoginScene.h
+//  PaijiuTable.h
 //  Gold
 //
-//  Created by Xu BILL on 13-8-4.
+//  Created by user on 13-8-30.
 //
 //
 
-#ifndef __Gold__LoginScene__
-#define __Gold__LoginScene__
+#ifndef __Gold__PaijiuTable__
+#define __Gold__PaijiuTable__
+
+
 #include "cocos2d.h"
 #include "cocos-ext.h"
 #include "NetWorkManager.h"
 #include "EventHandleQueue.h"
 USING_NS_CC ;
 USING_NS_CC_EXT ;
-class CLoginLayer
+class PaijiuTable
 :public CCLayer
 ,public CCBMemberVariableAssigner
 ,public CCBSelectorResolver
@@ -29,14 +31,9 @@ public:
     void onExit();
     void onEnter();
     
-    void AffterLoaderCCB();
-    void OnLogin(CCObject*, CCControlEvent);
-    void OnRegister(CCObject*, CCControlEvent);
-    void OnQuickEnter(CCObject*, CCControlEvent);
     bool OnMessage( RakNet::Packet* pMsg );
     void OnEvent(stEventArg* arg );
-protected:
-    CCScale9Sprite* m_pAccount , * m_pPassword ;
-    CCEditBox* m_pEAccount, *m_pEPassword ;
 };
-#endif /* defined(__Gold__LoginScene__) */
+
+
+#endif /* defined(__Gold__PaijiuTable__) */

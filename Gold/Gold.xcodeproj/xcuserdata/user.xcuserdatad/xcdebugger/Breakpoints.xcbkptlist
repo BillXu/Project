@@ -8,11 +8,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "Gold/Classes/LoginScene.cpp"
-         timestampString = "399455148.564406"
+         timestampString = "399790660.002699"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "210"
-         endingLineNumber = "210"
+         startingLineNumber = "215"
+         endingLineNumber = "215"
          landmarkName = "CLoginLayer::OnMessage( RakNet::Packet* pMsg )"
          landmarkType = "5">
       </FileBreakpoint>

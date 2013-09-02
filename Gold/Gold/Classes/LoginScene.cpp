@@ -54,8 +54,8 @@ void CLoginLayer::onEnter()
 
 bool CLoginLayer::onAssignCCBMemberVariable(cocos2d::CCObject *pTarget, const char *pMemberVariableName, cocos2d::CCNode *pNode)
 {
-    CCB_MEMBERVARIABLEASSIGNER_GLUE_WEAK(this, "m_pAccount", CCLayer*, m_pAccount) ;
-    CCB_MEMBERVARIABLEASSIGNER_GLUE_WEAK(this, "m_pPassword", CCLayer*, m_pPassword) ;
+    CCB_MEMBERVARIABLEASSIGNER_GLUE_WEAK(this, "m_pAccount", CCScale9Sprite*, m_pAccount) ;
+    CCB_MEMBERVARIABLEASSIGNER_GLUE_WEAK(this, "m_pPassword", CCScale9Sprite*, m_pPassword) ;
     return false ;
 }
 
@@ -136,27 +136,32 @@ void CLoginLayer::OnRegister(CCObject* pobj , CCControlEvent event )
 
 void CLoginLayer::OnQuickEnter(CCObject* pobj , CCControlEvent event )
 {
-    stMsgRegister msg ;
-    msg.nAccLen = 0 ;
-    msg.nPasswordLen =0;
-    msg.ncharNameLen = 0;
-    msg.bSex = eSex_Female ;
-    msg.bAutoQuickEnter = true ;
-    CClientApp::SharedClientApp()->SendMsg(&msg, sizeof(msg)) ;
+    CCScene *pScene = CLobbyScene::CreateScene();
+    CCDirector::sharedDirector()->replaceScene(pScene);
+//    stMsgRegister msg ;
+//    msg.nAccLen = 0 ;
+//    msg.nPasswordLen =0;
+//    msg.ncharNameLen = 0;
+//    msg.bSex = eSex_Female ;
+//    msg.bAutoQuickEnter = true ;
+//    CClientApp::SharedClientApp()->SendMsg(&msg, sizeof(msg)) ;
 }
 
 void CLoginLayer::AffterLoaderCCB()
 {
     CCSize ptSize = m_pAccount->getContentSize() ;
-    CCEditBox* paccount = CCEditBox::create(ptSize, CCScale9Sprite::create("ccbResources/green_edit.png")) ;
+    CCEditBox* paccount = CCEditBox::create(ptSize, CCScale9Sprite::create("ccbResources/gold_login_editbg.png")) ;
     paccount->ignoreAnchorPointForPosition(true) ;
+    paccount->setFontColor(ccc3(0, 0, 0));
     m_pAccount->addChild(paccount) ;
     paccount->setPlaceHolder("输入账号");
     m_pEAccount = paccount ;
     
     ptSize = m_pPassword->getContentSize() ;
-    CCEditBox* ppassword = CCEditBox::create(ptSize, CCScale9Sprite::create("ccbResources/green_edit.png")) ;
+    CCEditBox* ppassword = CCEditBox::create(ptSize, CCScale9Sprite::create("ccbResources/gold_login_editbg.png")) ;
     ppassword->ignoreAnchorPointForPosition(true) ;
+    ppassword->setFontColor(ccc3(0, 0, 0));
+    ppassword->setInputFlag(kEditBoxInputFlagPassword);
     m_pPassword->addChild(ppassword) ;
     ppassword->setPlaceHolder("输入密码");
     m_pEPassword = ppassword ;

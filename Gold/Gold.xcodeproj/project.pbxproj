@@ -413,6 +413,7 @@
 		CE09084D17CDB25F006C0873 /* SelectRoomLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE09084B17CDB25F006C0873 /* SelectRoomLayer.cpp */; };
 		CE3B75BF17CCD21000A0D48F /* LobbyScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE3B75BD17CCD21000A0D48F /* LobbyScene.cpp */; };
 		CE3B75C317CCDF9C00A0D48F /* SelectGameScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE3B75C117CCDF9C00A0D48F /* SelectGameScene.cpp */; };
+		CE3CA74F17D04AAD008D2B57 /* PaijiuTable.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE3CA74D17D04AAD008D2B57 /* PaijiuTable.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -1316,6 +1317,8 @@
 		CE3B75BE17CCD21000A0D48F /* LobbyScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LobbyScene.h; path = Classes/LobbyScene.h; sourceTree = "<group>"; };
 		CE3B75C117CCDF9C00A0D48F /* SelectGameScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SelectGameScene.cpp; path = Classes/SelectGameScene.cpp; sourceTree = "<group>"; };
 		CE3B75C217CCDF9C00A0D48F /* SelectGameScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SelectGameScene.h; path = Classes/SelectGameScene.h; sourceTree = "<group>"; };
+		CE3CA74D17D04AAD008D2B57 /* PaijiuTable.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PaijiuTable.cpp; path = Classes/PaijiuTable.cpp; sourceTree = "<group>"; };
+		CE3CA74E17D04AAD008D2B57 /* PaijiuTable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PaijiuTable.h; path = Classes/PaijiuTable.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1343,8 +1346,8 @@
 		9A0E2C2917A2174E0052B3D0 /* RoomScene */ = {
 			isa = PBXGroup;
 			children = (
-				9A0E2C2A17A217790052B3D0 /* RoomLayer.cpp */,
 				9A0E2C2B17A217790052B3D0 /* RoomLayer.h */,
+				9A0E2C2A17A217790052B3D0 /* RoomLayer.cpp */,
 				9A29144017A3CADD003A62E2 /* RoomPlayerInforLoader.cpp */,
 				9A29144117A3CADD003A62E2 /* RoomPlayerInforLoader.h */,
 				9A29144317A3CAF9003A62E2 /* RoomPlayerInfor.cpp */,
@@ -2565,6 +2568,7 @@
 		9A1A2E9717A0CC5D00B99BE0 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				CE3CA74C17D049E7008D2B57 /* PaijiuTable */,
 				CE09084A17CDB241006C0873 /* SelectRoomLayer */,
 				CE3B75C017CCDF2700A0D48F /* SelectGameScene */,
 				CE3B75BC17CCD1D400A0D48F /* LobbyScene */,
@@ -2917,6 +2921,15 @@
 				CE3B75C117CCDF9C00A0D48F /* SelectGameScene.cpp */,
 			);
 			name = SelectGameScene;
+			sourceTree = "<group>";
+		};
+		CE3CA74C17D049E7008D2B57 /* PaijiuTable */ = {
+			isa = PBXGroup;
+			children = (
+				CE3CA74E17D04AAD008D2B57 /* PaijiuTable.h */,
+				CE3CA74D17D04AAD008D2B57 /* PaijiuTable.cpp */,
+			);
+			name = PaijiuTable;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -3374,6 +3387,7 @@
 				CE3B75BF17CCD21000A0D48F /* LobbyScene.cpp in Sources */,
 				CE3B75C317CCDF9C00A0D48F /* SelectGameScene.cpp in Sources */,
 				CE09084D17CDB25F006C0873 /* SelectRoomLayer.cpp in Sources */,
+				CE3CA74F17D04AAD008D2B57 /* PaijiuTable.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

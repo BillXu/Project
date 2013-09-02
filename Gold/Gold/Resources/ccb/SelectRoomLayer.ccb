@@ -471,8 +471,8 @@
 								<string>BlockCCControl</string>
 								<key>value</key>
 								<array>
-									<string></string>
-									<integer>0</integer>
+									<string>OnRoom1Down</string>
+									<integer>2</integer>
 									<integer>32</integer>
 								</array>
 							</dict>
