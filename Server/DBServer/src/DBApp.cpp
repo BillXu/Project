@@ -41,7 +41,7 @@ void CDBServerApp::Init()
 
 	// set up data base thread 
 	m_pDBWorkThread = new CDataBaseThread ;
-	m_pDBWorkThread->InitDataBase("192.168.1.115",3306,"root","123456","gamedb");
+	m_pDBWorkThread->InitDataBase("127.0.0.1",3306,"root","123456","gamedb");
 	m_pDBWorkThread->Start();
 
 	// dbManager ;
